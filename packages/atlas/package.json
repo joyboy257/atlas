@@ -1,0 +1,29 @@
+{
+  "name": "@atlas-runner/atlas",
+  "version": "0.1.0-alpha.0",
+  "description": "Atlas Business Messaging Agent Runtime — CLI, local runtime, simulator, workbench, contracts, and evidence",
+  "type": "module",
+  "bin": { "atlas": "./bin/atlas.js" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./schema/atlas-project.v1.schema.json": "./schema/atlas-project.v1.schema.json",
+    "./metadata/package-source.v1.json": "./metadata/package-source.v1.json"
+  },
+  "files": ["bin", "dist", "docs", "examples", "skills", "metadata", "schema", "README.md"],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "metadata:write": "node scripts/generate-package-metadata.mjs",
+    "metadata:check": "node scripts/generate-package-metadata.mjs --check",
+    "test": "npm run metadata:check && vitest run",
+    "prepack": "npm run build && npm run metadata:write && npm test"
+  },
+  "publishConfig": { "access": "public", "provenance": true },
+  "repository": { "type": "git", "url": "git+https://github.com/joyboy257/atlas.git", "directory": "packages/atlas" },
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22.0.0" },
+  "dependencies": { "yaml": "^2.4.5" },
+  "devDependencies": { "@types/node": "^25.5.2", "typescript": "^6.0.3", "vitest": "^4.1.5" }
+}

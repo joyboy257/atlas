@@ -1,0 +1,11 @@
+Atlas — Business Messaging Agent Runtime
+Copyright 2026 The Atlas Authors
+
+This product includes software developed at:
+https://github.com/joyboy257/atlas
+
+Third-party dependencies and their licences:
+
+- yaml (https://github.com/eemeli/yaml) — ISC License
+- TypeScript (https://github.com/microsoft/TypeScript) — Apache-2.0
+- Vitest (https://github.com/vitest-dev/vitest) — MIT License

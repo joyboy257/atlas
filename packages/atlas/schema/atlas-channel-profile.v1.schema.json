@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.usemirai.app/atlas/channel-profile/v1.json",
+  "title": "Atlas Channel Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "capabilities"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "family", "provider", "version", "targetPosture", "readiness", "liveProviderProven"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^CH-[A-Z]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "family": { "enum": ["open", "customer", "workplace", "work-object"] },
+        "provider": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "targetPosture": { "type": "string", "minLength": 1 },
+        "readiness": { "enum": ["PLANNED", "IMPLEMENTING", "LOCAL_CONFORMANCE", "SANDBOX_PROVEN", "PROVIDER_CONNECTED", "PUBLIC_ALPHA", "PUBLIC_BETA", "GA", "PROVIDER_BLOCKED", "REGRESSED"] },
+        "liveProviderProven": { "type": "boolean" },
+        "providerBlockedReason": { "type": "string" }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surfaces", "text", "media", "interactive", "reactions", "typing", "readReceipts", "edits", "deletes", "proactive", "providerLimits"],
+      "properties": {
+        "surfaces": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["dm", "group", "channel", "thread", "public-post", "work-object"] } },
+        "text": { "type": "boolean" },
+        "media": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "interactive": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "reactions": { "type": "boolean" },
+        "typing": { "type": "boolean" },
+        "readReceipts": { "type": "boolean" },
+        "edits": { "type": "boolean" },
+        "deletes": { "type": "boolean" },
+        "proactive": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["supported", "consentRequired"],
+          "properties": {
+            "supported": { "type": "boolean" },
+            "consentRequired": { "type": "boolean" },
+            "templatePolicy": { "type": "string" },
+            "windowPolicy": { "type": "string" }
+          }
+        },
+        "providerLimits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rateModel", "payloadLimits"],
+          "properties": {
+            "rateModel": { "type": "string", "minLength": 1 },
+            "payloadLimits": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+          }
+        }
+      }
+    }
+  }
+}

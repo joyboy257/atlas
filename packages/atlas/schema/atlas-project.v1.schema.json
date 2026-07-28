@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.usemirai.app/atlas/project/v1.json",
+  "title": "Atlas Project v1",
+  "description": "Declarative project contract for the Atlas Business Messaging Agent Runtime.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "project",
+    "runtime",
+    "model",
+    "agent",
+    "knowledge",
+    "channels",
+    "evals"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "model": {
+      "$ref": "#/$defs/model"
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instructions", "tools", "policies"],
+      "properties": {
+        "instructions": { "$ref": "#/$defs/projectPath" },
+        "tools": { "$ref": "#/$defs/projectPath" },
+        "skills": { "$ref": "#/$defs/projectPath" },
+        "policies": { "$ref": "#/$defs/projectPath" },
+        "subagents": { "$ref": "#/$defs/projectPath" }
+      }
+    },
+    "knowledge": {
+      "$ref": "#/$defs/projectPaths"
+    },
+    "channels": {
+      "$ref": "#/$defs/projectPaths"
+    },
+    "evals": {
+      "$ref": "#/$defs/projectPaths"
+    }
+  },
+  "$defs": {
+    "projectPath": {
+      "type": "string",
+      "pattern": "^\\./[^\\\\\\u0000]+$"
+    },
+    "projectPaths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/projectPath"
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "const": "native"
+        }
+      }
+    },
+    "secretReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref"],
+      "properties": {
+        "kind": {
+          "const": "atlas.secret-ref/v1"
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^atlas://credentials/[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$"
+        }
+      }
+    },
+    "model": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "const": "local-fixture" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "const": "managed" },
+            "model": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "credential"],
+          "properties": {
+            "mode": { "const": "byok" },
+            "credential": { "$ref": "#/$defs/secretReference" },
+            "model": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "credential"],
+          "properties": {
+            "mode": { "const": "gateway" },
+            "credential": { "$ref": "#/$defs/secretReference" },
+            "baseUrl": { "type": "string", "format": "uri" },
+            "model": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "environmentOverlay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion"],
+      "properties": {
+        "schemaVersion": { "const": "1" },
+        "runtime": { "$ref": "#/$defs/runtime" },
+        "model": { "$ref": "#/$defs/model" },
+        "channels": { "$ref": "#/$defs/projectPaths" },
+        "variables": {
+          "type": "object",
+          "propertyNames": { "pattern": "^[A-Z][A-Z0-9_]{0,63}$" },
+          "additionalProperties": {
+            "type": ["string", "number", "boolean"]
+          }
+        },
+        "credentials": {
+          "type": "object",
+          "propertyNames": { "pattern": "^[A-Z][A-Z0-9_]{0,63}$" },
+          "additionalProperties": { "$ref": "#/$defs/secretReference" }
+        }
+      }
+    }
+  }
+}

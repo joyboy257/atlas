@@ -1,0 +1,30 @@
+{
+  "schema_version": "atlas.package-source/v1",
+  "package_name": "@mirai/atlas",
+  "package_version": "0.1.0-preview.0",
+  "source_head_sha": "9d67f5e53ed18699759164a29e078aa40f55105a",
+  "base_tree_sha": "6d28834d0202dec2198343f93ecd7dcff2102a2a",
+  "source_content_sha256": "sha256:6ceea70d47de26659f198fe88c197a9104ea0f41c13126bb0d894416f6e4effc",
+  "source_dirty": true,
+  "source_file_count": 79,
+  "release_status": "unpublished_local_artifact",
+  "repository_visibility": "private_or_unpublished",
+  "public_package_available": false,
+  "live_provider_connected": false,
+  "hosted_staging_proven": false,
+  "hosted_production_proven": false,
+  "content_roots": [
+    "bin",
+    "docs",
+    "examples",
+    "schema",
+    "scripts",
+    "skills",
+    "src"
+  ],
+  "content_files": [
+    "README.md",
+    "package.json",
+    "tsconfig.json"
+  ]
+}

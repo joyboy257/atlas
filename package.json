@@ -1,0 +1,23 @@
+{
+  "name": "atlas",
+  "private": true,
+  "description": "Atlas Business Messaging Agent Runtime — public developer kit",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "typecheck": "tsc -b",
+    "clean": "npm run clean --workspaces",
+    "metadata:check": "npm run metadata:check --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joyboy257/atlas.git"
+  },
+  "license": "Apache-2.0"
+}

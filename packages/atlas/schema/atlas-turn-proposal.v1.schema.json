@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.usemirai.app/atlas/turn-proposal/v1.json",
+  "title": "Atlas Turn Proposal v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocolVersion", "requestId"],
+  "anyOf": [
+    { "required": ["response"] },
+    { "required": ["proposedActions"] },
+    { "required": ["handoff"] }
+  ],
+  "properties": {
+    "protocolVersion": { "const": "1" },
+    "requestId": { "type": "string", "minLength": 1 },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "anyOf": [{ "required": ["text"] }, { "required": ["structured"] }],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "structured": {},
+        "replyTo": { "type": "string", "minLength": 1 }
+      }
+    },
+    "proposedActions": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["toolName", "arguments"],
+        "properties": {
+          "toolName": { "type": "string", "minLength": 1 },
+          "arguments": {},
+          "idempotencyKey": { "type": "string", "minLength": 1 },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "urgency"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1 },
+        "urgency": { "enum": ["normal", "high"] }
+      }
+    },
+    "citations": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "safeMetadata": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean"] }
+    }
+  }
+}
