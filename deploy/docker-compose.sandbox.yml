@@ -1,0 +1,168 @@
+# Atlas Sandbox — local hosted-experience preview
+# --------------------------------------------------
+# Runs the full Atlas stack locally: API, worker, PostgreSQL, Redis.
+# No real provider credentials needed — all channels use simulators.
+#
+# Quick start:
+#   cp deploy/env/sandbox.env.example deploy/env/sandbox.env
+#   docker compose -f deploy/docker-compose.sandbox.yml up -d
+#   atlas deploy status
+#
+# This is a DEVELOPMENT sandbox. Not for production use.
+
+x-atlas-common: &atlas-common
+  restart: unless-stopped
+  networks:
+    - atlas-sandbox
+  env_file:
+    - ./env/sandbox.env
+
+services:
+  # ── Infrastructure ────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: atlas-sandbox-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: atlas-sandbox
+      POSTGRES_DB: atlas
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atlas -d atlas"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - atlas-sandbox
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+
+  redis:
+    image: redis:7-alpine
+    container_name: atlas-sandbox-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - atlas-sandbox
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+
+  # ── Atlas Services ────────────────────────────────────────────
+
+  atlas-api:
+    <<: *atlas-common
+    container_name: atlas-sandbox-api
+    build:
+      context: ..
+      dockerfile: deploy/dockerfiles/atlas.Dockerfile
+    command: ["node", "dist/api/main.js"]
+    ports:
+      - "127.0.0.1:4001:4001"
+    environment:
+      PORT: "4001"
+      ATLAS_SANDBOX: "1"
+      ATLAS_DATABASE_URL: "postgresql://atlas:atlas-sandbox@postgres:5432/atlas"
+      ATLAS_REDIS_URL: "redis://redis:6379"
+      ATLAS_CHANNEL_MODE: "simulator"
+      ATLAS_MODEL_MODE: "local-fixture"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  atlas-worker:
+    <<: *atlas-common
+    container_name: atlas-sandbox-worker
+    build:
+      context: ..
+      dockerfile: deploy/dockerfiles/atlas.Dockerfile
+    command: ["node", "dist/worker/main.js"]
+    environment:
+      ATLAS_SANDBOX: "1"
+      ATLAS_DATABASE_URL: "postgresql://atlas:atlas-sandbox@postgres:5432/atlas"
+      ATLAS_REDIS_URL: "redis://redis:6379"
+      ATLAS_CHANNEL_MODE: "simulator"
+      ATLAS_MODEL_MODE: "local-fixture"
+      ATLAS_WORKER_CONCURRENCY: "4"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  atlas-otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.91.0
+    container_name: atlas-sandbox-otel
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector.sandbox.yml:/etc/otel-collector-config.yml:ro
+    ports:
+      - "127.0.0.1:4318:4318"  # OTLP HTTP
+    networks:
+      - atlas-sandbox
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+
+  # ── Optional: local observability stack ───────────────────────
+
+  jaeger:
+    profiles: ["observability"]
+    image: jaegertracing/all-in-one:1.53
+    container_name: atlas-sandbox-jaeger
+    restart: unless-stopped
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "127.0.0.1:16686:16686"  # UI
+    networks:
+      - atlas-sandbox
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+
+networks:
+  atlas-sandbox:
+    name: atlas-sandbox
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: atlas-sandbox-postgres
+  redis_data:
+    name: atlas-sandbox-redis

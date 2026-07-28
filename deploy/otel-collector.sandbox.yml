@@ -1,0 +1,31 @@
+# Atlas Sandbox — OpenTelemetry Collector config
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 1s
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 128
+
+exporters:
+  logging:
+    loglevel: debug
+  # When ready for production, add your backend:
+  # otlphttp:
+  #   endpoint: https://your-observability-backend.com
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [logging]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [logging]
