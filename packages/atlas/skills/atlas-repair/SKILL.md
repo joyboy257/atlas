@@ -2,7 +2,7 @@
 name: atlas-repair
 description: Diagnose and repair Atlas local project, scaffold, runtime, idempotency, and delivery failures without destroying evidence.
 version: 1
-package: "@mirai/atlas@0.1.0-preview.0"
+package: "@atlas-runner/atlas@0.1.0-alpha.0"
 ---
 
 # Atlas repair skill

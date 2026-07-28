@@ -44,7 +44,7 @@ export class AtlasPlatformClient {
     return { protocol: inspected.protocol, session: inspected.session, tools: inspected.tools.length, resources: inspected.resources.length };
   }
   async inspectMcp(): Promise<{ protocol: string; session: boolean; tools: Record<string, unknown>[]; resources: Record<string, unknown>[]; collisions: string[] }> {
-    const initialized = await this.mcpRpc({ jsonrpc: '2.0', id: 'atlas-cli-initialize', method: 'initialize', params: { protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: '@mirai/atlas', version: '0.1.0-preview.0' } } });
+    const initialized = await this.mcpRpc({ jsonrpc: '2.0', id: 'atlas-cli-initialize', method: 'initialize', params: { protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: '@atlas-runner/atlas', version: '0.1.0-preview.0' } } });
     const protocol = String((initialized.value?.result as Record<string, unknown> | undefined)?.protocolVersion ?? '');
     if (!protocol) throw new AtlasCliError('REMOTE_ERROR', 'MCP initialize response omitted protocolVersion');
     await this.mcpRpc({ jsonrpc: '2.0', method: 'notifications/initialized', params: {} }, initialized.sessionId, true);

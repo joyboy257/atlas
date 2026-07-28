@@ -41,7 +41,7 @@ Run it again after a successful migration to prove idempotency.
 ## Example v0 input
 
 ```ts
-import { defineAtlasProject } from "@mirai/atlas";
+import { defineAtlasProject } from "@atlas-runner/atlas";
 
 export default defineAtlasProject(
 {

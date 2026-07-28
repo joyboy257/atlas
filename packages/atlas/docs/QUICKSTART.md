@@ -3,7 +3,7 @@
 ## 1. Create the project
 
 ```bash
-npx @mirai/atlas@latest init front-desk
+npx @atlas-runner/atlas@latest init front-desk
 cd front-desk
 ```
 
@@ -11,7 +11,7 @@ Before public package approval, use the supplied local tarball instead of `@late
 
 ```bash
 npm install --ignore-scripts /absolute/path/to/mirai-atlas-0.1.0-preview.0.tgz
-node node_modules/@mirai/atlas/bin/atlas.js init front-desk --atlas-dependency file:/absolute/path/to/mirai-atlas-0.1.0-preview.0.tgz
+node node_modules/@atlas-runner/atlas/bin/atlas.js init front-desk --atlas-dependency file:/absolute/path/to/mirai-atlas-0.1.0-preview.0.tgz
 cd front-desk
 ```
 

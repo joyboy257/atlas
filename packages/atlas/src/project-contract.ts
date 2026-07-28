@@ -172,7 +172,7 @@ export function renderAtlasProjectConfig(
   const functionName = kind === 'project' ? 'defineAtlasProject' : 'defineAtlasEnvironment';
   const validated = kind === 'project' ? validateAtlasProject(value) : validateAtlasEnvironment(value);
   if (!validated.valid) throw validationError(validated.diagnostics);
-  return `import { ${functionName} } from "@mirai/atlas";\n\nexport default ${functionName}(\n${JSON.stringify(value, null, 2)}\n);\n`;
+  return `import { ${functionName} } from "@atlas-runner/atlas";\n\nexport default ${functionName}(\n${JSON.stringify(value, null, 2)}\n);\n`;
 }
 
 export async function writeAtlasProjectConfig(root: string, config: AtlasProjectConfig): Promise<string> {
@@ -219,7 +219,7 @@ export async function loadAtlasProject(
   const packageFiles = await collectPackageFiles(projectRoot, effective);
   const packageIdentity = {
     schema_version: ATLAS_PROJECT_SCHEMA_VERSION,
-    package_contract: '@mirai/atlas-project/v1',
+    package_contract: '@atlas-runner/atlas-project/v1',
     config: stripEnvironmentOnlyState(effective),
     files: await Promise.all(packageFiles.map(async (relativePath) => {
       const contents = await readUtf8Safe(path.join(projectRoot, relativePath));

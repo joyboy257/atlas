@@ -2,7 +2,7 @@
 name: atlas-first-agent-loop
 description: Implement and verify a complete governed customer-message-to-business-outcome lifecycle in Atlas.
 version: 1
-package: "@mirai/atlas@0.1.0-preview.0"
+package: "@atlas-runner/atlas@0.1.0-alpha.0"
 ---
 
 # Atlas First Agent Loop skill

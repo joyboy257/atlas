@@ -64,7 +64,7 @@ describe('Atlas package-local documentation', () => {
 
     for (const command of required) expect(commands).toContain(`\`${command}`);
     expect(commands).toContain('--json');
-    expect(agentGuide).toContain('node_modules/@mirai/atlas/docs/QUICKSTART.md');
+    expect(agentGuide).toContain('node_modules/@atlas-runner/atlas/docs/QUICKSTART.md');
     expect(agentGuide).toContain('Do not bypass Atlas approval or committed execution');
     expect(agentGuide).not.toContain('/Users/deon/');
   });
@@ -97,7 +97,7 @@ describe('Atlas package-local documentation', () => {
 
     expect(metadata).toMatchObject({
       schema_version: 'atlas.package-source/v1',
-      package_name: '@mirai/atlas',
+      package_name: '@atlas-runner/atlas',
       package_version: pkg.version,
       release_status: 'unpublished_local_artifact',
       repository_visibility: 'private_or_unpublished',

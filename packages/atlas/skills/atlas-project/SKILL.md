@@ -2,7 +2,7 @@
 name: atlas-project
 description: Create, adopt, inspect, and safely modify an Atlas Business Messaging Agent Runtime project.
 version: 1
-package: "@mirai/atlas@0.1.0-preview.0"
+package: "@atlas-runner/atlas@0.1.0-alpha.0"
 ---
 
 # Atlas project skill

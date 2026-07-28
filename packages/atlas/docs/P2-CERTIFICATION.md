@@ -38,7 +38,7 @@ pnpm --dir packages/atlas exec vitest run __tests__/p2-conformance.test.ts
 Programmatic use:
 
 ```ts
-import { certifyAtlasP2Local } from "@mirai/atlas";
+import { certifyAtlasP2Local } from "@atlas-runner/atlas";
 
 const result = await certifyAtlasP2Local();
 if (result.verdict !== "PASS") process.exitCode = 1;

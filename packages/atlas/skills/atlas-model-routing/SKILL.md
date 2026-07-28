@@ -2,7 +2,7 @@
 name: atlas-model-routing
 description: Add or verify managed, BYOK, gateway, or local-fixture inference without losing tenant, payer, cost, or fallback authority.
 version: 1
-package: "@mirai/atlas@0.1.0-preview.0"
+package: "@atlas-runner/atlas@0.1.0-alpha.0"
 ---
 
 # Atlas model routing skill

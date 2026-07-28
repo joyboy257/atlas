@@ -71,8 +71,8 @@ Check:
 
 ```text
 atlas.config.ts
-node_modules/@mirai/atlas/schema/atlas-project.v1.schema.json
-node_modules/@mirai/atlas/docs/PROJECT-CONTRACT.md
+node_modules/@atlas-runner/atlas/schema/atlas-project.v1.schema.json
+node_modules/@atlas-runner/atlas/docs/PROJECT-CONTRACT.md
 ```
 
 Common repairs:

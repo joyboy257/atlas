@@ -20,4 +20,4 @@ Atlas is the Business Messaging Agent Runtime. This package contains the CLI, pr
 - Integrated P2 proof: [P2-CERTIFICATION.md](./P2-CERTIFICATION.md)
 - Machine-readable index: [public-docs.manifest.json](./public-docs.manifest.json)
 
-These documents match `@mirai/atlas@0.1.0-preview.0`. Run `atlas capabilities --json` and `atlas explain project --json` for installed-code truth.
+These documents match `@atlas-runner/atlas@0.1.0-alpha.0`. Run `atlas capabilities --json` and `atlas explain project --json` for installed-code truth.

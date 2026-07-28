@@ -1,6 +1,6 @@
 # Packaged front-desk example
 
-This example is a complete Atlas project embedded in `@mirai/atlas`.
+This example is a complete Atlas project embedded in `@atlas-runner/atlas`.
 
 From this directory:
 

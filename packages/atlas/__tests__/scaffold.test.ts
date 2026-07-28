@@ -64,8 +64,8 @@ describe('Atlas front-desk scaffold', () => {
     ]));
     const agents = await readFile(path.join(root, 'AGENTS.md'), 'utf8');
     const readme = await readFile(path.join(root, 'README.md'), 'utf8');
-    expect(agents).toContain('node_modules/@mirai/atlas/docs/AGENT-GUIDE.md');
-    expect(agents).toContain('node_modules/@mirai/atlas/skills/atlas-first-agent-loop/SKILL.md');
+    expect(agents).toContain('node_modules/@atlas-runner/atlas/docs/AGENT-GUIDE.md');
+    expect(agents).toContain('node_modules/@atlas-runner/atlas/skills/atlas-first-agent-loop/SKILL.md');
     expect(agents).toContain('External reasoning may propose. Atlas commits.');
     for (const command of ['atlas doctor', 'atlas test', 'atlas capabilities', 'atlas explain project', 'atlas inspect', 'atlas replay', 'atlas deploy', 'atlas upgrade', 'atlas dev']) {
       expect(readme).toContain(`\`${command}`);
@@ -95,7 +95,7 @@ describe('Atlas front-desk scaffold', () => {
     expect(pkg.scripts.dev).toBe('node server.js');
     expect(pkg.scripts['atlas:dev']).toBe('atlas dev');
     expect(pkg.dependencies.express).toBe('^5.0.0');
-    expect(pkg.devDependencies['@mirai/atlas']).toBe('0.1.0-preview.0');
+    expect(pkg.devDependencies['@atlas-runner/atlas']).toBe('0.1.0-preview.0');
     expect(await readFile(path.join(cwd, 'server.js'), 'utf8')).toBe('console.log("existing");\n');
     expect(result.rollback.command).toContain('atlas init front-desk --rollback');
     expect(result.adoption_report_path).toBe('.atlas/adoption-report.json');

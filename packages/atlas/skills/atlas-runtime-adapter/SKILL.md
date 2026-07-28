@@ -2,7 +2,7 @@
 name: atlas-runtime-adapter
 description: Integrate an external agent runtime through the Atlas proposal-only turn protocol.
 version: 1
-package: "@mirai/atlas@0.1.0-preview.0"
+package: "@atlas-runner/atlas@0.1.0-alpha.0"
 ---
 
 # Atlas runtime adapter skill

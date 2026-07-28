@@ -3,7 +3,7 @@
 `atlas.config.ts` is the canonical source of truth for a local Atlas project.
 
 ```ts
-import { defineAtlasProject } from "@mirai/atlas";
+import { defineAtlasProject } from "@atlas-runner/atlas";
 
 export default defineAtlasProject(
 {
@@ -80,7 +80,7 @@ Supported model modes are:
 A raw token, API key, private key, password, or connection string is invalid project configuration.
 
 ```ts
-import { secretRef } from "@mirai/atlas";
+import { secretRef } from "@atlas-runner/atlas";
 
 const credential = secretRef("atlas://credentials/model-primary");
 ```
@@ -92,7 +92,7 @@ The string names a credential. It does not contain credential material.
 An optional `atlas.<environment>.ts` file may override only the environment-safe surface:
 
 ```ts
-import { defineAtlasEnvironment, secretRef } from "@mirai/atlas";
+import { defineAtlasEnvironment, secretRef } from "@atlas-runner/atlas";
 
 export default defineAtlasEnvironment(
 {
@@ -147,5 +147,5 @@ Run `atlas upgrade --json` to migrate a supported earlier schema. Atlas writes a
 The machine-readable schema is shipped at:
 
 ```text
-node_modules/@mirai/atlas/schema/atlas-project.v1.schema.json
+node_modules/@atlas-runner/atlas/schema/atlas-project.v1.schema.json
 ```

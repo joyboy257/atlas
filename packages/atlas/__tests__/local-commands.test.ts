@@ -141,7 +141,7 @@ describe('Atlas local project commands', () => {
 
   it('migrates a v0 project non-destructively and is idempotent after migration', async () => {
     const root = await project();
-    await writeFile(path.join(root, 'atlas.config.ts'), `import { defineAtlasProject } from "@mirai/atlas";\n\nexport default defineAtlasProject(\n${JSON.stringify({
+    await writeFile(path.join(root, 'atlas.config.ts'), `import { defineAtlasProject } from "@atlas-runner/atlas";\n\nexport default defineAtlasProject(\n${JSON.stringify({
       schemaVersion: '0',
       name: 'front-desk',
       instructions: './agent/instructions.md',

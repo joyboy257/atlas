@@ -1,4 +1,4 @@
-import { defineAtlasProject } from "@mirai/atlas";
+import { defineAtlasProject } from "@atlas-runner/atlas";
 
 export default defineAtlasProject(
 {

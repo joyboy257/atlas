@@ -2,7 +2,7 @@
 name: atlas-channel-adapter
 description: Build and certify an Atlas messaging channel adapter through the shared fabric and conformance kit.
 version: 1
-package: "@mirai/atlas@0.1.0-preview.0"
+package: "@atlas-runner/atlas@0.1.0-alpha.0"
 ---
 
 # Atlas channel adapter skill

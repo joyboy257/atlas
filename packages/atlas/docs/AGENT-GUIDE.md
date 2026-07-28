@@ -4,14 +4,14 @@ A coding agent should begin with the installed package, not private repository p
 
 Read in this order:
 
-1. `node_modules/@mirai/atlas/docs/QUICKSTART.md`
-2. `node_modules/@mirai/atlas/docs/PROJECT-CONTRACT.md`
-3. `node_modules/@mirai/atlas/docs/AUTHORITY.md`
-4. `node_modules/@mirai/atlas/docs/COMMANDS.md`
-5. `node_modules/@mirai/atlas/docs/RUNTIME-PROTOCOL.md`
-6. `node_modules/@mirai/atlas/docs/MODEL-ROUTING.md`
-7. `node_modules/@mirai/atlas/docs/CHANNEL-FABRIC.md`
-8. `node_modules/@mirai/atlas/docs/CHANNEL-READINESS.md`
+1. `node_modules/@atlas-runner/atlas/docs/QUICKSTART.md`
+2. `node_modules/@atlas-runner/atlas/docs/PROJECT-CONTRACT.md`
+3. `node_modules/@atlas-runner/atlas/docs/AUTHORITY.md`
+4. `node_modules/@atlas-runner/atlas/docs/COMMANDS.md`
+5. `node_modules/@atlas-runner/atlas/docs/RUNTIME-PROTOCOL.md`
+6. `node_modules/@atlas-runner/atlas/docs/MODEL-ROUTING.md`
+7. `node_modules/@atlas-runner/atlas/docs/CHANNEL-FABRIC.md`
+8. `node_modules/@atlas-runner/atlas/docs/CHANNEL-READINESS.md`
 9. the project's `atlas.config.ts`
 10. the generated `AGENTS.md` or `AGENTS.atlas.md`
 11. `atlas capabilities --json`
@@ -20,7 +20,7 @@ Read in this order:
 ## First action in an empty folder
 
 ```bash
-npx @mirai/atlas@latest init front-desk
+npx @atlas-runner/atlas@latest init front-desk
 cd front-desk
 atlas doctor --json
 atlas test --json
@@ -141,8 +141,8 @@ Do not weaken assertions to manufacture a pass.
 
 1. Run `atlas doctor --json`.
 2. Run `atlas inspect --json` for redacted state.
-3. Read `node_modules/@mirai/atlas/docs/ERROR-CATALOG.md`.
-4. Follow `node_modules/@mirai/atlas/docs/REPAIR.md`.
+3. Read `node_modules/@atlas-runner/atlas/docs/ERROR-CATALOG.md`.
+4. Follow `node_modules/@atlas-runner/atlas/docs/REPAIR.md`.
 5. Preserve `.atlas/runtime-state.json`, scaffold state, adoption report, and backups when they are evidence.
 
 Do not edit receipts, hashes, approval state, action ledgers, or delivery state by hand.

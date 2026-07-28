@@ -1,4 +1,4 @@
-# `@mirai/atlas`
+# `@atlas-runner/atlas`
 
 Atlas is the **Business Messaging Agent Runtime**.
 
@@ -18,7 +18,7 @@ customer message
 ## First Agent Loop
 
 ```bash
-npx @mirai/atlas@latest init front-desk
+npx @atlas-runner/atlas@latest init front-desk
 cd front-desk
 atlas test
 atlas dev
@@ -73,13 +73,13 @@ metadata/                source-bound package metadata
 Machine-readable documentation index:
 
 ```text
-node_modules/@mirai/atlas/docs/public-docs.manifest.json
+node_modules/@atlas-runner/atlas/docs/public-docs.manifest.json
 ```
 
 Start here:
 
 ```text
-node_modules/@mirai/atlas/docs/QUICKSTART.md
+node_modules/@atlas-runner/atlas/docs/QUICKSTART.md
 ```
 
 ## Authority boundary
