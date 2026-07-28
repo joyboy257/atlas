@@ -31,7 +31,7 @@ import {
 } from './local-commands.js';
 import type { AtlasSimulatorScenario } from './messaging-simulator.js';
 
-const VERSION = '0.1.0-preview.0';
+const VERSION = '0.1.0-alpha.0';
 const DEFAULT_API_BASE = 'https://api.usemirai.app';
 const DEFAULT_SCOPES = [
   'atlas.context.read', 'atlas.knowledge.read',

@@ -225,7 +225,7 @@ function turnRequest(runtimeId: string, runtimeType: AtlasTurnRequestV1['actor']
     protocolVersion: '1',
     requestId: `request_${runtimeId}`,
     traceId: `trace_${runtimeId}`,
-    packageVersion: '0.1.0-preview.0',
+    packageVersion: '0.1.0-alpha.0',
     tenant: { id: 'tenant_p2', scopes: ['messages:read', 'tools:propose'] },
     actor: { runtimeId, runtimeType },
     customer: { id: 'customer_p2' },

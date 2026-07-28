@@ -31,7 +31,7 @@ export async function runDoctor(input: { root: string; client: McpClient; platfo
     try { const result = await input.platform.testMcp(); checks.push(check('mcp.protocol', result.tools > 0, `MCP tools/list returned ${result.tools} tools`, 'Verify scopes and MCP service health')); }
     catch { checks.push(fail('mcp.protocol', 'MCP protocol smoke test failed', 'Run atlas mcp test for details')); }
   } else checks.push({ id: 'identity.remote', status: 'skip', severity: 'warning', explanation: 'No stored credential was available', remediation: 'Run atlas login' });
-  const result = { schema_version: 'atlas.doctor/v1', generated_at: new Date().toISOString(), cli_version: '0.1.0-preview.0', platform: process.platform, node_version: process.versions.node, checks, summary: { pass: checks.filter((c) => c.status === 'pass').length, warn: checks.filter((c) => c.status === 'warn').length, fail: checks.filter((c) => c.status === 'fail').length, skip: checks.filter((c) => c.status === 'skip').length } };
+  const result = { schema_version: 'atlas.doctor/v1', generated_at: new Date().toISOString(), cli_version: '0.1.0-alpha.0', platform: process.platform, node_version: process.versions.node, checks, summary: { pass: checks.filter((c) => c.status === 'pass').length, warn: checks.filter((c) => c.status === 'warn').length, fail: checks.filter((c) => c.status === 'fail').length, skip: checks.filter((c) => c.status === 'skip').length } };
   let bundlePath: string | undefined;
   if (input.supportBundle) { bundlePath = path.join(root, '.atlas', `support-${Date.now()}.json`); await atomicWrite(bundlePath, `${JSON.stringify(result, null, 2)}\n`); }
   return { ...result, support_bundle: bundlePath ?? null };

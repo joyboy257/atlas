@@ -13,7 +13,7 @@ import {
 
 export const ATLAS_SCAFFOLD_REPORT_VERSION = 'atlas.adoption-report/v1' as const;
 export const ATLAS_SCAFFOLD_STATE_VERSION = 'atlas.scaffold-state/v1' as const;
-export const ATLAS_PACKAGE_VERSION = '0.1.0-preview.0' as const;
+export const ATLAS_PACKAGE_VERSION = '0.1.0-alpha.0' as const;
 
 export type AtlasPackageManager = 'npm' | 'pnpm';
 export type AtlasScaffoldMode = 'new' | 'current' | 'existing' | 'resume';
