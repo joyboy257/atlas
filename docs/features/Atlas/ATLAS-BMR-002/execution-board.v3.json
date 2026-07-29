@@ -474,7 +474,7 @@
       "id": "ATLAS-BMR2-P1-005",
       "phase": "P1",
       "title": "Implement deterministic local Mission coordinator",
-      "outcome": "Run one complete observe\u2013reason\u2013propose\u2013govern\u2013act\u2013observe Mission locally with deterministic fixtures and no credentials.",
+      "outcome": "Run one complete observe–reason–propose–govern–act–observe Mission locally with deterministic fixtures and no credentials.",
       "dependencies": [
         "ATLAS-BMR2-P1-004"
       ],
@@ -503,10 +503,10 @@
       "owner": "principal orchestrator",
       "release_gate": "G1",
       "falsifier": "Demo is scripted output or a stateless mock without persistence",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "PENDING_LOCAL_COMMIT",
       "gap_ids": [
         "ATLAS-BMR2-GAP-010"
       ],
@@ -708,7 +708,7 @@
         "agent package validation"
       ],
       "acceptance_criteria": [
-        "Autonomy ladder L0\u2013L4 is action-specific; L5 unrestricted is forbidden",
+        "Autonomy ladder L0–L4 is action-specific; L5 unrestricted is forbidden",
         "Budget reservation/commit/release is atomic",
         "Policy version and explanation are recorded",
         "Exhausted/uncertain cases wait, hand off, or fail truthfully"

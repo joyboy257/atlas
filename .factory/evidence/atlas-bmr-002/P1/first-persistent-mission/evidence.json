@@ -1,0 +1,46 @@
+{
+  "evidence_id": "ATLAS-BMR2-P1-005-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P1-005",
+  "timestamp": "2026-07-29T13:26:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "changed_files": [
+    "packages/atlas/src/mission-coordinator.ts",
+    "packages/atlas/__tests__/mission-coordinator.test.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "invariants_verified": [
+    "AtlasLocalMissionCoordinator composes the existing zero-credential AtlasLocalRuntime with the durable MissionStore rather than introducing a second local policy or execution authority.",
+    "A booking-change input creates one deterministic Mission bound to the local project hash, then persists CREATED, READY, ACTIVE and WAITING_APPROVAL lifecycle events before any committed effect.",
+    "The local fixture proposal crosses the policy and approval boundary; no Action is present before operator approval.",
+    "Approval persists a durable approval wait and transitions the Mission through ACTIVE to WAITING_EVENT while the committed Action, outcome, outbox and runtime receipts remain inspectable.",
+    "Delivery resumes WAITING_EVENT through ACTIVE and COMPLETING to COMPLETED, with delivery receipts and the local runtime outbox state inspectable.",
+    "Reopening the coordinator reloads both Mission persistence and local runtime persistence at inbound, approval and delivery checkpoints.",
+    "Identical input replays without creating a second Mission or Action; changed content under the same message ID raises IDEMPOTENCY_MISMATCH.",
+    "The deterministic journey requires no Atlas account, provider credential, cloud service or paid model key."
+  ],
+  "verification": {
+    "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build && git diff --check",
+    "test_files": 32,
+    "tests": 244,
+    "passed": 244,
+    "failed": 0,
+    "typescript_build": "PASS",
+    "metadata": "PASS",
+    "diff_check": "PASS",
+    "journey": "PASS",
+    "restart_matrix": "PASS",
+    "determinism": "PASS",
+    "duplicate_input_replay": "PASS"
+  },
+  "limitations": [
+    "The executable coordinator is a zero-credential local implementation over filesystem-backed runtime and Mission persistence.",
+    "MissionStore governed Decision, Action and Receipt collections remain available for later contract-level integration; this coordinator exposes the existing local runtime's governed fixture records and receipts without fabricating provider receipts.",
+    "CI, staging, provider sandbox, limited production, production Cloud persistence, real provider delivery, billing settlement and commercial operation remain unclaimed.",
+    "P1-006 Mission control surfaces and P1-007 independent build-readiness review remain later work."
+  ],
+  "verdict": "ATLAS-BMR2-P1-005 = PASS — one complete deterministic local Mission journey is locally proven with durable lifecycle state, approval gating, committed effect, inspectable receipts, restart recovery and replay safety; no stronger environment maturity is claimed."
+}
