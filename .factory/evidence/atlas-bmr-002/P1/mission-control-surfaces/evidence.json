@@ -28,8 +28,8 @@
   "verification": {
     "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build && git diff --check",
     "test_files": 33,
-    "tests": 249,
-    "passed": 249,
+    "tests": 250,
+    "passed": 250,
     "failed": 0,
     "typescript_build": "PASS",
     "metadata": "PASS",

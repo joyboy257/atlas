@@ -584,3 +584,90 @@ Execute `ATLAS-BMR2-P1-006` — expose safe local Mission inspect, replay, pause
 ### Blockers
 
 - None for local proof. CI, staging, provider, Cloud, billing and production environments remain intentionally unclaimed.
+
+
+## 2026-07-29 — ATLAS-BMR2-P1-006
+
+## Mission
+
+Expose safe local Mission inspect, replay, pause, resume, cancel, approve and reject controls without introducing a second authority or requiring database access.
+
+## Now
+
+The local Mission coordinator owns durable lifecycle control. `MissionStore.updateWaitStatus()` performs locked atomic wait updates; coordinator control commands validate state, serialize races, close or release waits, and return current ledger/runtime snapshots with correlation IDs. The CLI exposes these operations under the versioned `atlas mission` namespace with explicit server-derived scope inputs.
+
+## Key insight
+
+Control surfaces must operate through the coordinator and runtime boundary, not mutate persistence rows directly. Stale approvals and repeated or racing control commands therefore fail with typed conflicts instead of silently creating invalid lifecycle histories.
+
+## Verdict
+
+```text
+ATLAS-BMR2-P1-006_PASS_LOCAL_PROVEN
+```
+
+## One next action
+
+Begin `ATLAS-BMR2-P1-007` independent build-readiness review; do not promote this local proof to Cloud, staging, provider, commercial or production maturity.
+
+### Git/worktree
+
+- Repository: `/Users/deon/Developer/atlas`
+- Branch: `codex/atlas-bmr-002-execution`
+- Implementation commit: `47f0f35` (`feat(atlas): expose durable mission control surfaces`)
+- No push, merge, tag, package publication, provider onboarding, Cloud mutation or production action performed.
+
+### Decisions and falsifiers
+
+- Preserved the existing top-level simulator `atlas inspect` and `atlas replay` commands for compatibility.
+- Added durable Mission controls as a separate `atlas mission` namespace rather than changing simulator semantics.
+- Falsifier exercised: direct row mutation would bypass runtime validation; all control paths use coordinator transitions and `MissionStore.updateWaitStatus()`.
+- Falsifier exercised: stale approval after cancellation; approve/reject now require an active durable approval wait.
+- Falsifier exercised: duplicate concurrent pause; the coordinator queue yields one success and one typed `CONFLICT`.
+
+### Changed files
+
+- `packages/atlas/src/mission-persistence.ts`
+- `packages/atlas/src/mission-coordinator.ts`
+- `packages/atlas/src/local-commands.ts`
+- `packages/atlas/src/cli.ts`
+- `packages/atlas/__tests__/mission-control.test.ts`
+- `packages/atlas/__tests__/cli.test.ts`
+- `packages/atlas/metadata/package-source.v1.json`
+- `.factory/evidence/atlas-bmr-002/P1/mission-control-surfaces/evidence.json`
+
+### Commands and results
+
+- `cd packages/atlas && npm run metadata:write && npm test` — `33` test files, `249` tests passed.
+- `cd packages/atlas && npm run build` — TypeScript build passed.
+- `git diff --check` — passed.
+
+### Evidence
+
+- `.factory/evidence/atlas-bmr-002/P1/mission-control-surfaces/evidence.json`
+- Maturity: `LOCAL_PROVEN` only.
+- P1-007 independent review remains open.
+
+### Workers
+
+- Local implementation and verification performed in the Atlas execution worktree.
+- A code-simplifier review identified optional type/refactoring improvements; no unrelated refactor was included in this closure.
+
+### Blockers
+
+- No local blocker remains for P1-006.
+- Cloud, CI, staging, provider sandbox, limited production, production, commercial settlement and whole-product certification remain unclaimed and out of this local work-item verdict.
+
+---
+
+## 2026-07-29T13:50+08:00 — P1-006 CORRECTION ADDENDUM
+
+The first P1-006 checkpoint above recorded 249 passing tests and implementation commit `47f0f35`. A final cross-coordinator cancel race reproduced a real read–validate–append concurrency gap: the MissionStore lock serialized individual persistence transactions but did not protect the complete control command across coordinator instances.
+
+The correction adds a shared `OperationLock` at `<project>/.atlas/mission-control/lock`, covering the complete Mission control operation while preserving the existing atomic MissionStore transaction boundary. Concurrent control commands across coordinator instances now produce one durable transition and one typed `CONFLICT`; the added regression test passes.
+
+- Correction commit: `9afb99b` (`fix(atlas): serialize mission control across coordinators`)
+- Final verification: 33 test files, 250 tests passed, 0 failed; metadata check PASS; TypeScript build PASS; `git diff --check` PASS.
+- Evidence corrected to `250` tests / `250` passed.
+- Execution board `ATLAS-BMR2-P1-006.commit_sha` corrected to `9afb99b`.
+- No Cloud, provider, billing, staging, production, push, merge, tag or publication action was performed.

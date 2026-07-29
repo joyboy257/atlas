@@ -547,10 +547,10 @@
       "owner": "principal orchestrator",
       "release_gate": "G1",
       "falsifier": "Control commands directly mutate rows without runtime validation",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "9afb99b",
       "gap_ids": [
         "ATLAS-BMR2-GAP-011"
       ],
