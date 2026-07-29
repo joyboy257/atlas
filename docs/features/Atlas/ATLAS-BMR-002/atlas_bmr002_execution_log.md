@@ -461,3 +461,72 @@ Execute `ATLAS-BMR2-P1-004` — install durable Mission persistence and migratio
 
 ### Blockers
 - None for P1-003. Durable storage is the next required environment.
+
+
+---
+
+## 2026-07-29T13:09+08:00 — ATLAS-BMR2-P1-004 PASS
+
+## Mission
+
+Turn the certified BMR-001 foundation into Atlas's complete production agentic product.
+
+## Now
+
+P1-004 complete. Durable Mission persistence is implemented behind a versioned `atlas.mission-store/v1` boundary. The zero-credential local backend persists Missions, append-only lifecycle events, steps, waits, Decisions, Actions, Receipts and receipt links in one private atomic envelope. Scoped repository methods require server-derived tenant, organisation, project and environment identity; dependent records require an existing scoped Mission.
+
+## Key insight
+
+Durability is more than writing JSON: restart recovery, replay identity, tenant isolation, parent integrity and concurrent writers must share one transaction boundary. The shipped PostgreSQL migration expresses the same tenant-keyed uniqueness and expand/contract constraints, but it is correctly treated as a contract artifact until disposable PostgreSQL and CI evidence exists.
+
+## Verdict
+
+`ATLAS-BMR2-P1-004 = PASS` — durable Mission persistence is locally proven by 31 package test files and 241 passing tests. PostgreSQL, CI, staging, provider sandbox and production proof remain explicitly unclaimed.
+
+## One next action
+
+Execute `ATLAS-BMR2-P1-005` — implement deterministic local Mission coordinator.
+
+### Git/worktree
+- Repo: `/Users/deon/Developer/atlas`
+- Branch: `codex/atlas-bmr-002-execution`
+- Commit: pending evidence commit
+- No push, merge, tag, package publication, provider credential, or production operation performed
+
+### Decisions and falsifiers
+- **Decision**: Local persistence uses the existing private atomic writer and operation lock; no database dependency or credential-bearing backend was introduced.
+- **Decision**: Exact replay is a safe no-op; different content under a Mission ID, event ID, contract ID or idempotency key is rejected.
+- **Decision**: All storage records are tenant-scoped, and child records cannot be written before their parent Mission exists in the same scope.
+- **Decision**: Migration SQL is additive/expand-contract and contains no destructive DROP operations.
+- **Falsifier**: A process restart losing Mission state, a cross-tenant read/write succeeding, or a concurrent write dropping a Mission would invalidate this item.
+
+### Changed files
+- `packages/atlas/src/mission-persistence.ts`
+- `packages/atlas/__tests__/mission-persistence.test.ts`
+- `packages/atlas/migrations/001_mission_persistence_v1.sql`
+- `packages/atlas/src/index.ts`
+- `packages/atlas/package.json`
+- `packages/atlas/__tests__/package-docs.test.ts`
+- `packages/atlas/docs/public-docs.manifest.json`
+- `packages/atlas/metadata/package-source.v1.json`
+- `.factory/evidence/atlas-bmr-002/P1/mission-persistence/evidence.json`
+- `docs/features/Atlas/ATLAS-BMR-002/execution-board.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/atlas_bmr002_execution_log.md`
+
+### Commands and results
+- `cd packages/atlas && npm run metadata:write && npm test && npm run build`
+- Metadata check: PASS
+- Vitest: 31 test files, 241 tests, 241 passed
+- TypeScript build: PASS
+- `git diff --check`: PASS
+
+### Evidence
+- `.factory/evidence/atlas-bmr-002/P1/mission-persistence/evidence.json`
+- `packages/atlas/migrations/001_mission_persistence_v1.sql`
+- `packages/atlas/__tests__/mission-persistence.test.ts`
+
+### Workers
+- Graph review was attempted; the workspace graph reported no parsed TypeScript entities, so direct compiler and test evidence remained authoritative. No external service or credential access was used.
+
+### Blockers
+- None for local proof. Disposable PostgreSQL and CI remain required environments for higher maturity claims.

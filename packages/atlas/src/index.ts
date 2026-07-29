@@ -19,6 +19,7 @@ export * from './project-contract.js';
 export * from './agent-package.js';
 export * from './mission-contract.js';
 export * from './action-contract.js';
+export * from './mission-persistence.js';
 export * from './scaffold.js';
 export * from './local-runtime.js';
 export * from './messaging-simulator.js';

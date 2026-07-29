@@ -52,6 +52,7 @@ describe('Atlas package-local documentation', () => {
       'schema/atlas-learning-proposal.v1.schema.json',
     ]));
     expect(manifest.examples).toContain('examples/front-desk');
+    expect(manifest.migrations).toContain('migrations/001_mission_persistence_v1.sql');
     expect(manifest.skills).toEqual(expect.arrayContaining([
       'skills/atlas-project/SKILL.md',
       'skills/atlas-first-agent-loop/SKILL.md',
@@ -61,7 +62,7 @@ describe('Atlas package-local documentation', () => {
       'skills/atlas-channel-adapter/SKILL.md',
     ]));
 
-    for (const relativePath of [...manifest.documents, ...manifest.schemas, ...manifest.skills]) {
+    for (const relativePath of [...manifest.documents, ...manifest.schemas, ...manifest.skills, ...manifest.migrations]) {
       await expect(stat(path.join(packageRoot, relativePath))).resolves.toMatchObject({});
     }
   });

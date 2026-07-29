@@ -11,7 +11,7 @@
     "./schema/atlas-project.v1.schema.json": "./schema/atlas-project.v1.schema.json",
     "./metadata/package-source.v1.json": "./metadata/package-source.v1.json"
   },
-  "files": ["bin", "dist", "docs", "examples", "skills", "metadata", "schema", "README.md"],
+  "files": ["bin", "dist", "docs", "examples", "skills", "metadata", "schema", "migrations", "README.md"],
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc -p tsconfig.json",

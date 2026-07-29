@@ -50,6 +50,9 @@
   "metadata": [
     "metadata/package-source.v1.json"
   ],
+  "migrations": [
+    "migrations/001_mission_persistence_v1.sql"
+  ],
   "generation_inputs": {
     "command_contract": "src/cli.ts",
     "project_contract": "src/project-contract.ts",
