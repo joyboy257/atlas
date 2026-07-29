@@ -395,3 +395,69 @@ Execute `ATLAS-BMR2-P1-003` — define Proposal, Decision, Action, Receipt, Outc
 
 ### Blockers
 - None for P1-002. Later persistence and runtime work still require their declared disposable database/local environments.
+
+
+---
+
+## 2026-07-29T12:54+08:00 — ATLAS-BMR2-P1-003 PASS
+
+## Mission
+
+Turn the certified BMR-001 foundation into Atlas's complete production agentic product.
+
+## Now
+
+P1-003 complete. Proposal, Decision, Action, Receipt, Outcome and LearningProposal are first-class versioned public contracts. External runtimes can submit bounded proposals but cannot issue Decisions, approvals, committed effects, provider sends or receipts. Atlas Decisions bind policy, risk, autonomy, budget, disposition and evidence. Actions bind proposal, decision, scope and idempotency. Receipts distinguish commit, tool, provider, delivery, usage, cost, audit and outcome evidence. LearningProposal acceptance requires independent governed review.
+
+## Key insight
+
+A message delivery is not a business outcome, and a model proposal is not an authorization. The contract family preserves those distinctions structurally and keeps UNKNOWN_PENDING_RECONCILIATION explicit for uncertain provider or business state.
+
+## Verdict
+
+`ATLAS-BMR2-P1-003 = PASS` — governed action/evidence contract family is locally proven by 234 package tests and a clean TypeScript build. Durable outbox, transactional persistence, provider execution, settlement, staging and production proof remain explicitly unclaimed.
+
+## One next action
+
+Execute `ATLAS-BMR2-P1-004` — install durable Mission persistence and migrations.
+
+### Git/worktree
+- Repo: `/Users/deon/Developer/atlas`
+- Branch: `codex/atlas-bmr-002-execution`
+- Commit: `2873287`
+- Worktree: clean after commit
+- No push, merge, tag, package publication, provider credential, or production operation performed
+
+### Decisions and falsifiers
+- **Decision**: Only Atlas system policy or an operator can issue a Decision; external runtimes remain proposal-only.
+- **Decision**: Committed Actions require a matching allow/modify Decision with complete tenant, organisation, project, environment and Mission scope.
+- **Decision**: UNKNOWN_PENDING_RECONCILIATION is retained as a first-class receipt state rather than fabricated success/failure.
+- **Decision**: LearningProposal status changes require independent review; the proposer cannot self-accept.
+- **Falsifier**: Persisting model output directly as a completed business outcome would violate the contract family.
+
+### Changed files
+- `packages/atlas/src/action-contract.ts`
+- `packages/atlas/__tests__/action-contract.test.ts`
+- `packages/atlas/src/index.ts`
+- Six public v1 schemas for Proposal, Decision, Action, Receipt, Outcome and LearningProposal
+- `packages/atlas/__tests__/package-docs.test.ts`
+- `packages/atlas/docs/public-docs.manifest.json`
+- `packages/atlas/metadata/package-source.v1.json`
+- `.factory/evidence/atlas-bmr-002/P1/action-receipt-contract/evidence.json`
+
+### Commands and results
+- `cd packages/atlas && npm run metadata:write && npm test && npm run build`
+- Metadata check: PASS
+- Vitest: 30 test files, 234 tests, 234 passed
+- TypeScript build: PASS
+- `git diff --check`: PASS
+
+### Evidence
+- `.factory/evidence/atlas-bmr-002/P1/action-receipt-contract/evidence.json`
+- Six public contract schemas under `packages/atlas/schema/`
+
+### Workers
+- Independent code, type-design and simplification review workers were requested; no external service or credential access was used.
+
+### Blockers
+- None for P1-003. Durable storage is the next required environment.

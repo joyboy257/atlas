@@ -415,10 +415,10 @@
       "owner": "principal orchestrator",
       "release_gate": "G1",
       "falsifier": "Model output is persisted directly as a completed business outcome",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "2873287",
       "gap_ids": [
         "ATLAS-BMR2-GAP-008"
       ],
@@ -2726,5 +2726,5 @@
     "ATLAS_BMR_002_EXECUTION_FAILED",
     "ATLAS_BMR_002_ROLLED_BACK"
   ],
-  "active_work_item": "ATLAS-BMR2-P1-003"
+  "active_work_item": "ATLAS-BMR2-P1-004"
 }
