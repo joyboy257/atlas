@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.usemirai.app/atlas/mission/v1.json",
+  "title": "Atlas Mission v1",
+  "description": "Durable tenant-scoped business Mission contract for the Atlas Business Messaging Agent Runtime.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "atlas.mirai.dev/v1" },
+    "kind": { "const": "Mission" },
+    "metadata": { "$ref": "#/$defs/missionMetadata" },
+    "spec": { "$ref": "#/$defs/missionSpec" }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.:-]{0,127}$"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000]+$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "missionMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["missionId", "schemaVersion"],
+      "properties": {
+        "missionId": { "$ref": "#/$defs/identifier" },
+        "schemaVersion": { "const": "1" },
+        "parentMissionId": { "$ref": "#/$defs/identifier" },
+        "labels": {
+          "type": "object",
+          "propertyNames": { "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$" },
+          "additionalProperties": { "type": "string", "maxLength": 256 },
+          "maxProperties": 32
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenantId", "organisationId", "projectId", "environmentId"],
+      "properties": {
+        "tenantId": { "$ref": "#/$defs/identifier" },
+        "organisationId": { "$ref": "#/$defs/identifier" },
+        "projectId": { "$ref": "#/$defs/identifier" },
+        "environmentId": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "agentBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agentId", "agentVersionId", "deploymentId", "runtime"],
+      "properties": {
+        "agentId": { "$ref": "#/$defs/identifier" },
+        "agentVersionId": { "$ref": "#/$defs/digest" },
+        "deploymentId": { "$ref": "#/$defs/identifier" },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "adapter": { "type": "string", "minLength": 1, "maxLength": 256 },
+            "configurationRef": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(atlas|https?)://[^\\s]+$" }
+          }
+        }
+      }
+    },
+    "missionSubject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subjectId", "kind"],
+      "properties": {
+        "subjectId": { "$ref": "#/$defs/identifier" },
+        "kind": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "displayName": { "type": "string", "maxLength": 256 },
+        "canonicalRef": { "type": "string", "maxLength": 512, "pattern": "^[^\\u0000]+$" }
+      }
+    },
+    "conversationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId", "channel"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "channel": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "providerConversationId": { "$ref": "#/$defs/identifier" },
+        "threadId": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowedTools": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 256 } },
+        "allowedChannels": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 128 } },
+        "maxSteps": { "type": "integer", "minimum": 1, "maximum": 1000000 },
+        "stopConditions": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "maxLength": 1000 } },
+        "requiredApprovalFor": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 256 } }
+      }
+    },
+    "riskPosture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policyRef", "riskClass", "autonomyLevel"],
+      "properties": {
+        "policyRef": { "$ref": "#/$defs/identifier" },
+        "riskClass": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "autonomyLevel": { "type": "string", "enum": ["L0", "L1", "L2", "L3", "L4"] },
+        "approvalRequired": { "type": "boolean" },
+        "handoffAllowed": { "type": "boolean" }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxTokens": { "type": "integer", "minimum": 1 },
+        "maxSteps": { "type": "integer", "minimum": 1 },
+        "maxCost": { "type": "number", "exclusiveMinimum": 0 },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "reservedCost": { "type": "number", "minimum": 0 }
+      }
+    },
+    "correlation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correlationId"],
+      "properties": {
+        "correlationId": { "$ref": "#/$defs/identifier" },
+        "causationId": { "$ref": "#/$defs/identifier" },
+        "traceId": { "$ref": "#/$defs/identifier" },
+        "parentSpanId": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "inputDigest"],
+      "properties": {
+        "source": { "type": "string", "enum": ["developer", "api", "channel", "schedule", "provider-callback", "operator", "system"] },
+        "inputDigest": { "$ref": "#/$defs/digest" },
+        "knowledgeRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } },
+        "memoryRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } }
+      }
+    },
+    "missionState": {
+      "type": "string",
+      "enum": ["CREATED", "READY", "ACTIVE", "WAITING_EVENT", "WAITING_SCHEDULE", "WAITING_APPROVAL", "HANDED_OFF", "PAUSED", "COMPLETING", "COMPLETED", "FAILED", "CANCELLED", "EXPIRED"]
+    },
+    "activeWait": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "waitId"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["event", "schedule", "approval", "handoff"] },
+        "waitId": { "$ref": "#/$defs/identifier" },
+        "expiresAt": { "$ref": "#/$defs/timestamp" },
+        "requiredActor": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "missionSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "agent", "missionType", "goal", "successCriteria", "state", "stateVersion", "correlation", "provenance", "timestamps"],
+      "properties": {
+        "scope": { "$ref": "#/$defs/scope" },
+        "agent": { "$ref": "#/$defs/agentBinding" },
+        "missionType": { "$ref": "#/$defs/slug" },
+        "goal": { "type": "string", "minLength": 1, "maxLength": 10000 },
+        "successCriteria": { "type": "string", "minLength": 1, "maxLength": 5000 },
+        "failureCriteria": { "type": "string", "maxLength": 5000 },
+        "subject": { "$ref": "#/$defs/missionSubject" },
+        "conversation": { "$ref": "#/$defs/conversationBinding" },
+        "constraints": { "$ref": "#/$defs/constraints" },
+        "risk": { "$ref": "#/$defs/riskPosture" },
+        "budget": { "$ref": "#/$defs/budget" },
+        "deadline": { "$ref": "#/$defs/timestamp" },
+        "state": { "$ref": "#/$defs/missionState" },
+        "stateVersion": { "type": "integer", "minimum": 1 },
+        "activeWait": { "$ref": "#/$defs/activeWait" },
+        "correlation": { "$ref": "#/$defs/correlation" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "timestamps": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["createdAt", "updatedAt"],
+          "properties": {
+            "createdAt": { "$ref": "#/$defs/timestamp" },
+            "activatedAt": { "$ref": "#/$defs/timestamp" },
+            "updatedAt": { "$ref": "#/$defs/timestamp" },
+            "terminalAt": { "$ref": "#/$defs/timestamp" }
+          }
+        }
+      }
+    }
+  }
+}

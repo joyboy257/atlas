@@ -1,0 +1,58 @@
+{
+  "evidence_id": "ATLAS-BMR2-P1-002-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P1-002",
+  "title": "Durable Mission and lifecycle event contracts",
+  "timestamp": "2026-07-29T12:43:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "scope": {
+    "mission": "A bounded business goal is represented as immutable tenant-scoped Mission state with server-derived organisation, project, and environment identity.",
+    "agent_binding": "Mission binds to immutable agent_version_id, deployment identity, and non-secret runtime configuration reference.",
+    "lifecycle": "MissionLifecycleEvent is append-only, versioned, causally and correlationally linked, actor-attributed, timestamped, and supports explicit terminal outcomes.",
+    "authority": "Caller input cannot override server-owned scope or lifecycle state; cross-tenant events are rejected."
+  },
+  "changed_files": [
+    "packages/atlas/schema/atlas-mission.v1.schema.json",
+    "packages/atlas/schema/atlas-mission-lifecycle-event.v1.schema.json",
+    "packages/atlas/src/mission-contract.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/__tests__/mission-contract.test.ts",
+    "packages/atlas/__tests__/package-docs.test.ts",
+    "packages/atlas/docs/public-docs.manifest.json",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "verification": {
+    "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
+    "metadata": "PASS",
+    "tests": { "test_files": 29, "tests": 225, "passed": 225, "failed": 0 },
+    "typescript_build": "PASS",
+    "diff_check": "PASS"
+  },
+  "invariants_verified": [
+    "Mission creation starts at CREATED with stateVersion 1 and an initial CREATED event.",
+    "Legal transitions are explicit and terminal states reject further transitions.",
+    "New lifecycle events require current priorState, current stateVersion plus one, exact Mission ID, and exact scope.",
+    "Identical event ID/idempotency-key replay is a DUPLICATE_REPLAY and does not append twice.",
+    "Conflicting event ID/idempotency-key reuse is rejected with IDEMPOTENCY_CONFLICT.",
+    "Mission and event objects are deep-frozen after validation/creation.",
+    "Agent source identity remains separate from deployment/runtime identity.",
+    "Public documentation manifest ships both Mission schemas."
+  ],
+  "tests_added": [
+    "server-owned scope and lifecycle override rejection",
+    "immutable Agent version and deadline validation",
+    "legal and terminal state transitions",
+    "append-only state advancement",
+    "duplicate replay and conflicting idempotency behavior",
+    "cross-tenant event rejection",
+    "deterministic input digest"
+  ],
+  "limitations": [
+    "This item proves the public contract and local in-memory ledger only.",
+    "Durable database persistence, migrations, restart recovery, concurrency, CI, provider sandbox, staging, and production proof remain owned by later BMR-002 work items and are not claimed here.",
+    "No credentials, provider, paid service, package publication, or production operation was used."
+  ],
+  "verdict": "ATLAS-BMR2-P1-002 = PASS — versioned Mission and append-only lifecycle event contracts are locally proven; persistence and deployment maturity remain explicitly unclaimed."
+}
