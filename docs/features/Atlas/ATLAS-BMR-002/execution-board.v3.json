@@ -321,7 +321,7 @@
       "status": "PASS",
       "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": "3fb1db6",
+      "commit_sha": "d9d4217",
       "gap_ids": [
         "ATLAS-BMR2-GAP-006"
       ],

@@ -296,7 +296,7 @@ The AgentPackage contract separates **source identity** (metadata name + version
 Execute `ATLAS-BMR2-P1-002` — define durable Mission and lifecycle event contracts.
 
 ### Git/worktree
-- Branch: `codex/atlas-bmr-002-execution`, HEAD: `3fb1db6`
+- Branch: `codex/atlas-bmr-002-execution`, HEAD: `d9d4217`
 - New files: `schema/atlas-agent-package.v2.schema.json`, `src/agent-package.ts`, `__tests__/agent-package.test.ts`
 - Modified: `src/index.ts` (added export), `__tests__/scaffold.test.ts` (version-string fix), `metadata/package-source.v1.json` (regenerated)
 
