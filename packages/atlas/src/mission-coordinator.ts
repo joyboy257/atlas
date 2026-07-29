@@ -1,8 +1,12 @@
 import path from 'node:path';
 import { AtlasCliError } from './errors.js';
-import { sha256 } from './fs-safety.js';
+import { atomicWrite, readUtf8Safe, sha256 } from './fs-safety.js';
 import { OperationLock } from './operation-journal.js';
-import { AtlasLocalRuntime, type AtlasLocalInboundMessage } from './local-runtime.js';
+import {
+  AtlasLocalRuntime,
+  AtlasLocalRuntimeError,
+  type AtlasLocalInboundMessage,
+} from './local-runtime.js';
 import {
   createMission,
   createMissionLifecycleEvent,
@@ -66,6 +70,7 @@ export class AtlasLocalMissionCoordinator {
   readonly store: MissionStore;
   readonly runtime: AtlasLocalRuntime;
   readonly clock: () => string;
+  private readonly coordinatorLock: OperationLock;
   private readonly controlLock: OperationLock;
   private controlQueue: Promise<void> = Promise.resolve();
 
@@ -79,95 +84,49 @@ export class AtlasLocalMissionCoordinator {
     this.clock = options.clock ?? (() => new Date().toISOString());
     this.runtime = runtime;
     this.store = store;
+    this.coordinatorLock = new OperationLock(path.resolve(options.root, '.atlas', 'mission-coordinator'));
     this.controlLock = new OperationLock(path.resolve(options.root, '.atlas', 'mission-control'));
   }
 
   static async open(
     options: MissionCoordinatorOptions,
   ): Promise<AtlasLocalMissionCoordinator> {
+    const root = path.resolve(options.root);
     const clock = options.clock ?? (() => new Date().toISOString());
-    const runtime = await AtlasLocalRuntime.open({ root: options.root, clock });
-    const store = createMissionStore(options.root, options.scope);
+    const runtime = await AtlasLocalRuntime.open({ root, clock });
+    const boundScope = await bindLocalScope(root, options.scope, runtime.snapshot().identity.project_hash);
+    const store = createMissionStore(root, boundScope);
     await store.migrate();
-    return new AtlasLocalMissionCoordinator({ ...options, clock }, runtime, store);
+    return new AtlasLocalMissionCoordinator({ ...options, root, scope: boundScope, clock }, runtime, store);
   }
 
   async receive(
     message: AtlasLocalInboundMessage,
   ): Promise<MissionCoordinatorResult> {
+    return this.withCoordinatorLock(() => this.receiveUnlocked(message), true);
+  }
+
+  private async receiveUnlocked(
+    message: AtlasLocalInboundMessage,
+  ): Promise<MissionCoordinatorResult> {
+    await this.runtime.reload();
     const missionId = missionIdFor(message, this.scope);
     const existing = await this.store.readMission(this.scope, missionId);
     const runtimeResult = await this.runtime.receiveMessage(message);
 
-    if (existing.value) {
-      return this.result(missionId, runtimeResult, true);
+    let replayed = Boolean(runtimeResult.replayed || existing.value);
+    if (!existing.value) await this.ensureMission(message, missionId);
+    await this.reconcileRuntimeResult(missionId, runtimeResult);
+    for (const drainedMessageId of drainedMessageIds(runtimeResult)) {
+      const drainedMessage = this.runtime.snapshot().messages.find((item) => item.message_id === drainedMessageId);
+      if (!drainedMessage) continue;
+      const drainedMissionId = missionIdFor(drainedMessage, this.scope);
+      const drainedMission = await this.store.readMission(this.scope, drainedMissionId);
+      if (!drainedMission.value) await this.ensureMission(drainedMessage, drainedMissionId);
+      const drainedRuntimeResult = this.runtimeResultForMessage(drainedMessage);
+      if (drainedRuntimeResult) await this.reconcileRuntimeResult(drainedMissionId, drainedRuntimeResult);
     }
-
-    const missionResult = createMission(
-      missionInput(
-        message,
-        missionId,
-        this.runtime.snapshot().identity.project_hash,
-      ),
-      this.scope,
-      this.clock(),
-    );
-    if (!missionResult.valid || !missionResult.mission || !missionResult.initialEvent) {
-      throw new Error(
-        `Unable to create local Mission: ${missionResult.diagnostics
-          .map((item) => item.message)
-          .join('; ')}`,
-      );
-    }
-
-    const created = await this.store.createMission(
-      this.scope,
-      missionResult.mission,
-      missionResult.initialEvent,
-    );
-    if (created.status !== 'CREATED' && created.status !== 'DUPLICATE_REPLAY') {
-      throw new Error(
-        `Unable to persist local Mission: ${created.diagnostics
-          .map((item) => item.message)
-          .join('; ')}`,
-      );
-    }
-
-    await this.advance(missionId, 'READY', 'local.coordinator.ready');
-    await this.advance(missionId, 'ACTIVE', 'local.coordinator.active');
-    if (runtimeResult.status === 'approval_pending') {
-      await this.advance(
-        missionId,
-        'WAITING_APPROVAL',
-        'local.coordinator.approval-required',
-      );
-      await this.store.putWait(this.scope, {
-        waitId: deterministicId('wait-approval', missionId),
-        missionId,
-        scope: this.scope,
-        kind: 'approval',
-        status: 'ACTIVE',
-        payload: { approvalId: runtimeResult.approval.id },
-        updatedAt: this.clock(),
-      });
-    } else if (runtimeResult.status === 'handoff_required') {
-      await this.advance(missionId, 'HANDED_OFF', 'local.coordinator.handoff');
-    } else if (runtimeResult.outbox) {
-      await this.advance(missionId, 'WAITING_EVENT', 'local.coordinator.await-delivery');
-      await this.store.putWait(this.scope, {
-        waitId: deterministicId('wait-delivery', missionId),
-        missionId,
-        scope: this.scope,
-        kind: 'event',
-        status: 'ACTIVE',
-        payload: { outboxId: runtimeResult.outbox.id },
-        updatedAt: this.clock(),
-      });
-    } else {
-      await this.advance(missionId, 'COMPLETING', 'local.coordinator.outcome-recorded');
-      await this.advance(missionId, 'COMPLETED', 'local.coordinator.completed');
-    }
-    return this.result(missionId, runtimeResult, false);
+    return this.result(missionId, runtimeResult, replayed);
   }
 
   async approve(
@@ -175,8 +134,17 @@ export class AtlasLocalMissionCoordinator {
     operatorId: string,
     reason?: string,
   ): Promise<MissionCoordinatorResult> {
-    const approvalWait = await this.activeApprovalWait(approvalId);
-    if (!approvalWait) {
+    return this.withCoordinatorLock(() => this.approveUnlocked(approvalId, operatorId, reason));
+  }
+
+  private async approveUnlocked(
+    approvalId: string,
+    operatorId: string,
+    reason?: string,
+  ): Promise<MissionCoordinatorResult> {
+    await this.runtime.reload();
+    const approvalWait = await this.approvalWait(approvalId);
+    if (!approvalWait || approvalWait.status === 'CANCELLED') {
       throw new AtlasCliError('CONFLICT', `Approval is not active: ${approvalId}`, {
         nextAction: 'Inspect the Mission and use an active approval ID',
       });
@@ -187,26 +155,8 @@ export class AtlasLocalMissionCoordinator {
       ...(reason ? { reason } : {}),
     });
     const missionId = approvalWait.missionId;
-    const released = await this.store.updateWaitStatus(
-      this.scope,
-      approvalWait.waitId,
-      'RELEASED',
-      this.clock(),
-    );
-    if (released.status !== 'UPDATED' && released.status !== 'DUPLICATE_REPLAY') {
-      throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to release approval wait ${approvalWait.waitId}`);
-    }
-    await this.advance(missionId, 'ACTIVE', 'local.coordinator.approval-granted');
-    await this.advance(missionId, 'WAITING_EVENT', 'local.coordinator.await-delivery');
-    await this.store.putWait(this.scope, {
-      waitId: deterministicId('wait-delivery', missionId),
-      missionId,
-      scope: this.scope,
-      kind: 'event',
-      status: 'ACTIVE',
-      payload: { outboxId: runtimeResult.outbox.id },
-      updatedAt: this.clock(),
-    });
+    if (approvalWait.status === 'ACTIVE') await this.releaseWait(approvalWait.waitId, 'approval');
+    await this.reconcileRuntimeResult(missionId, runtimeResult);
     return this.result(missionId, runtimeResult, Boolean(runtimeResult.replayed));
   }
 
@@ -215,8 +165,17 @@ export class AtlasLocalMissionCoordinator {
     operatorId: string,
     reason?: string,
   ): Promise<MissionCoordinatorResult> {
-    const approvalWait = await this.activeApprovalWait(approvalId);
-    if (!approvalWait) {
+    return this.withCoordinatorLock(() => this.rejectUnlocked(approvalId, operatorId, reason));
+  }
+
+  private async rejectUnlocked(
+    approvalId: string,
+    operatorId: string,
+    reason?: string,
+  ): Promise<MissionCoordinatorResult> {
+    await this.runtime.reload();
+    const approvalWait = await this.approvalWait(approvalId);
+    if (!approvalWait || approvalWait.status === 'CANCELLED') {
       throw new AtlasCliError('CONFLICT', `Approval is not active: ${approvalId}`, {
         nextAction: 'Inspect the Mission and use an active approval ID',
       });
@@ -227,16 +186,8 @@ export class AtlasLocalMissionCoordinator {
       ...(reason ? { reason } : {}),
     });
     const missionId = approvalWait.missionId;
-    const released = await this.store.updateWaitStatus(
-      this.scope,
-      approvalWait.waitId,
-      'RELEASED',
-      this.clock(),
-    );
-    if (released.status !== 'UPDATED' && released.status !== 'DUPLICATE_REPLAY') {
-      throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to release approval wait ${approvalWait.waitId}`);
-    }
-    await this.advance(missionId, 'HANDED_OFF', 'local.coordinator.approval-rejected');
+    if (approvalWait.status === 'ACTIVE') await this.releaseWait(approvalWait.waitId, 'approval');
+    await this.reconcileRuntimeResult(missionId, runtimeResult);
     return this.result(missionId, runtimeResult, Boolean(runtimeResult.replayed));
   }
 
@@ -252,22 +203,33 @@ export class AtlasLocalMissionCoordinator {
       provider_message_id?: string;
     }>,
   ): Promise<MissionCoordinatorResult> {
-    const runtimeResult = await this.runtime.attemptDelivery(outboxId, attempt);
-    const missionId = missionIdForRuntimeResult(
-      runtimeResult,
-      this.scope,
-      this.runtime,
-    );
-    if (runtimeResult.delivery?.state === 'delivered') {
-      await this.advance(missionId, 'ACTIVE', 'local.coordinator.delivery-confirmed');
-      await this.advance(missionId, 'COMPLETING', 'local.coordinator.delivery-confirmed');
-      await this.advance(missionId, 'COMPLETED', 'local.coordinator.completed');
-    } else if (
-      runtimeResult.delivery?.state === 'rejected' ||
-      runtimeResult.delivery?.state === 'failed'
-    ) {
-      await this.advance(missionId, 'FAILED', 'local.coordinator.delivery-failed');
+    return this.withCoordinatorLock(() => this.deliverUnlocked(outboxId, attempt));
+  }
+
+  private async deliverUnlocked(
+    outboxId: string,
+    attempt: Readonly<{
+      outcome:
+        | 'transient_failure'
+        | 'permanent_rejection'
+        | 'accepted'
+        | 'delivered';
+      provider_code?: string;
+      provider_message_id?: string;
+    }>,
+  ): Promise<MissionCoordinatorResult> {
+    await this.runtime.reload();
+    let runtimeResult: RuntimeResult;
+    try {
+      runtimeResult = await this.runtime.attemptDelivery(outboxId, attempt);
+    } catch (error) {
+      if (!(error instanceof AtlasLocalRuntimeError) || error.code !== 'CONFLICT') throw error;
+      const outbox = this.runtime.snapshot().outbox.find((item) => item.id === outboxId);
+      if (!outbox || !['delivered', 'read', 'rejected', 'failed'].includes(outbox.state)) throw error;
+      runtimeResult = { delivery: outbox, replayed: true };
     }
+    const missionId = missionIdForRuntimeResult(runtimeResult, this.scope, this.runtime);
+    await this.reconcileRuntimeResult(missionId, runtimeResult);
     return this.result(missionId, runtimeResult, Boolean(runtimeResult.replayed));
   }
 
@@ -319,7 +281,7 @@ export class AtlasLocalMissionCoordinator {
       throw error;
     }
     try {
-      return await this.controlUnlockedUnsafe(missionId, command, actorIdentity, reason);
+      return await this.withCoordinatorLock(() => this.controlUnlockedUnsafe(missionId, command, actorIdentity, reason));
     } finally {
       await this.controlLock.release();
     }
@@ -414,21 +376,221 @@ export class AtlasLocalMissionCoordinator {
     };
   }
 
-  private async closeActiveWaits(missionId: string): Promise<void> {
+  private async withCoordinatorLock<T>(operation: () => Promise<T>, waitForLock = false): Promise<T> {
+    if (waitForLock) {
+      while (true) {
+        try {
+          await this.coordinatorLock.acquire();
+          break;
+        } catch (error) {
+          if (!(error instanceof AtlasCliError) || error.code !== 'LOCAL_STATE_ERROR') throw error;
+          await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+      }
+    } else {
+      try {
+        await this.coordinatorLock.acquire();
+      } catch (error) {
+        if (error instanceof AtlasCliError && error.code === 'LOCAL_STATE_ERROR') {
+          throw new AtlasCliError('CONFLICT', 'Another Mission coordinator operation is already running', {
+            retryable: true,
+            nextAction: 'Wait for the current Mission operation to finish and retry',
+          });
+        }
+        throw error;
+      }
+    }
+    try {
+      return await operation();
+    } finally {
+      await this.coordinatorLock.release();
+    }
+  }
+
+  private async ensureMission(message: AtlasLocalInboundMessage, missionId: string): Promise<void> {
+    const missionResult = createMission(
+      missionInput(message, missionId, this.runtime.snapshot().identity.project_hash),
+      this.scope,
+      this.clock(),
+    );
+    if (!missionResult.valid || !missionResult.mission || !missionResult.initialEvent) {
+      throw new Error(`Unable to create local Mission: ${missionResult.diagnostics.map((item) => item.message).join('; ')}`);
+    }
+    const created = await this.store.createMission(this.scope, missionResult.mission, missionResult.initialEvent);
+    if (created.status !== 'CREATED' && created.status !== 'DUPLICATE_REPLAY') {
+      throw new Error(`Unable to persist local Mission: ${created.diagnostics.map((item) => item.message).join('; ')}`);
+    }
+    await this.advance(missionId, 'READY', 'local.coordinator.ready');
+    await this.advance(missionId, 'ACTIVE', 'local.coordinator.active');
+  }
+
+  private runtimeResultForMessage(message: AtlasLocalInboundMessage): RuntimeResult | null {
+    const snapshot = this.runtime.snapshot();
+    const trace = snapshot.traces.find((item) => item.message_id === message.message_id);
+    if (!trace) return null;
+    const approval = Object.values(snapshot.approvals).find((item) => item.trace_id === trace.id);
+    if (approval?.status === 'pending') {
+      const proposal = snapshot.proposals[approval.proposal_id];
+      return { status: 'approval_pending', trace_id: trace.id, approval, proposal };
+    }
+    const outbox = snapshot.outbox.find((item) => item.trace_id === trace.id);
+    if (outbox) return { status: outbox.state === 'delivered' ? 'delivered' : 'queued', trace_id: trace.id, outbox, delivery: outbox.state === 'delivered' ? outbox : undefined };
+    if (trace.status === 'handoff_required') return { status: 'handoff_required', trace_id: trace.id };
+    if (trace.status === 'completed') return { status: 'completed', trace_id: trace.id };
+    return null;
+  }
+
+  private async reconcileRuntimeResult(missionId: string, runtimeResult: RuntimeResult): Promise<void> {
+    const ledgerResult = await this.store.readLedger(this.scope, missionId);
+    const ledger = ledgerResult.value;
+    if (!ledger) throw new AtlasCliError('LOCAL_STATE_ERROR', `Mission ledger not found: ${missionId}`);
+    const state = ledger.mission.spec.state;
+
+    if (runtimeResult.status === 'held_out_of_order') {
+      if (state === 'ACTIVE') await this.advance(missionId, 'WAITING_EVENT', 'local.coordinator.await-inbound');
+      await this.ensureWait({
+        waitId: deterministicId('wait-inbound', missionId),
+        missionId,
+        scope: this.scope,
+        kind: 'event',
+        status: 'ACTIVE',
+        payload: {
+          messageId: runtimeResult.message_id,
+          conversationId: runtimeResult.conversation_id,
+          expectedSequence: runtimeResult.expected_sequence,
+          receivedSequence: runtimeResult.received_sequence,
+        },
+        updatedAt: this.clock(),
+      });
+      return;
+    }
+
+    if (runtimeResult.status === 'approval_pending') {
+      let current = state;
+      if (current === 'WAITING_EVENT') {
+        await this.releaseWait(deterministicId('wait-inbound', missionId), 'inbound event');
+        await this.advance(missionId, 'ACTIVE', 'local.coordinator.inbound-reconciled');
+        current = 'ACTIVE';
+      }
+      if (current === 'ACTIVE') await this.advance(missionId, 'WAITING_APPROVAL', 'local.coordinator.approval-required');
+      await this.ensureWait({
+        waitId: deterministicId('wait-approval', missionId),
+        missionId,
+        scope: this.scope,
+        kind: 'approval',
+        status: 'ACTIVE',
+        payload: { approvalId: runtimeResult.approval.id },
+        updatedAt: this.clock(),
+      });
+      return;
+    }
+
+    if (runtimeResult.status === 'handoff_required' || runtimeResult.status === 'rejected') {
+      await this.closeActiveWaits(missionId, 'RELEASED');
+      const current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'WAITING_APPROVAL' || current === 'ACTIVE') {
+        await this.advance(missionId, 'HANDED_OFF', 'local.coordinator.handoff');
+      }
+      return;
+    }
+
+    const delivery = runtimeResult.delivery;
+    if (delivery?.state === 'delivered' || delivery?.state === 'read') {
+      await this.releaseWaitForOutbox(missionId, delivery.id);
+      let current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'WAITING_EVENT') {
+        await this.advance(missionId, 'ACTIVE', 'local.coordinator.delivery-confirmed');
+        current = 'ACTIVE';
+      }
+      if (current === 'ACTIVE') await this.advance(missionId, 'COMPLETING', 'local.coordinator.delivery-confirmed');
+      current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'COMPLETING') await this.advance(missionId, 'COMPLETED', 'local.coordinator.completed');
+      return;
+    }
+
+    if (delivery?.state === 'rejected' || delivery?.state === 'failed') {
+      await this.releaseWaitForOutbox(missionId, delivery.id);
+      let current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'WAITING_EVENT') {
+        await this.advance(missionId, 'ACTIVE', 'local.coordinator.delivery-failed');
+        current = 'ACTIVE';
+      }
+      if (current === 'ACTIVE') await this.advance(missionId, 'COMPLETING', 'local.coordinator.delivery-failed');
+      current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'COMPLETING') await this.advance(missionId, 'FAILED', 'local.coordinator.delivery-failed');
+      return;
+    }
+
+    if (runtimeResult.outbox) {
+      await this.releaseApprovalWaits(missionId);
+      let current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'WAITING_APPROVAL') {
+        await this.advance(missionId, 'ACTIVE', 'local.coordinator.approval-granted');
+        current = 'ACTIVE';
+      }
+      if (current === 'ACTIVE') await this.advance(missionId, 'WAITING_EVENT', 'local.coordinator.await-delivery');
+      await this.ensureWait({
+        waitId: deterministicId('wait-delivery', missionId),
+        missionId,
+        scope: this.scope,
+        kind: 'event',
+        status: 'ACTIVE',
+        payload: { outboxId: runtimeResult.outbox.id },
+        updatedAt: this.clock(),
+      });
+      return;
+    }
+
+    if (runtimeResult.status === 'completed' || runtimeResult.status === 'outcome_recorded') {
+      let current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'ACTIVE') await this.advance(missionId, 'COMPLETING', 'local.coordinator.outcome-recorded');
+      current = (await this.store.readLedger(this.scope, missionId)).value?.mission.spec.state;
+      if (current === 'COMPLETING') await this.advance(missionId, 'COMPLETED', 'local.coordinator.completed');
+    }
+  }
+
+  private async ensureWait(wait: MissionWaitRecord): Promise<void> {
+    const existing = (await this.store.readState()).waits.find((item) => item.waitId === wait.waitId);
+    if (existing) return;
+    const result = await this.store.putWait(this.scope, wait);
+    if (!['CREATED', 'DUPLICATE_REPLAY'].includes(result.status)) {
+      throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to persist Mission wait ${wait.waitId}`);
+    }
+  }
+
+  private async releaseApprovalWaits(missionId: string): Promise<void> {
+    const waits = (await this.store.readState()).waits.filter((wait) => wait.missionId === missionId && wait.kind === 'approval' && wait.status === 'ACTIVE');
+    for (const wait of waits) await this.releaseWait(wait.waitId, 'approval');
+  }
+
+  private async releaseWaitForOutbox(missionId: string, outboxId: string): Promise<void> {
+    const wait = (await this.store.readState()).waits.find((item) => item.missionId === missionId && item.kind === 'event' && item.status === 'ACTIVE' && isRecord(item.payload) && item.payload.outboxId === outboxId);
+    if (wait) await this.releaseWait(wait.waitId, 'delivery');
+  }
+
+  private async releaseWait(waitId: string, label: string): Promise<void> {
+    const current = (await this.store.readState()).waits.find((wait) => wait.waitId === waitId);
+    if (!current || current.status !== 'ACTIVE') return;
+    const result = await this.store.updateWaitStatus(this.scope, waitId, 'RELEASED', this.clock());
+    if (!['UPDATED', 'DUPLICATE_REPLAY'].includes(result.status)) {
+      throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to release ${label} wait ${waitId}`);
+    }
+  }
+
+  private async closeActiveWaits(missionId: string, status: MissionWaitRecord['status'] = 'CANCELLED'): Promise<void> {
     const state = await this.store.readState();
     for (const wait of state.waits.filter((item) => item.missionId === missionId && item.status === 'ACTIVE')) {
-      const result = await this.store.updateWaitStatus(this.scope, wait.waitId, 'CANCELLED', this.clock());
+      const result = await this.store.updateWaitStatus(this.scope, wait.waitId, status, this.clock());
       if (!['UPDATED', 'DUPLICATE_REPLAY'].includes(result.status)) {
         throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to close Mission wait ${wait.waitId}`);
       }
     }
   }
 
-  private async activeApprovalWait(approvalId: string): Promise<MissionPersistenceState['waits'][number] | null> {
+  private async approvalWait(approvalId: string): Promise<MissionPersistenceState['waits'][number] | null> {
     const state = await this.store.readState();
     return state.waits.find((wait) =>
       wait.kind === 'approval' &&
-      wait.status === 'ACTIVE' &&
       isRecord(wait.payload) &&
       wait.payload.approvalId === approvalId,
     ) ?? null;
@@ -525,6 +687,42 @@ export async function snapshotMissionCoordinator(
   coordinator: AtlasLocalMissionCoordinator,
 ): Promise<MissionCoordinatorSnapshot> {
   return coordinator.snapshot();
+}
+
+async function bindLocalScope(root: string, scope: MissionScope, projectHash: string): Promise<MissionScope> {
+  const bindingPath = path.resolve(root, '.atlas', 'mission-scope.json');
+  const existing = await readUtf8Safe(bindingPath);
+  if (existing !== null) {
+    let binding: { projectHash?: string; scope?: MissionScope };
+    try {
+      binding = JSON.parse(existing) as { projectHash?: string; scope?: MissionScope };
+    } catch (error) {
+      throw new AtlasCliError('LOCAL_STATE_ERROR', `Invalid local Mission scope binding: ${String(error)}`, {
+        nextAction: 'Inspect or remove the verified local Mission scope binding after preserving evidence',
+      });
+    }
+    if (binding.projectHash !== projectHash || !binding.scope || !sameScope(binding.scope, scope)) {
+      throw new AtlasCliError('AUTHORIZATION_FAILED', 'Mission scope does not match the project-bound local Mission ledger', {
+        nextAction: 'Reopen the project with its original tenant, organisation, project and environment scope',
+      });
+    }
+    return Object.freeze({ ...binding.scope });
+  }
+  await atomicWrite(bindingPath, `${JSON.stringify({ schemaVersion: 'atlas.local-mission-scope/v1', projectHash, scope }, null, 2)}\n`);
+  return Object.freeze({ ...scope });
+}
+
+function drainedMessageIds(result: RuntimeResult): readonly string[] {
+  return Array.isArray(result.drained_message_ids)
+    ? result.drained_message_ids.filter((item: unknown): item is string => typeof item === 'string')
+    : [];
+}
+
+function sameScope(left: MissionScope, right: MissionScope): boolean {
+  return left.tenantId === right.tenantId &&
+    left.organisationId === right.organisationId &&
+    left.projectId === right.projectId &&
+    left.environmentId === right.environmentId;
 }
 
 function missionInput(

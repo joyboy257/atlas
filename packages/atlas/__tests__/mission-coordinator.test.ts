@@ -143,6 +143,108 @@ describe('Atlas local Mission coordinator', () => {
     expect(completed.ledger?.events.at(-1)?.spec.resultingState).toBe('COMPLETED');
   });
 
+  it('holds out-of-order Mission work without completing and reconciles it when drained', async () => {
+    const { root, clock } = await fixture();
+    const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const held = await coordinator.receive({ ...message, message_id: 'msg-coordinator-002', sequence: 2 });
+
+    expect(held.status).toBe('held_out_of_order');
+    expect(held.mission.spec.state).toBe('WAITING_EVENT');
+    expect(held.ledger.events.map((event) => event.spec.resultingState)).not.toContain('COMPLETED');
+    expect((await coordinator.snapshot()).missionState.waits).toEqual([
+      expect.objectContaining({ missionId: held.missionId, kind: 'event', status: 'ACTIVE' }),
+    ]);
+
+    const first = await coordinator.receive({ ...message, text: 'What is the booking policy?' });
+    expect(first.status).toBe('answered');
+    const reconciled = await coordinator.inspect(held.missionId);
+    expect(reconciled.mission?.spec.state).toBe('WAITING_APPROVAL');
+    expect(reconciled.ledger?.events.filter((event) => event.spec.resultingState === 'COMPLETED')).toHaveLength(0);
+  });
+
+  it('serializes duplicate receives across coordinator instances without duplicate Mission events', async () => {
+    const { root, clock } = await fixture();
+    const first = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const second = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+
+    const results = await Promise.all([first.receive(message), second.receive(message)]);
+    const snapshot = await first.snapshot();
+    expect(snapshot.missionState.missions).toHaveLength(1);
+    expect(snapshot.missionState.lifecycleEvents.filter((event) => event.spec.missionId === results[0].missionId)).toHaveLength(4);
+    expect(snapshot.runtime.traces).toHaveLength(1);
+    expect(results.some((result) => result.replayed)).toBe(true);
+  });
+
+  it('uses legal failure transitions and releases the delivery wait on rejection', async () => {
+    const { root, clock } = await fixture();
+    const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const inbound = await coordinator.receive(message);
+    const committed = await coordinator.approve(inbound.runtime.approval.id, 'operator-local');
+
+    const rejected = await coordinator.deliver(committed.runtime.outbox.id, {
+      outcome: 'permanent_rejection',
+      provider_code: 'RECIPIENT_BLOCKED',
+    });
+    expect(rejected.mission.spec.state).toBe('FAILED');
+    expect(rejected.ledger.events.map((event) => event.spec.resultingState).slice(-3)).toEqual(['ACTIVE', 'COMPLETING', 'FAILED']);
+    expect((await coordinator.snapshot()).missionState.waits).toEqual(expect.arrayContaining([
+      expect.objectContaining({ missionId: inbound.missionId, kind: 'approval', status: 'RELEASED' }),
+      expect.objectContaining({ missionId: inbound.missionId, kind: 'event', status: 'RELEASED' }),
+    ]));
+  });
+
+  it('reconciles approval replay without duplicate lifecycle events', async () => {
+    const { root, clock } = await fixture();
+    const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const inbound = await coordinator.receive(message);
+    const first = await coordinator.approve(inbound.runtime.approval.id, 'operator-local');
+    const second = await coordinator.approve(inbound.runtime.approval.id, 'operator-local');
+
+    expect(first.mission.spec.state).toBe('WAITING_EVENT');
+    expect(second.replayed).toBe(true);
+    expect(second.mission.spec.state).toBe('WAITING_EVENT');
+    expect((await coordinator.snapshot()).missionState.lifecycleEvents.filter((event) => event.spec.missionId === inbound.missionId)).toHaveLength(6);
+    expect((await coordinator.snapshot()).missionState.waits).toEqual(expect.arrayContaining([
+      expect.objectContaining({ missionId: inbound.missionId, kind: 'approval', status: 'RELEASED' }),
+      expect.objectContaining({ missionId: inbound.missionId, kind: 'event', status: 'ACTIVE' }),
+    ]));
+  });
+
+  it('reconciles terminal delivery replay without duplicate completion events', async () => {
+    const { root, clock } = await fixture();
+    const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const inbound = await coordinator.receive(message);
+    const committed = await coordinator.approve(inbound.runtime.approval.id, 'operator-local');
+    const first = await coordinator.deliver(committed.runtime.outbox.id, {
+      outcome: 'delivered',
+      provider_message_id: 'local-provider-message-replay',
+    });
+
+    const replay = await coordinator.deliver(committed.runtime.outbox.id, {
+      outcome: 'delivered',
+      provider_message_id: 'local-provider-message-replay',
+    });
+
+    const inspected = await coordinator.inspect(inbound.missionId);
+    expect(replay.replayed).toBe(true);
+    expect(first.mission.spec.state).toBe('COMPLETED');
+    expect(inspected.mission?.spec.state).toBe('COMPLETED');
+    expect(inspected.ledger?.events.filter((event) => event.spec.resultingState === 'COMPLETED')).toHaveLength(1);
+    expect((await coordinator.snapshot()).missionState.waits).toEqual(expect.arrayContaining([
+      expect.objectContaining({ missionId: inbound.missionId, kind: 'event', status: 'RELEASED' }),
+    ]));
+  });
+
+  it('rejects reopening a project with a different local Mission scope', async () => {
+    const { root, clock } = await fixture();
+    await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    await expect(AtlasLocalMissionCoordinator.open({
+      root,
+      scope: { ...scope, tenantId: 'tenant-other' },
+      clock,
+    })).rejects.toMatchObject({ code: 'AUTHORIZATION_FAILED' });
+  });
+
   it('is deterministic and replays identical input without a second Mission or action', async () => {
     const firstFixture = await fixture();
     const secondFixture = await fixture();

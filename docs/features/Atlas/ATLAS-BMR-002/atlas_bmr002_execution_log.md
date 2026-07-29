@@ -671,3 +671,15 @@ The correction adds a shared `OperationLock` at `<project>/.atlas/mission-contro
 - Evidence corrected to `250` tests / `250` passed.
 - Execution board `ATLAS-BMR2-P1-006.commit_sha` corrected to `9afb99b`.
 - No Cloud, provider, billing, staging, production, push, merge, tag or publication action was performed.
+
+---
+
+## 2026-07-29T14:25+08:00 — P1-006 CONSISTENCY REPAIR ADDENDUM
+
+Independent review identified local correctness gaps in held inbound messages, duplicate receives, approval and delivery replay, durable wait cleanup, legal failure transitions, and caller-supplied Mission scope. The bounded repair preserves the local-only P1-006 surface and does not introduce Cloud, provider, billing, staging or production behavior.
+
+The coordinator now serializes receives across coordinator instances, reloads the persisted local runtime before coordinated operations, keeps held messages in `WAITING_EVENT`, reconciles drained messages without duplicate lifecycle events, binds Mission scope to the project hash, releases durable waits during progress and terminal outcomes, reconciles terminal delivery replay, and records permanent rejection through `ACTIVE -> COMPLETING -> FAILED`.
+
+- Final verification: 33 test files, 256 tests passed, 0 failed; metadata check PASS; TypeScript build PASS; `git diff --check` PASS.
+- Evidence updated to include the repaired runtime/coordinator surfaces and `256` tests / `256` passed.
+- Maturity remains `LOCAL_PROVEN` only. No Cloud, provider, billing, staging, production, push, merge, tag or publication action was performed.

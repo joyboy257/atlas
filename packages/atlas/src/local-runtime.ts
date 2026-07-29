@@ -303,6 +303,22 @@ export class AtlasLocalRuntime {
     return new AtlasLocalRuntime(root, state, knowledge, clock);
   }
 
+  async reload(): Promise<void> {
+    const existing = await readUtf8Safe(this.statePath);
+    if (existing === null) {
+      throw new AtlasLocalRuntimeError('PROJECT_STATE_MISMATCH', 'Local Atlas runtime state disappeared during coordination', {
+        nextAction: 'Restore the local runtime state before retrying the Mission operation',
+      });
+    }
+    const state = parseState(existing);
+    if (state.identity.project_hash !== this.state.identity.project_hash) {
+      throw new AtlasLocalRuntimeError('PROJECT_STATE_MISMATCH', 'Local Atlas runtime state changed to a different Atlas project', {
+        nextAction: 'Inspect the local runtime state before retrying the Mission operation',
+      });
+    }
+    this.state = state;
+  }
+
   snapshot(): AtlasLocalRuntimeSnapshot {
     return deepClone({
       schema_version: this.state.schema_version,
