@@ -490,7 +490,7 @@ Execute `ATLAS-BMR2-P1-005` — implement deterministic local Mission coordinato
 ### Git/worktree
 - Repo: `/Users/deon/Developer/atlas`
 - Branch: `codex/atlas-bmr-002-execution`
-- Commit: pending evidence commit
+- Commit: `8398a1b`
 - No push, merge, tag, package publication, provider credential, or production operation performed
 
 ### Decisions and falsifiers
