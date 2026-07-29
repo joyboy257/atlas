@@ -328,3 +328,70 @@ Execute `ATLAS-BMR2-P1-002` — define durable Mission and lifecycle event contr
 
 ### Blockers
 - None
+
+
+---
+
+## 2026-07-29T12:43+08:00 — ATLAS-BMR2-P1-002 PASS
+
+## Mission
+
+Turn the certified BMR-001 foundation into Atlas's complete production agentic product.
+
+## Now
+
+P1-002 complete. Mission v1 and MissionLifecycleEvent v1 are first-class public contracts. A Mission is immutable tenant-scoped durable state with server-derived tenant, organisation, project, and environment identity, immutable Agent version/deployment binding, bounded goal and success criteria, subject and conversation correlation, constraints, risk and approval posture, budget, deadline, explicit lifecycle state, current wait, causal/correlation identifiers, timestamps, and provenance. Lifecycle events are append-only, actor-attributed, timestamped, versioned, scope-checked, and idempotent.
+
+## Key insight
+
+The local ledger distinguishes safe at-least-once replay from conflicting event reuse: identical event ID/idempotency-key content returns DUPLICATE_REPLAY without appending, while conflicting content is rejected. New events must match the current Mission state and stateVersion plus one.
+
+## Verdict
+
+`ATLAS-BMR2-P1-002 = PASS` — local Mission and lifecycle event contracts are proven by 225 package tests and a clean TypeScript build. Database persistence, restart recovery, CI, provider, staging, and production proof remain explicitly unclaimed.
+
+## One next action
+
+Execute `ATLAS-BMR2-P1-003` — define Proposal, Decision, Action, Receipt, Outcome and Learning contracts.
+
+### Git/worktree
+- Repo: `/Users/deon/Developer/atlas`
+- Branch: `codex/atlas-bmr-002-execution`
+- Commit: `67ebdd9`
+- Worktree: clean after commit
+- No push, merge, tag, package publication, provider credential, or production operation performed
+
+### Decisions and falsifiers
+- **Decision**: Scope and lifecycle state are server-owned at Mission creation; callers cannot select tenant/environment or inject current state.
+- **Decision**: Lifecycle append requires exact Mission ID/scope, prior state, and monotonic stateVersion.
+- **Decision**: Terminal states are explicit and immutable; terminalAt is required only after terminal transition.
+- **Falsifier**: A Mission is not interchangeable with a request/response or conversation row; it carries durable lifecycle state and an append-only event history.
+
+### Changed files
+- `packages/atlas/schema/atlas-mission.v1.schema.json`
+- `packages/atlas/schema/atlas-mission-lifecycle-event.v1.schema.json`
+- `packages/atlas/src/mission-contract.ts`
+- `packages/atlas/src/index.ts`
+- `packages/atlas/__tests__/mission-contract.test.ts`
+- `packages/atlas/__tests__/package-docs.test.ts`
+- `packages/atlas/docs/public-docs.manifest.json`
+- `packages/atlas/metadata/package-source.v1.json`
+- `.factory/evidence/atlas-bmr-002/P1/mission-contract/evidence.json`
+
+### Commands and results
+- `cd packages/atlas && npm run metadata:write && npm test && npm run build`
+- Metadata check: PASS
+- Vitest: 29 test files, 225 tests, 225 passed
+- TypeScript build: PASS
+- `git diff --check`: PASS
+
+### Evidence
+- `.factory/evidence/atlas-bmr-002/P1/mission-contract/evidence.json`
+- `packages/atlas/schema/atlas-mission.v1.schema.json`
+- `packages/atlas/schema/atlas-mission-lifecycle-event.v1.schema.json`
+
+### Workers
+- Independent code/type/simplification review workers were requested; no production or external service access was used.
+
+### Blockers
+- None for P1-002. Later persistence and runtime work still require their declared disposable database/local environments.

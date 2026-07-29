@@ -156,8 +156,12 @@
       "maturity": "LOCAL_PROVEN",
       "blockers": [],
       "commit_sha": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
-      "gap_ids": ["ATLAS-BMR2-GAP-002"],
-      "requirement_ids": ["ATLAS-BMR2-REQ-002"]
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-002"
+      ],
+      "requirement_ids": [
+        "ATLAS-BMR2-REQ-002"
+      ]
     },
     {
       "id": "ATLAS-BMR2-P0-003",
@@ -195,8 +199,12 @@
       "maturity": "LOCAL_PROVEN",
       "blockers": [],
       "commit_sha": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
-      "gap_ids": ["ATLAS-BMR2-GAP-003"],
-      "requirement_ids": ["ATLAS-BMR2-REQ-003"]
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-003"
+      ],
+      "requirement_ids": [
+        "ATLAS-BMR2-REQ-003"
+      ]
     },
     {
       "id": "ATLAS-BMR2-P0-004",
@@ -362,10 +370,10 @@
       "owner": "principal orchestrator",
       "release_gate": "G1",
       "falsifier": "A Mission is interchangeable with one request/response or conversation row",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "67ebdd9",
       "gap_ids": [
         "ATLAS-BMR2-GAP-007"
       ],
@@ -466,7 +474,7 @@
       "id": "ATLAS-BMR2-P1-005",
       "phase": "P1",
       "title": "Implement deterministic local Mission coordinator",
-      "outcome": "Run one complete observe\u2013reason\u2013propose\u2013govern\u2013act\u2013observe Mission locally with deterministic fixtures and no credentials.",
+      "outcome": "Run one complete observe–reason–propose–govern–act–observe Mission locally with deterministic fixtures and no credentials.",
       "dependencies": [
         "ATLAS-BMR2-P1-004"
       ],
@@ -700,7 +708,7 @@
         "agent package validation"
       ],
       "acceptance_criteria": [
-        "Autonomy ladder L0\u2013L4 is action-specific; L5 unrestricted is forbidden",
+        "Autonomy ladder L0–L4 is action-specific; L5 unrestricted is forbidden",
         "Budget reservation/commit/release is atomic",
         "Policy version and explanation are recorded",
         "Exhausted/uncertain cases wait, hand off, or fail truthfully"
@@ -2718,5 +2726,5 @@
     "ATLAS_BMR_002_EXECUTION_FAILED",
     "ATLAS_BMR_002_ROLLED_BACK"
   ],
-  "active_work_item": "ATLAS-BMR2-P0-001"
+  "active_work_item": "ATLAS-BMR2-P1-003"
 }
