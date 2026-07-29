@@ -1,3 +1,4 @@
+import { AtlasCliError } from './errors.js';
 import { sha256 } from './fs-safety.js';
 import { AtlasLocalRuntime, type AtlasLocalInboundMessage } from './local-runtime.js';
 import {
@@ -12,6 +13,7 @@ import {
   createMissionStore,
   type MissionPersistenceState,
   type MissionStore,
+  type MissionWaitRecord,
 } from './mission-persistence.js';
 
 export const ATLAS_LOCAL_MISSION_COORDINATOR_VERSION =
@@ -46,12 +48,23 @@ export type MissionCoordinatorSnapshot = Readonly<{
   runtime: ReturnType<AtlasLocalRuntime['snapshot']>;
 }>;
 
+export type MissionControlResult = Readonly<{
+  command: 'inspect' | 'pause' | 'resume' | 'cancel';
+  missionId: string;
+  mission: Mission;
+  ledger: MissionCoordinatorLedger;
+  waits: readonly MissionWaitRecord[];
+  correlationId: string;
+  runtime: ReturnType<AtlasLocalRuntime['snapshot']>;
+}>;
+
 export class AtlasLocalMissionCoordinator {
   readonly root: string;
   readonly scope: MissionScope;
   readonly store: MissionStore;
   readonly runtime: AtlasLocalRuntime;
   readonly clock: () => string;
+  private controlQueue: Promise<void> = Promise.resolve();
 
   private constructor(
     options: MissionCoordinatorOptions,
@@ -158,16 +171,27 @@ export class AtlasLocalMissionCoordinator {
     operatorId: string,
     reason?: string,
   ): Promise<MissionCoordinatorResult> {
+    const approvalWait = await this.activeApprovalWait(approvalId);
+    if (!approvalWait) {
+      throw new AtlasCliError('CONFLICT', `Approval is not active: ${approvalId}`, {
+        nextAction: 'Inspect the Mission and use an active approval ID',
+      });
+    }
     const runtimeResult = await this.runtime.decideApproval(approvalId, {
       decision: 'approved',
       operator_id: operatorId,
       ...(reason ? { reason } : {}),
     });
-    const missionId = missionIdForRuntimeResult(
-      runtimeResult,
+    const missionId = approvalWait.missionId;
+    const released = await this.store.updateWaitStatus(
       this.scope,
-      this.runtime,
+      approvalWait.waitId,
+      'RELEASED',
+      this.clock(),
     );
+    if (released.status !== 'UPDATED' && released.status !== 'DUPLICATE_REPLAY') {
+      throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to release approval wait ${approvalWait.waitId}`);
+    }
     await this.advance(missionId, 'ACTIVE', 'local.coordinator.approval-granted');
     await this.advance(missionId, 'WAITING_EVENT', 'local.coordinator.await-delivery');
     await this.store.putWait(this.scope, {
@@ -187,16 +211,27 @@ export class AtlasLocalMissionCoordinator {
     operatorId: string,
     reason?: string,
   ): Promise<MissionCoordinatorResult> {
+    const approvalWait = await this.activeApprovalWait(approvalId);
+    if (!approvalWait) {
+      throw new AtlasCliError('CONFLICT', `Approval is not active: ${approvalId}`, {
+        nextAction: 'Inspect the Mission and use an active approval ID',
+      });
+    }
     const runtimeResult = await this.runtime.decideApproval(approvalId, {
       decision: 'rejected',
       operator_id: operatorId,
       ...(reason ? { reason } : {}),
     });
-    const missionId = missionIdForRuntimeResult(
-      runtimeResult,
+    const missionId = approvalWait.missionId;
+    const released = await this.store.updateWaitStatus(
       this.scope,
-      this.runtime,
+      approvalWait.waitId,
+      'RELEASED',
+      this.clock(),
     );
+    if (released.status !== 'UPDATED' && released.status !== 'DUPLICATE_REPLAY') {
+      throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to release approval wait ${approvalWait.waitId}`);
+    }
     await this.advance(missionId, 'HANDED_OFF', 'local.coordinator.approval-rejected');
     return this.result(missionId, runtimeResult, Boolean(runtimeResult.replayed));
   }
@@ -252,12 +287,124 @@ export class AtlasLocalMissionCoordinator {
     };
   }
 
+  async control(
+    missionId: string,
+    command: 'inspect' | 'pause' | 'resume' | 'cancel',
+    actorIdentity: string,
+    reason: string,
+  ): Promise<MissionControlResult> {
+    const operation = this.controlQueue.then(() => this.controlUnlocked(missionId, command, actorIdentity, reason));
+    this.controlQueue = operation.then(() => undefined, () => undefined);
+    return operation;
+  }
+
+  private async controlUnlocked(
+    missionId: string,
+    command: 'inspect' | 'pause' | 'resume' | 'cancel',
+    actorIdentity: string,
+    reason: string,
+  ): Promise<MissionControlResult> {
+    if (command !== 'inspect' && (!actorIdentity.trim() || !reason.trim())) {
+      throw new AtlasCliError('USAGE_ERROR', 'Mission control requires actor identity and reason', {
+        nextAction: 'Provide a non-empty operator identity and reason',
+      });
+    }
+    const ledgerResult = await this.store.readLedger(this.scope, missionId);
+    const ledger = ledgerResult.value;
+    if (!ledger) {
+      throw new AtlasCliError('LOCAL_STATE_ERROR', `Mission not found: ${missionId}`, {
+        nextAction: 'Inspect an existing Mission ID',
+      });
+    }
+    if (command === 'pause') {
+      if (ledger.mission.spec.state === 'PAUSED') {
+        throw new AtlasCliError('CONFLICT', `Mission ${missionId} is already paused`, {
+          nextAction: 'Resume the Mission or inspect its current state',
+        });
+      }
+      if (['COMPLETED', 'FAILED', 'CANCELLED', 'EXPIRED'].includes(ledger.mission.spec.state)) {
+        throw new AtlasCliError('CONFLICT', `Mission ${missionId} is terminal in state ${ledger.mission.spec.state}`, {
+          nextAction: 'Inspect the terminal Mission instead of mutating it',
+        });
+      }
+      await this.advance(missionId, 'PAUSED', `local.control.pause:${actorIdentity}:${reason}`);
+      await this.closeActiveWaits(missionId);
+    } else if (command === 'resume') {
+      if (ledger.mission.spec.state !== 'PAUSED') {
+        throw new AtlasCliError('CONFLICT', `Mission ${missionId} is not paused`, {
+          nextAction: 'Resume only a Mission currently in PAUSED state',
+        });
+      }
+      await this.advance(missionId, 'ACTIVE', `local.control.resume:${actorIdentity}:${reason}`);
+    } else if (command === 'cancel') {
+      if (['COMPLETED', 'FAILED', 'CANCELLED', 'EXPIRED'].includes(ledger.mission.spec.state)) {
+        throw new AtlasCliError('CONFLICT', `Mission ${missionId} is terminal in state ${ledger.mission.spec.state}`, {
+          nextAction: 'Inspect the terminal Mission instead of mutating it',
+        });
+      }
+      await this.advance(missionId, 'CANCELLED', `local.control.cancel:${actorIdentity}:${reason}`);
+      await this.closeActiveWaits(missionId);
+    }
+    return this.controlResult(missionId, command);
+  }
+
+  async pause(missionId: string, actorIdentity: string, reason: string): Promise<MissionControlResult> {
+    return this.control(missionId, 'pause', actorIdentity, reason);
+  }
+
+  async resume(missionId: string, actorIdentity: string, reason: string): Promise<MissionControlResult> {
+    return this.control(missionId, 'resume', actorIdentity, reason);
+  }
+
+  async cancel(missionId: string, actorIdentity: string, reason: string): Promise<MissionControlResult> {
+    return this.control(missionId, 'cancel', actorIdentity, reason);
+  }
+
   async snapshot(): Promise<MissionCoordinatorSnapshot> {
     return {
       version: ATLAS_LOCAL_MISSION_COORDINATOR_VERSION,
       missionState: await this.store.readState(),
       runtime: this.runtime.snapshot(),
     };
+  }
+
+  private async controlResult(
+    missionId: string,
+    command: MissionControlResult['command'],
+  ): Promise<MissionControlResult> {
+    const state = await this.store.readState();
+    const mission = state.missions.find((item) => item.metadata.missionId === missionId);
+    const ledgerResult = await this.store.readLedger(this.scope, missionId);
+    if (!mission || !ledgerResult.value) throw new AtlasCliError('LOCAL_STATE_ERROR', `Mission disappeared during ${command}`);
+    return {
+      command,
+      missionId,
+      mission,
+      ledger: ledgerResult.value,
+      waits: state.waits.filter((wait) => wait.missionId === missionId),
+      correlationId: mission.spec.correlation.correlationId,
+      runtime: this.runtime.snapshot(),
+    };
+  }
+
+  private async closeActiveWaits(missionId: string): Promise<void> {
+    const state = await this.store.readState();
+    for (const wait of state.waits.filter((item) => item.missionId === missionId && item.status === 'ACTIVE')) {
+      const result = await this.store.updateWaitStatus(this.scope, wait.waitId, 'CANCELLED', this.clock());
+      if (!['UPDATED', 'DUPLICATE_REPLAY'].includes(result.status)) {
+        throw new AtlasCliError('LOCAL_STATE_ERROR', `Unable to close Mission wait ${wait.waitId}`);
+      }
+    }
+  }
+
+  private async activeApprovalWait(approvalId: string): Promise<MissionPersistenceState['waits'][number] | null> {
+    const state = await this.store.readState();
+    return state.waits.find((wait) =>
+      wait.kind === 'approval' &&
+      wait.status === 'ACTIVE' &&
+      isRecord(wait.payload) &&
+      wait.payload.approvalId === approvalId,
+    ) ?? null;
   }
 
   private async advance(
@@ -460,6 +607,10 @@ function missionIdForRuntimeResult(
 
 function deterministicId(prefix: string, ...parts: string[]): string {
   return `${prefix}_${sha256(stableJson(parts)).slice(7, 23)}`;
+}
+
+function isRecord(value: unknown): value is Record<string, any> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
 function stableJson(value: unknown): string {

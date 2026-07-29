@@ -200,6 +200,26 @@ export class MissionStore {
     return this.putScopedRecord('waits', scope, wait, wait.waitId);
   }
 
+  async updateWaitStatus(
+    scope: MissionScope,
+    waitId: string,
+    status: MissionWaitRecord['status'],
+    updatedAt: string,
+  ): Promise<PersistenceResult<MissionWaitRecord>> {
+    this.assertScope(scope);
+    return this.transaction(async (state) => {
+      const index = state.waits.findIndex((wait) => wait.waitId === waitId);
+      if (index < 0) return { state, result: reject('NOT_FOUND', '$.waitId', 'Mission wait does not exist', 'Inspect the Mission and retry with an active wait ID') };
+      const current = state.waits[index]!;
+      if (!sameScope(current.scope, scope)) return { state, result: reject('SCOPE_MISMATCH', '$.wait.scope', 'Mission wait is outside the server-derived scope', 'Use a wait from the current Mission scope') };
+      if (current.status === status) return { state, result: { status: 'DUPLICATE_REPLAY', diagnostics: [], value: current } };
+      const updated = freezeClone({ ...current, status, updatedAt });
+      const waits = [...state.waits];
+      waits[index] = updated;
+      return { state: freezeState({ ...state, waits }), result: { status: 'UPDATED', diagnostics: [], value: updated } };
+    });
+  }
+
   async putDecision(scope: MissionScope, decision: Decision): Promise<PersistenceResult<Decision>> {
     this.assertScope(scope);
     const validation = validateDecision(decision);

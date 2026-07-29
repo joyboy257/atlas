@@ -3,7 +3,9 @@ import path from 'node:path';
 import { copyFile, mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { AtlasCliError } from './errors.js';
 import { atomicWriteProjectFile, readUtf8Safe } from './fs-safety.js';
-import { AtlasLocalRuntime, ATLAS_LOCAL_RUNTIME_VERSION } from './local-runtime.js';
+import { AtlasLocalRuntime, ATLAS_LOCAL_RUNTIME_VERSION, type AtlasLocalInboundMessage } from './local-runtime.js';
+import { AtlasLocalMissionCoordinator } from './mission-coordinator.js';
+import type { MissionScope } from './mission-contract.js';
 import { AtlasMessagingSimulator, type AtlasSimulatorScenario } from './messaging-simulator.js';
 import {
   ATLAS_PROJECT_CONFIG_FILE,
@@ -173,6 +175,48 @@ export async function listLocalCapabilities(root: string) {
     commands: [...CLI_COMMANDS],
     next_action: 'Run atlas explain project for the source-bound package map.',
   } as const;
+}
+
+export type LocalMissionScopeInput = Readonly<{
+  tenantId: string;
+  organisationId: string;
+  projectId: string;
+  environmentId: string;
+}>;
+
+export async function controlLocalMission(
+  root: string,
+  scope: LocalMissionScopeInput,
+  command: 'inspect' | 'pause' | 'resume' | 'cancel',
+  missionId: string,
+  actorIdentity = '',
+  reason = '',
+) {
+  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope });
+  return coordinator.control(missionId, command, actorIdentity, reason);
+}
+
+export async function replayLocalMission(
+  root: string,
+  scope: LocalMissionScopeInput,
+  message: AtlasLocalInboundMessage,
+) {
+  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope });
+  return coordinator.replay(message);
+}
+
+export async function decideLocalMissionApproval(
+  root: string,
+  scope: LocalMissionScopeInput,
+  approvalId: string,
+  decision: 'approve' | 'reject',
+  operatorId: string,
+  reason?: string,
+) {
+  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope });
+  return decision === 'approve'
+    ? coordinator.approve(approvalId, operatorId, reason)
+    : coordinator.reject(approvalId, operatorId, reason);
 }
 
 export async function inspectLocalProject(root: string) {

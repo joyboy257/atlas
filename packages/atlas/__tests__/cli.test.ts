@@ -164,6 +164,39 @@ describe('atlas CLI auth commands', () => {
     } finally { await rm(dir, { recursive: true, force: true }); }
   });
 
+  it('exposes durable local Mission replay and typed control errors through the CLI', async () => {
+    const dir = await mkdtemp(path.join(os.tmpdir(), 'atlas-cli-mission-'));
+    try {
+      const dependencies = {
+        output: capture().writer,
+        cwd: dir,
+        nodeVersion: 'v22.12.0',
+        scaffoldDependencies: scaffoldDependencies(),
+        platformCredentialStore: { store: new MemoryStore(), reference: 'default' },
+      };
+      expect(await runCli(['init', 'front-desk', '--no-install', '--no-git', '--json'], dependencies)).toBe(0);
+      const root = path.join(dir, 'front-desk');
+      const message = {
+        message_id: 'msg-cli-mission-001', conversation_id: 'conv-cli-mission-001', customer_id: 'customer-cli-mission-001',
+        channel_id: 'local-web-chat', sequence: 1, occurred_at: '2026-07-24T08:00:00.000Z',
+        text: 'Can I move booking BK-100 to Friday?', consent: true, within_messaging_window: true,
+      };
+      const replayOutput = capture();
+      expect(await runCli([
+        'mission', 'replay', '--input', JSON.stringify(message), '--dir', root, '--json',
+        '--tenant-id', 'tenant-cli', '--organisation-id', 'org-cli', '--project-id', 'project-cli', '--environment-id', 'local',
+      ], { ...dependencies, output: replayOutput.writer, cwd: root })).toBe(0);
+      expect(JSON.parse(replayOutput.stdout[0]!)).toMatchObject({ ok: true, command: 'mission replay', data: { mission: { spec: { state: 'WAITING_APPROVAL' } } } });
+
+      const errorOutput = capture();
+      expect(await runCli([
+        'mission', 'pause', '--mission-id', 'missing-mission', '--dir', root, '--json',
+        '--tenant-id', 'tenant-cli', '--organisation-id', 'org-cli', '--project-id', 'project-cli', '--environment-id', 'local',
+      ], { ...dependencies, output: errorOutput.writer, cwd: root })).toBe(2);
+      expect(JSON.parse(errorOutput.stderr[0]!)).toMatchObject({ ok: false, error: { code: 'USAGE_ERROR' } });
+    } finally { await rm(dir, { recursive: true, force: true }); }
+  });
+
   it('scaffolds the zero-credential front-desk project through atlas init', async () => {
     const dir = await mkdtemp(path.join(os.tmpdir(), 'atlas-cli-scaffold-'));
     try {

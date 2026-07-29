@@ -28,6 +28,9 @@ import {
   replayLocalProject,
   testLocalProject,
   upgradeLocalProject,
+  controlLocalMission,
+  replayLocalMission,
+  decideLocalMissionApproval,
 } from './local-commands.js';
 import type { AtlasSimulatorScenario } from './messaging-simulator.js';
 
@@ -60,6 +63,8 @@ const CLI_OPTIONS = {
   input: { type: 'string' }, commit: { type: 'boolean', default: false }, 'dry-run': { type: 'boolean', default: false }, wait: { type: 'boolean', default: false },
   fix: { type: 'boolean', default: false }, 'support-bundle': { type: 'boolean', default: false },
   reason: { type: 'string' },
+  'actor-id': { type: 'string' }, 'tenant-id': { type: 'string' }, 'organisation-id': { type: 'string' },
+  'project-id': { type: 'string' }, 'environment-id': { type: 'string' }, 'mission-id': { type: 'string' },
   file: { type: 'string', default: 'atlas.yaml' },
   from: { type: 'string' }, to: { type: 'string' }, deployment: { type: 'string' }, 'approval-id': { type: 'string' },
   port: { type: 'string' }, host: { type: 'string' }, 'fail-first': { type: 'string' }, 'latency-ms': { type: 'string' }, 'duration-ms': { type: 'string' },
@@ -152,6 +157,33 @@ export async function runCli(argv: readonly string[], dependencies: CliDependenc
       const response = await (dependencies.fetchImpl ?? globalThis.fetch)(`${apiBase}/atlas/v1/docs`, { headers: { authorization: `Bearer ${credential.accessToken}`, accept: 'application/json' }, signal: AbortSignal.timeout(15_000) });
       if (!response.ok) throw new AtlasCliError('AUTHENTICATION_FAILED', `Stored credential was rejected: HTTP ${response.status}`, { nextAction: 'Run atlas login again' });
       writeResult(output, { ok: true, command, data: { authenticated: true, credential_ref: `${await credentialKind(selection.store, selection.reference)}:${selection.reference}`, api_base: credential.apiBase, scopes: credential.scopes, expires_at: credential.expiresAt ?? null } }, json);
+      return 0;
+    }
+    if (command === 'mission') {
+      const root = path.resolve(dependencies.cwd ?? process.cwd(), parsed.values.dir!);
+      if (await readUtf8Safe(path.join(root, 'atlas.config.ts')) === null) {
+        throw new AtlasCliError('LOCAL_STATE_ERROR', 'Mission commands require a local Atlas project', { nextAction: 'Run atlas init front-desk, then cd into the generated project' });
+      }
+      const scope = localMissionScope(parsed.values);
+      const action = parsed.positionals[1]!;
+      if (action === 'replay') {
+        const message = await parseInput(parsed.values.input) as unknown as import('./local-runtime.js').AtlasLocalInboundMessage;
+        const data = await replayLocalMission(root, scope, message);
+        writeResult(output, { ok: true, command: 'mission replay', data }, json);
+        return 0;
+      }
+      if (action === 'approve' || action === 'reject') {
+        const approvalId = required(parsed.values['approval-id'], '--approval-id');
+        const actorId = required(parsed.values['actor-id'], '--actor-id');
+        const data = await decideLocalMissionApproval(root, scope, approvalId, action, actorId, parsed.values.reason);
+        writeResult(output, { ok: true, command: `mission ${action}`, data }, json);
+        return 0;
+      }
+      const missionId = required(parsed.values['mission-id'] ?? parsed.positionals[2], '--mission-id');
+      const actorId = parsed.values['actor-id'] ?? '';
+      const reason = parsed.values.reason ?? '';
+      const data = await controlLocalMission(root, scope, action as 'inspect' | 'pause' | 'resume' | 'cancel', missionId, actorId, reason);
+      writeResult(output, { ok: true, command: `mission ${action}`, data }, json);
       return 0;
     }
     if (command === 'test' || command === 'capabilities' || command === 'inspect' || command === 'replay' || command === 'upgrade' || command === 'explain') {
@@ -454,7 +486,7 @@ export async function runCli(argv: readonly string[], dependencies: CliDependenc
 }
 
 function helpText(): string {
-  return `Mirai Atlas CLI ${VERSION}\n\nUsage:\n  atlas init front-desk [--dir PATH] [--existing] [--no-install] [--no-git]\n  atlas init --cloud [--client claude-code] [--client-id ID]\n  atlas login --client-id ID [--no-browser]\n  atlas logout\n  atlas whoami\n  atlas projects list|create|link|show\n  atlas env list|create|show|use\n  atlas run TOOL [--input JSON|@FILE] [--commit|--dry-run]\n  atlas runs list|show|tail|cancel|replay RUN_ID\n  atlas receipts list|show|verify RECEIPT_ID\n  atlas approvals list|show|approve|reject\n  atlas webhooks list|listen|trigger|replay\n  atlas usage\n  atlas logs show|follow TRACE_ID\n  atlas mcp install|status|test|inspect|uninstall\n  atlas tools collisions\n  atlas dev [--fail-first N] [--latency-ms N]\n  atlas test\n  atlas doctor [--support-bundle]\n  atlas capabilities\n  atlas explain project\n  atlas inspect\n  atlas replay [--input @SCENARIO.json]\n  atlas validate\n  atlas deploy [plan|apply|status|drift|promote|rollback]\n  atlas upgrade\n  atlas version\n\nGlobal options:\n  --json  --api-base URL  --credential-ref NAME  --file-credentials  --dir PATH`;
+  return `Mirai Atlas CLI ${VERSION}\n\nUsage:\n  atlas init front-desk [--dir PATH] [--existing] [--no-install] [--no-git]\n  atlas init --cloud [--client claude-code] [--client-id ID]\n  atlas login --client-id ID [--no-browser]\n  atlas logout\n  atlas whoami\n  atlas projects list|create|link|show\n  atlas env list|create|show|use\n  atlas run TOOL [--input JSON|@FILE] [--commit|--dry-run]\n  atlas runs list|show|tail|cancel|replay RUN_ID\n  atlas receipts list|show|verify RECEIPT_ID\n  atlas approvals list|show|approve|reject\n  atlas webhooks list|listen|trigger|replay\n  atlas usage\n  atlas logs show|follow TRACE_ID\n  atlas mcp install|status|test|inspect|uninstall\n  atlas tools collisions\n  atlas dev [--fail-first N] [--latency-ms N]\n  atlas test\n  atlas doctor [--support-bundle]\n  atlas capabilities\n  atlas explain project\n  atlas inspect\n  atlas replay [--input @SCENARIO.json]\n  atlas mission inspect|pause|resume|cancel --mission-id ID --tenant-id ID --organisation-id ID --project-id ID --environment-id ID\n  atlas mission replay --input @MESSAGE.json --tenant-id ID --organisation-id ID --project-id ID --environment-id ID\n  atlas mission approve|reject --approval-id ID --actor-id ID [--reason TEXT] --tenant-id ID --organisation-id ID --project-id ID --environment-id ID\n  atlas validate\n  atlas deploy [plan|apply|status|drift|promote|rollback]\n  atlas upgrade\n  atlas version\n\nGlobal options:\n  --json  --api-base URL  --credential-ref NAME  --file-credentials  --dir PATH`;
 }
 
 function assertCommandArity(command: string, positionals: readonly string[]): void {
@@ -463,6 +495,9 @@ function assertCommandArity(command: string, positionals: readonly string[]): vo
   }
   if (command === 'explain' && (positionals.length !== 2 || positionals[1] !== 'project')) {
     throw new AtlasCliError('USAGE_ERROR', 'explain requires project');
+  }
+  if (command === 'mission' && (positionals.length < 2 || positionals.length > 3 || !['inspect', 'replay', 'pause', 'resume', 'cancel', 'approve', 'reject'].includes(positionals[1]!))) {
+    throw new AtlasCliError('USAGE_ERROR', 'mission requires inspect, replay, pause, resume, cancel, approve, or reject');
   }
   if (command === 'init' && (positionals.length < 1 || positionals.length > 2)) {
     throw new AtlasCliError('USAGE_ERROR', 'init accepts at most one template name');
@@ -492,6 +527,15 @@ async function credentialKind(store: import('./credentials/types.js').Credential
   return store.kindFor ? store.kindFor(reference) : store.kind;
 }
 
+function localMissionScope(values: Record<string, unknown>): { tenantId: string; organisationId: string; projectId: string; environmentId: string } {
+  return {
+    tenantId: requiredString(values['tenant-id'], '--tenant-id'),
+    organisationId: requiredString(values['organisation-id'], '--organisation-id'),
+    projectId: requiredString(values['project-id'], '--project-id'),
+    environmentId: requiredString(values['environment-id'], '--environment-id'),
+  };
+}
+function requiredString(value: unknown, flag: string): string { if (typeof value !== 'string' || !value.trim()) throw new AtlasCliError('USAGE_ERROR', `${flag} is required`); return value; }
 function required(value: string | undefined, flag: string): string { if (!value) throw new AtlasCliError('USAGE_ERROR', `${flag} is required`); return value; }
 function missingProject() { return new AtlasCliError('LOCAL_STATE_ERROR', 'No active Project; pass --project or run atlas projects link'); }
 function missingEnvironment() { return new AtlasCliError('LOCAL_STATE_ERROR', 'No active Environment; pass --environment or run atlas env use'); }

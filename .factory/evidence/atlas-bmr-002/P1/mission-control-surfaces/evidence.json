@@ -1,0 +1,49 @@
+{
+  "evidence_id": "ATLAS-BMR2-P1-006-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P1-006",
+  "timestamp": "2026-07-29T13:45:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "changed_files": [
+    "packages/atlas/src/mission-persistence.ts",
+    "packages/atlas/src/mission-coordinator.ts",
+    "packages/atlas/src/local-commands.ts",
+    "packages/atlas/src/cli.ts",
+    "packages/atlas/__tests__/mission-control.test.ts",
+    "packages/atlas/__tests__/cli.test.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "invariants_verified": [
+    "MissionStore updates wait status transactionally under the existing private file lock and atomic-write boundary.",
+    "Pause, resume and cancel are coordinator-owned lifecycle commands; they do not directly mutate persistence rows or runtime files.",
+    "Pause and cancel close active durable waits; approval and rejection release the active approval wait before advancing the Mission.",
+    "Resume is accepted only from PAUSED, repeated pause is rejected, terminal pause/cancel is rejected, and stale approval IDs are rejected with typed CONFLICT errors.",
+    "Concurrent control commands on one coordinator are serialized; duplicate pause commands produce one success and one typed conflict.",
+    "Replay delegates to the existing runtime idempotency ledger and does not recommit completed Actions.",
+    "The local CLI exposes mission replay, inspect, pause, resume, cancel, approve and reject with explicit tenant, organisation, project and environment scope.",
+    "Successful control results expose the Mission correlation ID and current lifecycle, wait, runtime and ledger state."
+  ],
+  "verification": {
+    "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build && git diff --check",
+    "test_files": 33,
+    "tests": 249,
+    "passed": 249,
+    "failed": 0,
+    "typescript_build": "PASS",
+    "metadata": "PASS",
+    "diff_check": "PASS",
+    "mission_control_suite": "PASS",
+    "cli_suite": "PASS",
+    "concurrent_control": "PASS",
+    "replay_idempotency": "PASS"
+  },
+  "limitations": [
+    "This evidence proves a zero-credential local filesystem-backed coordinator and CLI only.",
+    "No Atlas Cloud API, hosted worker, PostgreSQL deployment, provider account, staging environment, production environment, billing settlement or commercial readiness is claimed.",
+    "The existing top-level atlas inspect/replay simulator commands remain backward-compatible; durable Mission controls are versioned under the atlas mission namespace.",
+    "P1-007 independent build-readiness review remains required before the P1 gate can close."
+  ],
+  "verdict": "ATLAS-BMR2-P1-006 = PASS — local Mission inspect, replay, pause, resume, cancel and approval control surfaces are durable, scoped, typed and locally proven without claiming hosted or production maturity."
+}
