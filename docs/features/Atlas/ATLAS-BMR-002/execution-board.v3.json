@@ -318,10 +318,10 @@
       "owner": "principal orchestrator",
       "release_gate": "G1",
       "falsifier": "An Agent remains only an unversioned prompt blob",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "3fb1db6",
       "gap_ids": [
         "ATLAS-BMR2-GAP-006"
       ],

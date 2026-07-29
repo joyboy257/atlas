@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.usemirai.app/atlas/agent-package/v2.json",
+  "title": "Atlas AgentPackage v2",
+  "description": "Versioned Agent package contract for the Atlas Business Messaging Agent Runtime. Defines an immutable deployed Agent with mission types, tools, policies, budgets, channel requirements, and outcome definitions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "atlas.mirai.dev/v2"
+    },
+    "kind": {
+      "const": "AgentPackage"
+    },
+    "metadata": {
+      "$ref": "#/$defs/agentMetadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/agentSpec"
+    }
+  },
+  "$defs": {
+    "agentMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,62}$",
+          "description": "Agent package name, lowercase slug"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-[a-zA-Z0-9][a-zA-Z0-9.-]{0,62})?(\\+[a-zA-Z0-9][a-zA-Z0-9.-]{0,62})?$",
+          "description": "Semantic version of the agent package"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "labels": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9_.-]{0,61}[a-zA-Z0-9])?$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "maxProperties": 16
+        }
+      }
+    },
+    "agentSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instructions",
+        "knowledgeBindings",
+        "tools",
+        "actionPolicies"
+      ],
+      "properties": {
+        "missionTypes": {
+          "$ref": "#/$defs/missionTypes"
+        },
+        "instructions": {
+          "$ref": "#/$defs/projectPath"
+        },
+        "knowledgeBindings": {
+          "$ref": "#/$defs/projectPaths"
+        },
+        "memoryPolicy": {
+          "$ref": "#/$defs/memoryPolicy"
+        },
+        "tools": {
+          "$ref": "#/$defs/projectPath"
+        },
+        "skills": {
+          "$ref": "#/$defs/projectPath"
+        },
+        "actionPolicies": {
+          "$ref": "#/$defs/projectPath"
+        },
+        "subagents": {
+          "$ref": "#/$defs/projectPath"
+        },
+        "triggers": {
+          "$ref": "#/$defs/triggers"
+        },
+        "channelRequirements": {
+          "$ref": "#/$defs/channelRequirements"
+        },
+        "runtime": {
+          "$ref": "#/$defs/agentRuntime"
+        },
+        "budgets": {
+          "$ref": "#/$defs/budgets"
+        },
+        "outcomeDefinitions": {
+          "$ref": "#/$defs/outcomeDefinitions"
+        },
+        "evals": {
+          "$ref": "#/$defs/projectPaths"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/compatibility"
+        }
+      }
+    },
+    "projectPath": {
+      "type": "string",
+      "pattern": "^\\./[^\\\\\\u0000]+$"
+    },
+    "projectPaths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/projectPath"
+      }
+    },
+    "missionTypes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "goalTemplate"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,62}$"
+          },
+          "goalTemplate": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "successDefinition": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "failureDefinition": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "autonomyLevel": {
+            "type": "string",
+            "enum": ["full", "proposal-only", "approval-required", "handoff-required"]
+          },
+          "allowedTools": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string" }
+          },
+          "maxDuration": {
+            "type": "string",
+            "pattern": "^PT?(\\d+H)?(\\d+M)?(\\d+S)?$"
+          }
+        }
+      }
+    },
+    "memoryPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["stateless", "conversation", "mission", "customer", "organisation"]
+        },
+        "retention": {
+          "type": "string",
+          "pattern": "^P(\\d+D)?(T(\\d+H)?(\\d+M)?)?$"
+        },
+        "provenanceRequired": {
+          "type": "boolean",
+          "default": true
+        },
+        "maxEntries": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        }
+      }
+    },
+    "triggers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["message", "schedule", "webhook", "provider-callback", "human-command", "system-condition"]
+          },
+          "channel": {
+            "type": "string",
+            "description": "Channel name for message triggers"
+          },
+          "cronExpression": {
+            "type": "string",
+            "description": "Standard 5-field cron expression for schedule triggers"
+          },
+          "webhookPath": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9/-]{0,127}$"
+          },
+          "providerEvent": {
+            "type": "string",
+            "description": "Provider event type for callback triggers"
+          }
+        }
+      }
+    },
+    "channelRequirements": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["channel", "direction"],
+        "properties": {
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["inbound", "outbound", "bidirectional"]
+          },
+          "mediaTypes": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": ["text", "image", "audio", "video", "file", "template", "interactive"]
+            }
+          },
+          "required": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    "agentRuntime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["native", "openai-agents-sdk", "eve", "langgraph", "n8n", "custom"]
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxConcurrentMissions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "maxTokensPerMission": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxTokensPerDay": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxCostPerMission": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxCostPerDay": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxCostPerMonth": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      }
+    },
+    "outcomeDefinitions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,62}$"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["success", "failure", "neutral"]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "evidenceRequired": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": ["message-delivered", "action-committed", "callback-received", "human-approved", "customer-confirmed", "time-expired", "error-threshold", "budget-exceeded"]
+            }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minimumAtlasVersion": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)"
+        },
+        "requiresMirai": {
+          "type": "boolean",
+          "default": false
+        },
+        "schemaEvolution": {
+          "type": "string",
+          "enum": ["additive-only", "versioned", "breaking-allowed"],
+          "default": "additive-only"
+        }
+      }
+    }
+  }
+}

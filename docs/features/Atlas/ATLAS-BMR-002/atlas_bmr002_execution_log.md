@@ -270,3 +270,61 @@ Execute `ATLAS-BMR2-P1-001` — define AgentPackage and deployed Agent identity 
 - Active item: ATLAS-BMR2-P1-001
 - Dependencies: P0-005 (PASS)
 - Fix prerequisite: scaffold test version-string drift
+
+---
+
+## 2026-07-29T12:00+08:00 — ATLAS-BMR2-P1-001 PASS
+
+## Mission
+
+Turn the certified BMR-001 foundation into Atlas's complete production agentic product.
+
+## Now
+
+P1-001 complete. AgentPackage v2 contract is a first-class public type with JSON Schema, TypeScript types, validation, and source-digest identity. The contract defines: versioned Agent identity (`atlas.mirai.dev/v2`, kind `AgentPackage`), metadata (name, semver version, labels), required spec fields (instructions, knowledgeBindings, tools, actionPolicies as project-safe paths), and optional spec fields (missionTypes, memoryPolicy, triggers, channelRequirements, runtime, budgets, outcomeDefinitions, evals, compatibility). `validateAgentPackage()` produces frozen (immutable) AgentPackage objects with diagnostic codes (`AgentPackageDiagnosticCode`). `computeAgentVersionId()` derives a deterministic SHA-256 identity from metadata + spec (excluding deployment-varying fields like runtime and budgets).
+
+## Key insight
+
+The AgentPackage contract separates **source identity** (metadata name + version + spec, producing `agent_version_id`) from **deployment identity** (runtime mode, budgets). This means the same Agent deployed twice — once with `native` runtime, once with `openai-agents-sdk` — produces the same `agent_version_id`, enabling multi-runtime deployment without forking the Agent definition.
+
+## Verdict
+
+`ATLAS-BMR2-P1-001 = PASS` — JSON Schema, TypeScript types, validation (55 tests), `computeAgentVersionId()`, schema evolution policy documented, no private Cloud implementation leaked into public contract.
+
+## One next action
+
+Execute `ATLAS-BMR2-P1-002` — define durable Mission and lifecycle event contracts.
+
+### Git/worktree
+- Branch: `codex/atlas-bmr-002-execution`, HEAD: `3fb1db6`
+- New files: `schema/atlas-agent-package.v2.schema.json`, `src/agent-package.ts`, `__tests__/agent-package.test.ts`
+- Modified: `src/index.ts` (added export), `__tests__/scaffold.test.ts` (version-string fix), `metadata/package-source.v1.json` (regenerated)
+
+### Decisions and falsifiers
+- **Decision**: Path safety allows trailing slashes (`./agent/tools/`) — directory references are valid project paths
+- **Decision**: Runtime and budgets are excluded from `agent_version_id` — they are deployment concerns, not source identity
+- **Falsifier**: Agent is not merely an unversioned prompt blob; it is a validated, frozen, versioned AgentPackage with deterministic identity
+
+### Changed files
+- `packages/atlas/schema/atlas-agent-package.v2.schema.json` (new — 363 lines, JSON Schema draft 2020-12)
+- `packages/atlas/src/agent-package.ts` (new — 475 lines, types, validation, version ID computation)
+- `packages/atlas/__tests__/agent-package.test.ts` (new — 55 tests, all passing)
+- `packages/atlas/src/index.ts` (added `export * from './agent-package.js'`)
+- `packages/atlas/__tests__/scaffold.test.ts` (line 98: version `0.1.0-preview.0` → `0.1.0-alpha.0`)
+- `packages/atlas/metadata/package-source.v1.json` (regenerated — new SHA)
+
+### Commands and results
+- `npx vitest run`: 28 files, 214 tests, all passing (159 existing + 55 new)
+- `npm test`: metadata check + 28 test files, all passing
+- `npm run metadata:write`: regenerated `sha256:49847dfe...`
+
+### Evidence
+- `packages/atlas/schema/atlas-agent-package.v2.schema.json`
+- `packages/atlas/src/agent-package.ts`
+- `packages/atlas/__tests__/agent-package.test.ts`
+
+### Workers
+- None delegated (principal executed directly)
+
+### Blockers
+- None
