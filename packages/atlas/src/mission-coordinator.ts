@@ -1,5 +1,7 @@
+import path from 'node:path';
 import { AtlasCliError } from './errors.js';
 import { sha256 } from './fs-safety.js';
+import { OperationLock } from './operation-journal.js';
 import { AtlasLocalRuntime, type AtlasLocalInboundMessage } from './local-runtime.js';
 import {
   createMission,
@@ -64,6 +66,7 @@ export class AtlasLocalMissionCoordinator {
   readonly store: MissionStore;
   readonly runtime: AtlasLocalRuntime;
   readonly clock: () => string;
+  private readonly controlLock: OperationLock;
   private controlQueue: Promise<void> = Promise.resolve();
 
   private constructor(
@@ -76,6 +79,7 @@ export class AtlasLocalMissionCoordinator {
     this.clock = options.clock ?? (() => new Date().toISOString());
     this.runtime = runtime;
     this.store = store;
+    this.controlLock = new OperationLock(path.resolve(options.root, '.atlas', 'mission-control'));
   }
 
   static async open(
@@ -304,6 +308,29 @@ export class AtlasLocalMissionCoordinator {
     actorIdentity: string,
     reason: string,
   ): Promise<MissionControlResult> {
+    try {
+      await this.controlLock.acquire();
+    } catch (error) {
+      if (error instanceof AtlasCliError && error.code === 'LOCAL_STATE_ERROR') {
+        throw new AtlasCliError('CONFLICT', `Mission control is already running for ${missionId}`, {
+          nextAction: 'Wait for the current Mission control command to finish and retry',
+        });
+      }
+      throw error;
+    }
+    try {
+      return await this.controlUnlockedUnsafe(missionId, command, actorIdentity, reason);
+    } finally {
+      await this.controlLock.release();
+    }
+  }
+
+  private async controlUnlockedUnsafe(
+    missionId: string,
+    command: 'inspect' | 'pause' | 'resume' | 'cancel',
+    actorIdentity: string,
+    reason: string,
+  ): Promise<MissionControlResult> {
     if (command !== 'inspect' && (!actorIdentity.trim() || !reason.trim())) {
       throw new AtlasCliError('USAGE_ERROR', 'Mission control requires actor identity and reason', {
         nextAction: 'Provide a non-empty operator identity and reason',
@@ -441,10 +468,12 @@ export class AtlasLocalMissionCoordinator {
       this.clock(),
     );
     if (!event.valid || !event.event) {
-      throw new Error(
+      throw new AtlasCliError(
+        'CONFLICT',
         `Illegal local Mission transition: ${event.diagnostics
           .map((item) => item.message)
           .join('; ')}`,
+        { nextAction: 'Inspect the current Mission state before retrying the command' },
       );
     }
     const result = await this.store.appendLifecycleEvent(this.scope, event.event);

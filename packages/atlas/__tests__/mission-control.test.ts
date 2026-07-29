@@ -64,6 +64,22 @@ describe('Atlas local Mission control surfaces', () => {
     expect((await restarted.snapshot()).runtime.actions).toHaveLength(0);
   });
 
+  it('serializes concurrent cancel commands across coordinator instances', async () => {
+    const { root, clock } = await fixture();
+    const first = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const second = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
+    const inbound = await first.receive(message);
+
+    const results = await Promise.allSettled([
+      first.cancel(inbound.missionId, 'operator-a', 'cancel for review'),
+      second.cancel(inbound.missionId, 'operator-b', 'cancel duplicate request'),
+    ]);
+    expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
+    const rejected = results.find((result) => result.status === 'rejected');
+    expect(rejected).toMatchObject({ status: 'rejected', reason: expect.objectContaining({ code: 'CONFLICT' }) });
+    expect((await first.inspect(inbound.missionId)).mission?.spec.state).toBe('CANCELLED');
+  });
+
   it('serializes concurrent pause commands with one typed conflict', async () => {
     const { root, clock } = await fixture();
     const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, clock });
