@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "evidence_root": ".factory/evidence/atlas-bmr-002",
+  "required_metadata": [
+    "programme",
+    "phase",
+    "work_item",
+    "gate",
+    "source_commit",
+    "artifact_digest",
+    "environment",
+    "region",
+    "provider_account_scope",
+    "command_or_journey",
+    "started_at",
+    "finished_at",
+    "actor",
+    "reviewer",
+    "result",
+    "limitations",
+    "checksum"
+  ],
+  "items": [],
+  "note": "Append evidence records during execution. This empty initial index is not proof."
+}

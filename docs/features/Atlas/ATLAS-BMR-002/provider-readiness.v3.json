@@ -1,0 +1,170 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "readiness_vocabulary": [
+    "DECLARED",
+    "LOCAL_CONFORMANCE",
+    "PROVIDER_SANDBOX_PROVEN",
+    "LIMITED_PRODUCTION",
+    "PRODUCTION_PROVEN",
+    "BLOCKED_PROVIDER",
+    "DEPRECATED"
+  ],
+  "promotion_rule": "Readiness is provider-account, environment, region, capability and adapter-version specific.",
+  "providers": [
+    {
+      "id": "web-chat",
+      "channel": "Web Chat",
+      "provider": "first-party/local",
+      "initial_state": "LOCAL_CONFORMANCE",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Reference simulator and staging ingress"
+    },
+    {
+      "id": "resend-email",
+      "channel": "Email via Resend",
+      "provider": "Resend",
+      "initial_state": "LIMITED_PRODUCTION",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Reported one real send in BMR-001; BMR-002 must reverify and harden"
+    },
+    {
+      "id": "smtp-email",
+      "channel": "Email via SMTP",
+      "provider": "generic",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Do not promote from generic interface"
+    },
+    {
+      "id": "twilio-sms",
+      "channel": "SMS via Twilio",
+      "provider": "Twilio",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Default second-lane candidate; must be rescored from current evidence"
+    },
+    {
+      "id": "twilio-whatsapp",
+      "channel": "WhatsApp via Twilio",
+      "provider": "Twilio/Meta",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Separate eligibility/template/embedded-signup decision"
+    },
+    {
+      "id": "meta-whatsapp-cloud",
+      "channel": "WhatsApp Cloud API",
+      "provider": "Meta",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Account/business eligibility and regional constraints required"
+    },
+    {
+      "id": "telegram",
+      "channel": "Telegram",
+      "provider": "Telegram",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Prior adapter/conformance must be reverified"
+    },
+    {
+      "id": "slack",
+      "channel": "Slack",
+      "provider": "Salesforce/Slack",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Workspace install/OAuth/event policy required"
+    },
+    {
+      "id": "microsoft-teams",
+      "channel": "Microsoft Teams",
+      "provider": "Microsoft",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Tenant/app eligibility and Graph/Bot Framework decision"
+    },
+    {
+      "id": "discord",
+      "channel": "Discord",
+      "provider": "Discord",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Business relevance and support burden must be justified"
+    },
+    {
+      "id": "instagram",
+      "channel": "Instagram Messaging",
+      "provider": "Meta",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Business account and policy constraints"
+    },
+    {
+      "id": "facebook-messenger",
+      "channel": "Messenger",
+      "provider": "Meta",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Page/app review and policy constraints"
+    },
+    {
+      "id": "google-business-messages",
+      "channel": "Google Business Messages",
+      "provider": "Google",
+      "initial_state": "BLOCKED_PROVIDER",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Service availability/current product status must be verified before any work"
+    },
+    {
+      "id": "line",
+      "channel": "LINE",
+      "provider": "LY Corporation",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Asia relevance; account/region evidence required"
+    },
+    {
+      "id": "wechat",
+      "channel": "WeChat",
+      "provider": "Tencent",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Eligibility/regional/operator burden requires explicit decision"
+    },
+    {
+      "id": "signal",
+      "channel": "Signal",
+      "provider": "Signal ecosystem",
+      "initial_state": "DECLARED",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "No unsupported official business-provider claim"
+    },
+    {
+      "id": "custom-webhook",
+      "channel": "Custom webhook channel",
+      "provider": "Customer/partner",
+      "initial_state": "LOCAL_CONFORMANCE",
+      "state_scope": "Initial package hypothesis only; P0/P5 must assign account, environment, region, capabilities, adapter version and evidence.",
+      "next_gate": "P5 provider scorecard or conformance review",
+      "notes": "Contract/auth/replay conformance; customer operates endpoint"
+    }
+  ]
+}

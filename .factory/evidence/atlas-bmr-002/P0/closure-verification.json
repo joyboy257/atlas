@@ -1,0 +1,168 @@
+{
+  "evidence_id": "ATLAS-BMR2-P0-001-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P0-001",
+  "title": "BMR-001 Closure Verification — Post-Closure Erratum",
+  "type": "BMR001_POST_CLOSURE_ERRATUM",
+  "timestamp": "2026-07-29T11:42:00+08:00",
+  "reviewer": "principal orchestrator (Claude Code / DeepSeek Pro)",
+  "environment": {
+    "hostname": "deon-mac",
+    "repository_path": "/Users/deon/Developer/atlas",
+    "actual_repository": "/Users/deon/Developer/atlas",
+    "handover_claimed_repository": "/Users/deon/Developer/mirai-atlas-bmr001"
+  },
+
+  "handover_claims": {
+    "worktree": "/Users/deon/Developer/mirai-atlas-bmr001",
+    "branch": "codex/atlas-bmr-001-p0-audit",
+    "commit": "4bf5da957d",
+    "tag": "atlas-bmr-001-closed",
+    "board_result": "50/50 PASS across P0–P4"
+  },
+
+  "live_verification": {
+    "worktree_exists": false,
+    "handover_worktree_path": "/Users/deon/Developer/mirai-atlas-bmr001",
+    "handover_worktree_status": "NOT_FOUND",
+
+    "actual_repository": "/Users/deon/Developer/atlas",
+    "actual_branch": "main",
+    "actual_head_sha": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
+    "actual_head_message": "feat(beta): P4-006/P4-008 prep — sandbox infra, deploy docs, beta release plans",
+
+    "reported_commit_resolved": false,
+    "reported_commit_status": "NOT_FOUND — no object with prefix 4bf5da957d exists in this repository",
+
+    "tag_exists": false,
+    "tag_status": "NOT_FOUND — no tags exist in this repository",
+
+    "branches": ["main"],
+    "worktrees": [
+      {
+        "path": "/Users/deon/Developer/atlas",
+        "head": "7fc1ec8",
+        "branch": "main"
+      }
+    ],
+
+    "commits_on_main": [
+      {
+        "sha": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
+        "message": "feat(beta): P4-006/P4-008 prep — sandbox infra, deploy docs, beta release plans",
+        "author": "joyboy257",
+        "date": "2026-07-28T11:12:24+08:00"
+      },
+      {
+        "sha": "c415bb440d5c8051a879c0328e1f119c7093a35e",
+        "message": "fix: update version string from preview to alpha (0.1.0-alpha.0)",
+        "author": "joyboy257",
+        "date": "2026-07-28T10:23:56+08:00"
+      },
+      {
+        "sha": "2ecc66bc7c2888ba08346f2ad1046f48c7a1520c",
+        "message": "feat: add 3 runnable starter templates (P4-007)",
+        "author": "joyboy257",
+        "date": "2026-07-28T10:22:10+08:00"
+      },
+      {
+        "sha": "cc43655fb7f996090ebd4f57556318a42be60ef9",
+        "message": "fix: replace @mirai/atlas with @atlas-runner/atlas across all files",
+        "author": "joyboy257",
+        "date": "2026-07-28T10:14:38+08:00"
+      },
+      {
+        "sha": "155c36552e2b1ca2c550565ced9060bd430db28c",
+        "message": "feat: initial public alpha — Atlas Business Messaging Agent Runtime",
+        "author": "joyboy257",
+        "date": "2026-07-28T10:13:23+08:00"
+      }
+    ],
+
+    "dirty_state": {
+      "staged": [],
+      "unstaged": [],
+      "untracked": [".claude/", "docs/features/ATLAS-BMR-002/"],
+      "untracked_is_overlay": true
+    },
+
+    "no_closing_ceremony": true
+  },
+
+  "code_inventory": {
+    "package_name": "@atlas-runner/atlas",
+    "package_version": "0.1.0-alpha.0",
+    "package_status_per_metadata": "unpublished_local_artifact",
+
+    "source_files": 42,
+    "test_files": 27,
+    "test_files_passing": 26,
+    "test_files_failing": 1,
+    "tests_passing": 158,
+    "tests_failing": 1,
+
+    "failing_test": {
+      "file": "packages/atlas/__tests__/scaffold.test.ts",
+      "test": "adopts an existing npm application without overwriting its package or source",
+      "cause": "Version string drift — test expects '0.1.0-preview.0' but package.json has '0.1.0-alpha.0' after version rename in commit c415bb4",
+      "severity": "COSMETIC — test expectation not updated after version rename; no runtime impact"
+    },
+
+    "empty_packages_no_tests": [
+      "@atlas-runner/runtime-adapters",
+      "@atlas-runner/sdk",
+      "@atlas-runner/testkit"
+    ],
+
+    "templates": ["customer-support", "front-desk", "lead-qualification"],
+    "schema_files": [
+      "atlas-channel-profile.v1.schema.json",
+      "atlas-model-route.v1.schema.json",
+      "atlas-project.v1.schema.json",
+      "atlas-turn-proposal.v1.schema.json",
+      "atlas-turn-request.v1.schema.json"
+    ],
+
+    "deploy_docs": {
+      "beta_release_plans": 6,
+      "sandbox_docs": 3,
+      "docker_compose": true
+    }
+  },
+
+  "actual_maturity": {
+    "atlas_native_runtime": "LOCAL_PROVEN",
+    "external_runtime_adapters": "LOCAL_CONFORMANCE",
+    "all_16_channels": "LOCAL_CONFORMANCE (simulator only)",
+    "byok_inference": "LOCAL_PROVEN",
+    "managed_inference": "IMPLEMENTING",
+    "provider_connected_channels": 0,
+    "npm_published": false,
+    "hosted_deployment": false,
+    "staging_proven": false,
+    "production_proven": false,
+    "live_provider_connections": false
+  },
+
+  "erratum_classification": {
+    "type": "BMR001_POST_CLOSURE_ERRATUM",
+    "summary": "The BMR-001 codebase exists and is substantially complete (158/159 tests pass, 42 source files, 3 templates, 5 schemas, beta docs). However, no closure ceremony was performed: the reported branch, tag, and commit do not exist; no closure board or evidence bundle was created. The handover's 50/50 PASS claim cannot be verified because the board was never materialized.",
+    "code_exists": true,
+    "ceremony_performed": false,
+    "handover_accurate": false,
+    "can_proceed_to_BMR_002": true,
+    "rationale": "The code IS the BMR-001 output. The absence of closure ceremony is a process gap, not a code gap. BMR-002 starts from the actual code at HEAD (7fc1ec8) on main, understanding the truthful maturity stated in the README and package metadata."
+  },
+
+  "bmr_002_starting_baseline": {
+    "repository": "/Users/deon/Developer/atlas",
+    "branch": "main",
+    "commit": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
+    "version": "0.1.0-alpha.0",
+    "package_identity": "@atlas-runner/atlas"
+  },
+
+  "checksums": {
+    "closure_verification_sha256_placeholder": "this evidence record is itself the verification artifact; no pre-existing checksum manifest was found"
+  }
+}

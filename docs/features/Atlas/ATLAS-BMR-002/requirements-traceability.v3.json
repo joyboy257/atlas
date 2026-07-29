@@ -1,0 +1,1885 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "requirements": [
+    {
+      "id": "ATLAS-BMR2-REQ-001",
+      "product_requirement": "Create a repository-derived closure verification record or a versioned post-closure erratum without mutating BMR-001 history.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-001"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P0-001"
+      ],
+      "source_implementation": [
+        "git refs",
+        "worktrees",
+        "closure commit",
+        "closure tag",
+        "BMR-001 execution board",
+        "release evidence"
+      ],
+      "tests": [
+        "git object/ref validation",
+        "board count validation",
+        "checksum verification",
+        "closure diff inventory"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P0/closure-verification.json",
+      "release_gate": "G0",
+      "acceptance_criteria": [
+        "Resolve commit 4bf5da957d and tag atlas-bmr-001-closed",
+        "Record exact branch, HEAD, tree, dirty state, worktrees and post-closure drift",
+        "Verify 50/50 claim against canonical board",
+        "Verify evidence checksums and release decision",
+        "Record discrepancies only in BMR-002 errata"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-002",
+      "product_requirement": "Map public packages, private cloud, Mirai interfaces, runtime adapters, channels, providers, deployment, tests, and evidence to truthful maturity states.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-002"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P0-002"
+      ],
+      "source_implementation": [
+        "packages",
+        "apps",
+        "services",
+        "migrations",
+        "CLI",
+        "SDK",
+        "docs",
+        "CI/CD",
+        "deployments",
+        "registries"
+      ],
+      "tests": [
+        "path existence validator",
+        "registry schema validation",
+        "source/evidence sampling"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P0/current-product-inventory.json",
+      "release_gate": "G0",
+      "acceptance_criteria": [
+        "Every BMR-001 capability is mapped to source and evidence",
+        "Implemented/local/staging/provider/production proof are distinguished",
+        "Public/private/Mirai boundaries are explicit",
+        "Fixtures and memory authorities are identified"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-003",
+      "product_requirement": "Create a current gap and dependency map without absorbing Mirai ONE, AI Front Desk, AtlasAPI, Runtime-003, performance, provenance, or GTM authorities.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-003"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P0-003"
+      ],
+      "source_implementation": [
+        "programme docs",
+        "roadmaps",
+        "ownership maps",
+        "risk register",
+        "source drift"
+      ],
+      "tests": [
+        "cross-reference validator",
+        "ownership contradiction review",
+        "post-tag diff tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P0/ownership-and-drift-review.md",
+      "release_gate": "G0",
+      "acceptance_criteria": [
+        "Duplicate writable authorities are identified",
+        "Each adjacent programme is dependency, provider, consumer, superseded, or out of scope",
+        "Post-certification drift is tested",
+        "Residual technical, operational, commercial and ecosystem debt is recorded"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-004",
+      "product_requirement": "Confirm or narrowly amend the Production Agentic Business Messaging Platform thesis using verified BMR-001 reality while preserving every first-class product plane and boundary.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-004"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P0-004"
+      ],
+      "source_implementation": [
+        "programme constitution",
+        "target architecture",
+        "execution board",
+        "founder decisions"
+      ],
+      "tests": [
+        "thesis falsification review",
+        "scope/non-goal review",
+        "independent architecture review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P0/thesis-decision.md",
+      "release_gate": "G0",
+      "acceptance_criteria": [
+        "Agent/Mission, durable execution, developer, Cloud, provider, enterprise, commercial, ecosystem and operator-control planes are explicitly first-class",
+        "No plane is demoted to optional supporting infrastructure",
+        "Shared ownership and interface boundaries prevent duplicate authorities",
+        "Build-stream and final whole-product test order are recorded",
+        "Unresolvable founder choices are isolated as explicit decision records",
+        "No broad implementation begins before the decision record is sealed"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-005",
+      "product_requirement": "Install the BMR-002 package canonically, create the execution branch strategy, validate machine authorities, and establish persistent programme memory.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-005"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P0-005"
+      ],
+      "source_implementation": [
+        "docs/features/Atlas/ATLAS-BMR-002",
+        ".claude",
+        "execution log",
+        "branch/worktree record"
+      ],
+      "tests": [
+        "package validator",
+        "secret scan",
+        "git diff boundary check",
+        "checksum verification"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P0/package-seal.json",
+      "release_gate": "G0",
+      "acceptance_criteria": [
+        "No BMR-001 evidence or tag changes",
+        "JSON, dependencies, cross-references, checksums and secret scan pass",
+        "Execution log records exact active worktree and next action",
+        "Branch/worktree strategy preserves concurrent work"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-006",
+      "product_requirement": "Make a versioned Agent package and immutable deployed Agent version first-class public contracts.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-006"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-001"
+      ],
+      "source_implementation": [
+        "public schemas",
+        "TypeScript SDK",
+        "OpenAPI",
+        "CLI project schema",
+        "private deployment records"
+      ],
+      "tests": [
+        "JSON Schema fixtures",
+        "Type-level tests",
+        "compatibility tests",
+        "invalid package negative tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/agent-package-contract/",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "AgentPackage declares instructions, knowledge bindings, tools, policies, triggers, budgets, channel capabilities and compatibility",
+        "Deployment produces immutable agent_version_id tied to source digest",
+        "Public contract contains no private Cloud implementation",
+        "Schema evolution policy is documented"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-007",
+      "product_requirement": "Represent a bounded business goal as durable tenant-scoped state with an append-only lifecycle and explicit terminal outcomes.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-007"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-002"
+      ],
+      "source_implementation": [
+        "public schemas",
+        "runtime domain",
+        "database schema",
+        "event contracts",
+        "SDK"
+      ],
+      "tests": [
+        "state-machine property tests",
+        "schema tests",
+        "illegal transition tests",
+        "cross-tenant negative tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/mission-contract/",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "Mission includes goal, subject/customer, conversation, agent version, constraints, budget, deadline, state and correlation",
+        "Lifecycle defines created/activated/waiting/approval/handoff/completed/failed/cancelled/expired",
+        "Events carry causation, correlation, actor and timestamps",
+        "Tenant and environment identity are server-derived"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-008",
+      "product_requirement": "Separate reasoning proposals from Atlas-governed decisions, committed effects, delivery receipts, business outcomes, and reviewed learning.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-008"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-003"
+      ],
+      "source_implementation": [
+        "public contracts",
+        "policy interface",
+        "tool contracts",
+        "receipt schemas",
+        "outcome schemas"
+      ],
+      "tests": [
+        "authority boundary tests",
+        "schema compatibility tests",
+        "forgery negative tests",
+        "receipt completeness tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/action-receipt-contract/",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "External runtimes can create proposals but not approvals or committed actions",
+        "Decision records policy version, reasons and required control",
+        "Action has idempotency scope and typed effect",
+        "Receipts distinguish commit, provider delivery, usage, cost, audit and outcome",
+        "LearningProposal cannot mutate durable memory before review"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-009",
+      "product_requirement": "Persist missions, lifecycle events, steps, waits, decisions, actions and receipt links in tenant-scoped durable storage.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-009"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-004"
+      ],
+      "source_implementation": [
+        "database migrations",
+        "repositories",
+        "transaction boundaries",
+        "row-level access patterns"
+      ],
+      "tests": [
+        "migration contract tests",
+        "restart tests",
+        "concurrency tests",
+        "tenant isolation tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/mission-persistence/",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "Restart preserves exact mission state",
+        "Unique/idempotency constraints reject conflicting replay",
+        "Tenant scope is enforced in every read/write path",
+        "Migrations are forward/backward compatible for the release window"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-010",
+      "product_requirement": "Run one complete observe\u2013reason\u2013propose\u2013govern\u2013act\u2013observe Mission locally with deterministic fixtures and no credentials.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-010"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-005"
+      ],
+      "source_implementation": [
+        "local runtime",
+        "coordinator",
+        "simulator",
+        "deterministic model adapter",
+        "tool simulator"
+      ],
+      "tests": [
+        "outside-in local journey",
+        "restart-at-each-step matrix",
+        "determinism test",
+        "duplicate input replay"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/first-persistent-mission/",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "Coordinator resumes from persisted event/state",
+        "At least one tool proposal crosses policy and approval boundary",
+        "Committed effect and all receipt types are inspectable",
+        "No Atlas account, provider credential, cloud, or paid model key is required"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-011",
+      "product_requirement": "Give developers safe control and observability over local Missions without database access.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-011"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-006"
+      ],
+      "source_implementation": [
+        "CLI",
+        "SDK",
+        "local API",
+        "local UI/TUI if present",
+        "docs"
+      ],
+      "tests": [
+        "CLI golden tests",
+        "SDK contract tests",
+        "cancel race tests",
+        "replay idempotency tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/mission-control-surfaces/",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "Inspect shows lifecycle, current wait, decisions, actions, receipts, usage and cost",
+        "Replay never re-commits completed actions",
+        "Pause/resume/cancel are durable commands",
+        "Commands return typed errors and correlation IDs"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-012",
+      "product_requirement": "Obtain an adversarial build-readiness review proving that the shared Agent/Mission and authority contracts are genuine, durable and safe to integrate with every other product plane.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-012"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "source_implementation": [
+        "P1 source",
+        "tests",
+        "outside-in evidence",
+        "architecture decision"
+      ],
+      "tests": [
+        "independent reproduction",
+        "architecture adversarial review",
+        "anti-cheat review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P1/independent-review.md",
+      "release_gate": "G1",
+      "acceptance_criteria": [
+        "Reviewer reproduces the local Mission journey",
+        "Reviewer attempts authority bypass and restart loss",
+        "Public/private/Mirai interfaces are checked for duplicate authority",
+        "Review maps every foundation invariant to source/test/evidence",
+        "The verdict is explicitly build readiness, not Atlas release certification",
+        "Critical findings are repaired or G1 fails"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-013",
+      "product_requirement": "Allow many coordinators to process Missions without concurrent ownership or abandoned work.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-013"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-001"
+      ],
+      "source_implementation": [
+        "mission scheduler",
+        "lease store",
+        "worker runtime",
+        "database"
+      ],
+      "tests": [
+        "lease race tests",
+        "process-kill matrix",
+        "stale heartbeat tests",
+        "duplicate worker tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/coordinator-recovery/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Lease acquisition is atomic and tenant-safe",
+        "Expired leases are recoverable",
+        "Long steps heartbeat without indefinite lock",
+        "Crash at every lifecycle boundary resumes from canonical state"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-014",
+      "product_requirement": "Start and resume Missions from inbound events, schedules, provider callbacks, approvals, deadlines and business signals.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-014"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-002"
+      ],
+      "source_implementation": [
+        "trigger router",
+        "scheduler",
+        "wait registry",
+        "webhook/event ingress"
+      ],
+      "tests": [
+        "trigger deduplication tests",
+        "clock/timeout tests",
+        "late callback tests",
+        "restart tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/triggers-and-waits/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Triggers are idempotent and tenant-scoped",
+        "Durable waits survive restart and support timeout",
+        "Late/duplicate events are reconciled deterministically",
+        "Schedules respect environment and cancellation"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-015",
+      "product_requirement": "Enforce server-side autonomy levels, risk classes, time/step/token/spend budgets and escalation behavior per action.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-015"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-003"
+      ],
+      "source_implementation": [
+        "policy engine",
+        "budget ledger",
+        "tool registry",
+        "agent package validation"
+      ],
+      "tests": [
+        "policy matrix tests",
+        "budget race tests",
+        "forged autonomy negative tests",
+        "exhaustion tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/autonomy-and-budgets/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Autonomy ladder L0\u2013L4 is action-specific; L5 unrestricted is forbidden",
+        "Budget reservation/commit/release is atomic",
+        "Policy version and explanation are recorded",
+        "Exhausted/uncertain cases wait, hand off, or fail truthfully"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-016",
+      "product_requirement": "Model human control as first-class commands and state transitions usable by Mirai or another operator surface.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-016"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-004"
+      ],
+      "source_implementation": [
+        "approval service",
+        "handoff contracts",
+        "operator command API",
+        "mission state machine"
+      ],
+      "tests": [
+        "approval forgery tests",
+        "takeover race tests",
+        "expiry tests",
+        "handoff integration contract tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/human-control/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Approval cannot be issued by the proposing runtime",
+        "Scope, expiry, actor, rationale and policy are recorded",
+        "Human takeover prevents agent side effects",
+        "Return-to-agent resumes from explicit state and context",
+        "Mirai consumes public contracts rather than private Atlas concepts"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-017",
+      "product_requirement": "Allow Missions to read scoped knowledge and memory while keeping source provenance, confidence, retention, tenant boundary and review state explicit.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-017"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-005"
+      ],
+      "source_implementation": [
+        "knowledge retrieval",
+        "memory store",
+        "learning proposals",
+        "retention hooks"
+      ],
+      "tests": [
+        "provenance tests",
+        "poisoning tests",
+        "cross-tenant retrieval tests",
+        "retention invalidation tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/memory-and-learning/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Every retrieved item carries source/version/scope",
+        "Ephemeral observations are separate from durable memory",
+        "Learning proposals require configured review before promotion",
+        "Deletion/retention invalidates dependent memory",
+        "Untrusted provider/model content cannot silently become policy"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-018",
+      "product_requirement": "Commit business actions exactly once and deliver provider/tool effects through a durable outbox with canonical receipts.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-018"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-006"
+      ],
+      "source_implementation": [
+        "action service",
+        "database transaction",
+        "outbox",
+        "tool workers",
+        "provider workers",
+        "receipt store"
+      ],
+      "tests": [
+        "fault-point transaction tests",
+        "idempotency concurrency tests",
+        "worker retry tests",
+        "credential boundary tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/action-outbox/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Action and outbox record commit atomically",
+        "Idempotency mismatch is rejected",
+        "Worker retries cannot duplicate committed business effects",
+        "Provider/tool response is reconciled to canonical receipt",
+        "External runtimes never receive raw provider credentials"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-019",
+      "product_requirement": "Resolve partial failure without fabricating rollback or outcome success.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-019"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-007"
+      ],
+      "source_implementation": [
+        "mission coordinator",
+        "compensation contracts",
+        "dead-letter store",
+        "admin recovery API"
+      ],
+      "tests": [
+        "cancel/commit race tests",
+        "compensation tests",
+        "poison-message tests",
+        "replay authorization tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/failure-resolution/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Cancellation distinguishes not-started, committed, in-flight and irreversible effects",
+        "Compensation is explicit business action, not database deletion",
+        "Dead letters carry reason, owner and safe replay command",
+        "Replay verifies current policy and idempotency"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-020",
+      "product_requirement": "Prove an agent can initiate and continue a bounded business objective over time while respecting triggers, budgets, approvals, memory, recovery and outcomes.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-020"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P2-008"
+      ],
+      "source_implementation": [
+        "flagship local scenario",
+        "mission runtime",
+        "simulated channel/provider",
+        "evidence pack"
+      ],
+      "tests": [
+        "outside-in proactive journey",
+        "fault injection matrix",
+        "independent replay",
+        "anti-cheat review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P2/proactive-mission-certification/",
+      "release_gate": "G2",
+      "acceptance_criteria": [
+        "Mission spans at least two wake-ups and three governed steps",
+        "Restart and duplicate events are injected",
+        "One action requires approval or handoff",
+        "Budget and deadline are enforced",
+        "Outcome receipt is based on committed evidence",
+        "Independent verifier reproduces the journey"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-021",
+      "product_requirement": "Make agent packages, mission types, policies, tools, knowledge, tests and deployment intent understandable from one project.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-021"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P3-001"
+      ],
+      "source_implementation": [
+        "atlas.config/project schema",
+        "scaffold generator",
+        "examples",
+        "migration command"
+      ],
+      "tests": [
+        "scaffold snapshot tests",
+        "migration fixtures",
+        "empty-folder outside-in test",
+        "backward compatibility tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P3/project-and-scaffold/",
+      "release_gate": "G3",
+      "acceptance_criteria": [
+        "New project creates a runnable persistent Mission example",
+        "Existing BMR-001 project migrates without private knowledge",
+        "Project validation identifies unsupported capabilities",
+        "Local simulator remains zero-credential"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-022",
+      "product_requirement": "Expose create, signal, inspect, pause, resume, cancel, approve, handoff, replay, deploy and evidence operations consistently.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-022"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P3-002"
+      ],
+      "source_implementation": [
+        "CLI",
+        "TypeScript SDK",
+        "OpenAPI",
+        "generated types",
+        "docs"
+      ],
+      "tests": [
+        "contract parity tests",
+        "OpenAPI diff gate",
+        "CLI golden tests",
+        "SDK integration tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P3/cli-sdk-api/",
+      "release_gate": "G3",
+      "acceptance_criteria": [
+        "CLI/SDK/API share schemas and error model",
+        "Every mutating call supports idempotency and correlation",
+        "Capability/readiness inspection is machine-readable",
+        "Generated clients match current OpenAPI"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-023",
+      "product_requirement": "Connect Atlas-native inference to the proposal protocol with traceable context, tool proposals, budgets and typed failures.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-023"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P3-003"
+      ],
+      "source_implementation": [
+        "native runtime adapter",
+        "model router",
+        "proposal protocol",
+        "trace propagation"
+      ],
+      "tests": [
+        "adapter conformance tests",
+        "tool-bypass negative tests",
+        "malformed response tests",
+        "usage receipt tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P3/native-adapter/",
+      "release_gate": "G3",
+      "acceptance_criteria": [
+        "Adapter cannot commit actions or approve itself",
+        "Context is scoped and provenance-tagged",
+        "Model usage/cost is recorded without becoming billing settlement",
+        "Timeout/refusal/malformed output produce explicit states"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-024",
+      "product_requirement": "Allow an external agent runtime to reason and propose through Atlas without receiving authority over tenant, approval, credentials, effects or receipts.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-024"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P3-004"
+      ],
+      "source_implementation": [
+        "runtime interoperability protocol",
+        "HTTP/webhook adapter",
+        "auth scopes",
+        "conformance harness"
+      ],
+      "tests": [
+        "protocol conformance tests",
+        "forgery/replay tests",
+        "scope tests",
+        "outside-in external agent journey"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P3/external-runtime/",
+      "release_gate": "G3",
+      "acceptance_criteria": [
+        "Tenant/environment are server-derived",
+        "Proposal replay and signature/authentication are tested",
+        "External runtime cannot select provider credentials or fabricate receipt",
+        "At least one real external-runtime harness passes"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-025",
+      "product_requirement": "Make Atlas and this programme executable by coding agents from public contracts and repository-resident instructions.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-025"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P3-005"
+      ],
+      "source_implementation": [
+        "docs",
+        "examples",
+        ".claude skill",
+        "machine registries",
+        "conformance commands"
+      ],
+      "tests": [
+        "fresh-context doc test",
+        "example execution",
+        "link/path validation",
+        "skill lint"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P3/agent-readable-adoption/",
+      "release_gate": "G3",
+      "acceptance_criteria": [
+        "Skill states authority hierarchy, active item workflow and safety rules",
+        "Examples are version-matched and executable",
+        "No secret/private operator knowledge is required",
+        "Worker delegation events can be logged without claiming unverified model identity"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-026",
+      "product_requirement": "Prove two independent journeys: empty-folder Atlas-native and existing external agent integration.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-026"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P3-006"
+      ],
+      "source_implementation": [
+        "fresh repositories",
+        "published/local packages",
+        "docs",
+        "conformance kit"
+      ],
+      "tests": [
+        "outside-in adoption eval",
+        "runtime parity eval",
+        "documentation ambiguity review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P3/independent-adoption/",
+      "release_gate": "G3",
+      "acceptance_criteria": [
+        "Independent agent/developer completes both journeys",
+        "No direct database/provider access is used",
+        "Governed action, recovery and receipts are observed",
+        "Friction/time/failures are captured and critical defects fixed"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-027",
+      "product_requirement": "Ensure production identity, mission, policy, approval, action, outbox, receipt, usage and credential authorities have one durable owner.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-027"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-001"
+      ],
+      "source_implementation": [
+        "private Atlas Cloud services",
+        "config boot checks",
+        "database",
+        "queue",
+        "secret manager"
+      ],
+      "tests": [
+        "authority census",
+        "environment matrix tests",
+        "negative boot tests",
+        "local regression"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/production-authority/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Memory/test/fixture authorities are rejected in staging/production",
+        "One writable owner exists per authority",
+        "Startup emits typed failure for unsafe fallback",
+        "Local simulator behavior is unchanged"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-028",
+      "product_requirement": "Model representative tenants, conversations, Missions, steps, inference, tools, provider events, media, receipts and operational cost.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-028"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-002"
+      ],
+      "source_implementation": [
+        "load fixtures",
+        "capacity model",
+        "cost attribution model",
+        "fault catalogue"
+      ],
+      "tests": [
+        "fixture validation",
+        "cost reconciliation fixture tests",
+        "model review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/workload-capacity-model/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Steady, peak, burst and abuse profiles are versioned",
+        "Tenant distribution and provider quotas are included",
+        "Per-mission and per-action cost drivers are measurable",
+        "Assumptions and confidence bounds are explicit"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-029",
+      "product_requirement": "Bound failure domains and noisy-neighbour effects across mission coordination, actions, providers and tenants.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-029"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-003"
+      ],
+      "source_implementation": [
+        "PostgreSQL",
+        "queue topology",
+        "worker pools",
+        "connection pools",
+        "partition keys",
+        "DLQ"
+      ],
+      "tests": [
+        "ordering tests",
+        "poison tests",
+        "fairness tests",
+        "pool/lock load tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/partitioning/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Partition keys preserve ordering where required",
+        "Poison work is quarantined",
+        "Fairness and per-tenant admission are observable",
+        "Pool/lock/lag saturation has defined behavior"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-030",
+      "product_requirement": "Trace each Mission from trigger through reasoning, decision, action, provider/tool delivery, receipt and outcome with user-relevant SLOs.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-030"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-004"
+      ],
+      "source_implementation": [
+        "OpenTelemetry instrumentation",
+        "metrics",
+        "logs",
+        "dashboards",
+        "alerts",
+        "SLO policy"
+      ],
+      "tests": [
+        "trace correlation tests",
+        "redaction tests",
+        "SLO query tests",
+        "alert simulation"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/observability-slos/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Trace context crosses service/queue/provider boundaries where possible",
+        "Telemetry is redacted and not business authority",
+        "SLIs measure mission/action/delivery correctness and freshness",
+        "Error-budget consequences name release/incident actions"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-031",
+      "product_requirement": "Scale on meaningful backlog/saturation while preserving bounded admission and truthful degraded states.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-031"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-005"
+      ],
+      "source_implementation": [
+        "worker deployment",
+        "autoscaler",
+        "admission control",
+        "circuit breakers",
+        "retry budgets"
+      ],
+      "tests": [
+        "burst load test",
+        "drain test",
+        "overload test",
+        "dependency chaos tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/scaling-degradation/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Burst recovers within measured objective",
+        "Scale-down drains leases/outbox safely",
+        "Overload rejects or defers explicitly",
+        "Inference/provider faults never fabricate completion",
+        "Local/critical control paths remain available where designed"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-032",
+      "product_requirement": "Recover durable authorities with measured RPO/RTO and reconcile missions, outbox, receipts, usage and provider state.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-032"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-006"
+      ],
+      "source_implementation": [
+        "database backups",
+        "object storage",
+        "secret/config backup metadata",
+        "restore tooling",
+        "reconciliation jobs"
+      ],
+      "tests": [
+        "restore drill",
+        "receipt/outbox reconciliation tests",
+        "secret boundary review",
+        "timed recovery exercise"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/recovery/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Independent restore succeeds from documented artifacts",
+        "RPO/RTO are measured, not aspirational",
+        "Post-restore reconciliation identifies lost/duplicate/unknown states",
+        "Credentials are not copied unsafely",
+        "Runbook names decision authority"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-033",
+      "product_requirement": "Create reproducible source-to-artifact promotion with expand/contract migrations and tested rollback.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-033"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-007"
+      ],
+      "source_implementation": [
+        "CI/CD",
+        "artifact registry",
+        "SBOM/provenance",
+        "migrations",
+        "canary controls",
+        "rollback scripts"
+      ],
+      "tests": [
+        "build reproducibility",
+        "migration contract tests",
+        "canary tests",
+        "rollback drill",
+        "secret/SBOM scan"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/deployment-safety/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Artifact digest maps to reviewed commit and dependencies",
+        "Migrations pass compatibility window tests",
+        "Canary exercises real Mission lifecycle",
+        "Rollback is timed and preserves durable events/outbox",
+        "No secret is embedded in artifact"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-034",
+      "product_requirement": "Operate the durable Atlas Cloud product plane in a production-shaped staging preview for Cloud reliability and integration-readiness testing; do not treat it as the final product release candidate.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-034"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-008"
+      ],
+      "source_implementation": [
+        "private Atlas Cloud deployment",
+        "database",
+        "queue",
+        "workers",
+        "secrets",
+        "observability",
+        "status/runbooks"
+      ],
+      "tests": [
+        "staging smoke suite",
+        "flagship journey",
+        "load/fault suite",
+        "restore/rollback recheck"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/cloud-staging-preview/",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Durable database, queue, workers, secrets and observability are deployed from reproducible artifacts",
+        "Agent/Mission runtime contracts operate on the Cloud topology",
+        "Load, fault, recovery, migration and rollback tests required by P4 pass",
+        "The preview exposes documented interfaces for provider, enterprise and commercial integration",
+        "Evidence explicitly states that P4 is a Cloud product-plane preview, not G8 whole-product staging certification"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-035",
+      "product_requirement": "Publish a falsifiable capacity, reliability, recovery and operational-ownership verdict for the Cloud product plane before whole-product integration.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-035"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P4-009"
+      ],
+      "source_implementation": [
+        "release candidate",
+        "all P4 evidence",
+        "runbooks",
+        "ownership roster"
+      ],
+      "tests": [
+        "independent reliability review",
+        "evidence freshness check",
+        "anti-cheat review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P4/independent-reliability-review.md",
+      "release_gate": "G4",
+      "acceptance_criteria": [
+        "Reviewer reproduces critical load, fault and recovery tests",
+        "Capacity envelope names limits and exclusions",
+        "Every alert has owner, escalation and runbook",
+        "Cloud interfaces are compatible with the Agent, provider, enterprise and commercial planes",
+        "The verdict is Cloud build readiness, not final Atlas release certification",
+        "Critical findings block integration"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-036",
+      "product_requirement": "Evaluate provider/account/environment readiness progressively instead of using one universal supported flag.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-036"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-001"
+      ],
+      "source_implementation": [
+        "provider registry",
+        "adapter SDK",
+        "conformance harness",
+        "readiness CLI",
+        "evidence schema"
+      ],
+      "tests": [
+        "registry schema tests",
+        "adapter conformance tests",
+        "evidence promotion negative tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/provider-harness/",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "States use DECLARED through PRODUCTION_PROVEN vocabulary",
+        "Readiness is scoped by provider account, capability, environment, region and version",
+        "Harness covers auth, eligibility, webhooks, retry, rate, spend, media, templates and reconciliation",
+        "Blocked/deprecated states are visible"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-037",
+      "product_requirement": "Convert BMR-001 real-send proof into repeatable email operation with inbound/outbound events, authenticity, reconciliation, quotas and outage behavior.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-037"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-002"
+      ],
+      "source_implementation": [
+        "Resend adapter",
+        "webhook ingress",
+        "credential lifecycle",
+        "delivery reconciliation",
+        "runbooks"
+      ],
+      "tests": [
+        "signed webhook tests",
+        "duplicate/replay tests",
+        "live sandbox/limited test",
+        "quota/fault tests",
+        "rotation test"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/resend/",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "Domain/account eligibility is recorded",
+        "Webhook verification and replay/deduplication pass",
+        "Provider status maps truthfully to Atlas receipts",
+        "Rate/quota/spend controls are observable",
+        "Outage and credential rotation runbooks pass"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-038",
+      "product_requirement": "Choose one provider from repository demand and current eligibility evidence using value, geography, complexity, cost and support burden.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-038"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-003"
+      ],
+      "source_implementation": [
+        "provider scorecard",
+        "demand evidence",
+        "commercial/cost model",
+        "decision record"
+      ],
+      "tests": [
+        "scorecard reproducibility",
+        "decision review",
+        "cost/eligibility evidence check"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/second-provider-decision.md",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "At least three candidates are scored",
+        "Selection is not based on declared channel count alone",
+        "Account eligibility and budget are explicit",
+        "Unselected providers remain truthful DECLARED/BLOCKED states",
+        "Default recommendation is Twilio SMS only if current evidence still supports it"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-039",
+      "product_requirement": "Onboard credentials/account, validate authenticity, send/receive or equivalent sandbox events, reconcile delivery and document limitations.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-039"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-004"
+      ],
+      "source_implementation": [
+        "selected provider adapter",
+        "onboarding",
+        "webhooks",
+        "templates/consent as applicable",
+        "receipts"
+      ],
+      "tests": [
+        "provider sandbox outside-in test",
+        "webhook forgery tests",
+        "retry/reconciliation tests",
+        "credential rotation test"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/selected-provider-sandbox/",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "Account/environment eligibility is captured",
+        "Credential lifecycle and webhook authenticity pass",
+        "Rate/retry/delivery mapping pass",
+        "Evidence includes provider IDs redacted safely",
+        "State reaches PROVIDER_SANDBOX_PROVEN only"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-040",
+      "product_requirement": "Operate a real multi-step Mission over an authorised provider account to validate the provider product plane before complete-product integration.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-040"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-005"
+      ],
+      "source_implementation": [
+        "staging/limited production runtime",
+        "provider account",
+        "flagship Mission",
+        "operator control"
+      ],
+      "tests": [
+        "outside-in live journey",
+        "receipt reconciliation",
+        "operator takeover test",
+        "budget enforcement test"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/live-journey/",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "Exact provider account, capability, region and environment are recorded",
+        "Mission includes policy or approval, committed Action, durable outbox, provider effect and authentic callback/reconciliation",
+        "Delivery and business Outcome remain distinct",
+        "Usage, cost, audit and support signals are captured for downstream integration",
+        "Evidence explicitly states that this is provider-plane readiness, not G8 whole-product staging certification"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-041",
+      "product_requirement": "Prove Atlas responds truthfully to provider downtime, webhook drift, API/version change, quota exhaustion and planned deprecation.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-041"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-006"
+      ],
+      "source_implementation": [
+        "provider clients",
+        "circuit breakers",
+        "readiness registry",
+        "runbooks",
+        "status communication"
+      ],
+      "tests": [
+        "provider fault injection",
+        "contract drift test",
+        "quota exhaustion test",
+        "deprecation tabletop"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/provider-operations/",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "Provider failure does not fabricate delivery/outcome",
+        "Backoff and retry obey provider/idempotency constraints",
+        "Version drift is detected before promotion",
+        "Deprecation has customer migration path",
+        "Support owner and communication template exist"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-042",
+      "product_requirement": "Review exact account/environment evidence and issue truthful provider-product readiness states before whole-product integration, without extrapolation.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-042"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P5-007"
+      ],
+      "source_implementation": [
+        "provider registry",
+        "live/sandbox evidence",
+        "runbooks",
+        "release candidate"
+      ],
+      "tests": [
+        "independent provider review",
+        "evidence replay",
+        "readiness-state audit"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P5/independent-provider-review.md",
+      "release_gate": "G5",
+      "acceptance_criteria": [
+        "Reviewer verifies redacted account, environment and region scope",
+        "Mocks, sandbox and live proof are distinguished",
+        "Blocked limitations remain visible",
+        "Provider operations integrate with Mission, Cloud, usage/cost, support and audit authorities",
+        "The verdict is provider-plane readiness, not complete Atlas release certification",
+        "No universal supported claim is inferred"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-043",
+      "product_requirement": "Make ownership, environment separation, lifecycle and server-derived tenant context explicit across Atlas Cloud.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-043"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-001"
+      ],
+      "source_implementation": [
+        "control plane",
+        "organisation/project/environment records",
+        "auth context",
+        "deployment metadata"
+      ],
+      "tests": [
+        "cross-tenant negative tests",
+        "environment isolation tests",
+        "lifecycle state tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/org-governance/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Organisation/project/environment hierarchy is canonical",
+        "Production/test boundaries are enforced",
+        "Deletion/suspension states are explicit",
+        "No client-selected tenant authority"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-044",
+      "product_requirement": "Enforce least-privilege human and machine access for development, deployment, operations, approval and billing.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-044"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-002"
+      ],
+      "source_implementation": [
+        "identity service",
+        "RBAC policy",
+        "API keys/service accounts",
+        "approval scopes",
+        "audit"
+      ],
+      "tests": [
+        "RBAC matrix tests",
+        "token/key scope tests",
+        "escalation tests",
+        "rotation/revocation tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/rbac-machine-identity/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Role/scope matrix is versioned",
+        "Machine credentials are environment-scoped and rotatable",
+        "Approval authority is separate from proposal authority",
+        "Privilege escalation and confused-deputy tests pass"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-045",
+      "product_requirement": "Provide enterprise-ready control evidence without making unsupported certification claims.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-045"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-003"
+      ],
+      "source_implementation": [
+        "OIDC integration or decision record",
+        "audit export",
+        "KMS/encryption",
+        "secret manager",
+        "key rotation"
+      ],
+      "tests": [
+        "OIDC negative tests",
+        "audit integrity/export tests",
+        "key rotation test",
+        "secret scan"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/trust-controls/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "OIDC/SSO scope is justified and tested if implemented",
+        "Audit export is tenant-scoped, tamper-evident and documented",
+        "Encryption/key/secret ownership and rotation are tested",
+        "CMK/SCIM are assessed but not built without justified demand",
+        "No SOC2/ISO/GDPR/HIPAA/PCI claim exceeds evidence"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-046",
+      "product_requirement": "Make data lifecycle and security/abuse response executable across messages, knowledge, memory, missions, receipts and telemetry.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-046"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-004"
+      ],
+      "source_implementation": [
+        "data classification",
+        "retention engine",
+        "deletion/export jobs",
+        "incident runbooks",
+        "abuse controls"
+      ],
+      "tests": [
+        "retention expiry tests",
+        "deletion/export drill",
+        "cross-tenant negative tests",
+        "incident tabletop"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/data-lifecycle-incident/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Data inventory and retention classes exist",
+        "Deletion/export is tenant-scoped and reconciles derived memory/indexes",
+        "Legal hold is an explicit supported/unsupported decision",
+        "Incident severity, notification, containment and evidence roles are named",
+        "Provider data handling is recorded"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-047",
+      "product_requirement": "Record model, runtime, tool, provider, media, storage and observability usage against tenant/project/environment/agent/mission/action.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-047"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-005"
+      ],
+      "source_implementation": [
+        "usage event schema",
+        "cost ledger",
+        "pricing inputs",
+        "reconciliation jobs",
+        "receipts"
+      ],
+      "tests": [
+        "usage idempotency tests",
+        "invoice fixture reconciliation",
+        "retry accounting tests",
+        "tenant attribution tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/usage-cost-ledger/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Usage events are idempotent and attributable",
+        "Estimated versus settled cost is distinguished",
+        "Provider/model invoices can reconcile to internal events",
+        "Atlas ledger remains source of runtime truth",
+        "No double counting across retries"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-048",
+      "product_requirement": "Enforce understandable plan and customer controls before costly work is admitted.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-048"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-006"
+      ],
+      "source_implementation": [
+        "quota service",
+        "budget reservation",
+        "rate limits",
+        "risk signals",
+        "operator override"
+      ],
+      "tests": [
+        "quota race tests",
+        "budget overshoot tests",
+        "abuse simulation",
+        "override expiry tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/quotas-spend-abuse/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Hard/soft limits and alert thresholds are explicit",
+        "Spend is reserved before model/provider/tool work where feasible",
+        "Race-safe enforcement passes",
+        "Abuse response can suspend narrowly without corrupting state",
+        "Override is audited and expires"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-049",
+      "product_requirement": "Operate signup, organisation/project creation, sandbox, deployment, channel connection, usage transparency and Stripe test billing lifecycle.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-049"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-007"
+      ],
+      "source_implementation": [
+        "signup/control plane",
+        "billing adapter",
+        "Stripe test mode",
+        "invoices",
+        "lifecycle communications",
+        "support handoff"
+      ],
+      "tests": [
+        "outside-in self-serve journey",
+        "billing reconciliation tests",
+        "failed-payment tests",
+        "lifecycle tests",
+        "email/notification tests"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/self-serve-billing/",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Starter sandbox works before live provider access",
+        "Plans/quotas use provisional versioned metrics, not unsupported final prices",
+        "Stripe test meter/settlement reconciles to Atlas ledger",
+        "Failed payment, upgrade, downgrade, cancellation, export and deletion paths are tested",
+        "Enterprise handoff and support boundary are explicit"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-050",
+      "product_requirement": "Adversarially verify the enterprise-governance and commercial product plane before whole-product integration.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-050"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P6-008"
+      ],
+      "source_implementation": [
+        "P6 release candidate",
+        "security tests",
+        "billing evidence",
+        "runbooks"
+      ],
+      "tests": [
+        "independent trust review",
+        "billing replay",
+        "claim audit",
+        "abuse tabletop"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P6/independent-enterprise-commercial-review.md",
+      "release_gate": "G6",
+      "acceptance_criteria": [
+        "Tenant-isolation and RBAC negative tests pass",
+        "Audit, retention, deletion, encryption and incident controls are exercised",
+        "Usage, cost, quota, spend and billing test settlement reconcile",
+        "Signup, organisation, project, environment and support lifecycle are outside-in tested",
+        "The verdict is product-plane readiness, not complete Atlas release certification",
+        "Unsupported compliance or pricing claims are absent"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-051",
+      "product_requirement": "Let third parties build runtime, model, tool, channel/provider and solution extensions against bounded public contracts.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-051"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-001"
+      ],
+      "source_implementation": [
+        "public SDKs",
+        "adapter kits",
+        "template contracts",
+        "conformance suite",
+        "security manifest"
+      ],
+      "tests": [
+        "extension fixture suite",
+        "compatibility tests",
+        "malicious extension tests",
+        "package boundary scan"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/extension-kit/",
+      "release_gate": "G7",
+      "acceptance_criteria": [
+        "Extension types and authority limits are explicit",
+        "Compatibility/support/deprecation policy exists",
+        "Conformance tests include security and failure behavior",
+        "Private Cloud implementation is not leaked",
+        "Marketplace is not required"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-052",
+      "product_requirement": "Have an independent context build one useful extension and solution pack using only the public kit and documentation.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-052"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-002"
+      ],
+      "source_implementation": [
+        "fresh repository",
+        "extension SDK",
+        "docs",
+        "catalogue metadata"
+      ],
+      "tests": [
+        "outside-in extension build",
+        "package boundary test",
+        "security review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/extension-adoption/",
+      "release_gate": "G7",
+      "acceptance_criteria": [
+        "Extension passes conformance/security suite",
+        "Solution pack runs local zero-credential journey",
+        "No private imports or maintainer instructions are used",
+        "Friction and missing contracts are repaired"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-053",
+      "product_requirement": "Assemble exact versions of every first-class product plane into one source-to-artifact release candidate before whole-product certification.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-053"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-003"
+      ],
+      "source_implementation": [
+        "release manifest",
+        "Agent/Mission runtime",
+        "developer kit",
+        "Atlas Cloud",
+        "provider operations",
+        "enterprise controls",
+        "commercial controls",
+        "extension kit",
+        "Mirai control interfaces"
+      ],
+      "tests": [
+        "full build and package matrix",
+        "cross-plane contract tests",
+        "migration compatibility tests",
+        "release manifest validator",
+        "secret and licence scan",
+        "artifact reproducibility check"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/integrated-release-candidate/",
+      "release_gate": "G7",
+      "acceptance_criteria": [
+        "All required product-plane work items have defensible build-readiness evidence",
+        "One exact source commit, dependency lock, migration set, configuration set and artifact set are bound",
+        "Cross-plane contracts have no duplicate writable authority",
+        "Public/private/Mirai boundaries remain coherent",
+        "The candidate includes Agent, Cloud, provider, enterprise, commercial and ecosystem functionality",
+        "No staging or production claim is made before deployment and whole-product tests"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-054",
+      "product_requirement": "Deploy the sealed integrated candidate, migrations, configuration and secret references to staging without rebuilding or mutating the artifact.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-054"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-004"
+      ],
+      "source_implementation": [
+        "staging deployment",
+        "release manifest",
+        "artifact provenance",
+        "database migrations",
+        "queue/workers",
+        "secret references",
+        "observability",
+        "rollback controls"
+      ],
+      "tests": [
+        "deployment preflight",
+        "artifact provenance verification",
+        "migration compatibility test",
+        "hosted smoke suite",
+        "rollback rehearsal",
+        "secret-reference check"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/staging-deployment/",
+      "release_gate": "G8",
+      "acceptance_criteria": [
+        "Staging runs the exact reviewed artifact and configuration digests",
+        "Expand/contract migrations and worker compatibility checks pass",
+        "All required services become healthy with causal observability",
+        "No manual unrecorded data or credential mutation is used",
+        "Rollback and stop-admission paths are current before whole-product testing"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-055",
+      "product_requirement": "Test the complete Atlas product after all planes are built, integrated and deployed, then issue an independent staging verdict for the exact candidate.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-055"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-005"
+      ],
+      "source_implementation": [
+        "whole-product outside-in suite",
+        "provider sandbox/live test lane",
+        "enterprise controls",
+        "usage/cost/billing test mode",
+        "load/fault/security suites",
+        "backup/restore",
+        "developer cohort",
+        "extension conformance",
+        "evidence index"
+      ],
+      "tests": [
+        "complete flagship outside-in matrix",
+        "provider certification matrix",
+        "tenant-isolation and abuse suite",
+        "usage/cost/billing reconciliation",
+        "load and fault campaign",
+        "backup/restore and rollback campaign",
+        "independent developer cohort",
+        "independent extension adoption",
+        "evidence freshness and anti-cheat review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/whole-product-staging-certification/",
+      "release_gate": "G8",
+      "acceptance_criteria": [
+        "A fresh user completes signup, organisation, project, environment, sandbox, Agent deployment and provider connection",
+        "A durable Mission crosses context, Proposal, policy, approval/handoff, Action, outbox, provider/tool effect, receipt and evidence-backed outcome",
+        "Atlas-native and one external runtime complete the governed path",
+        "Tenant isolation, RBAC, webhook authenticity, abuse, quota and spend negative tests pass",
+        "Usage/cost ledger, billing test settlement, audit export and data-lifecycle controls reconcile",
+        "Load, backpressure, provider outage, worker crash, backup/restore, migration and rollback tests pass",
+        "Independent developers complete greenfield, existing-agent and extension journeys without private knowledge",
+        "No unresolved critical defect or unsupported maturity claim remains"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-056",
+      "product_requirement": "Promote the staging-certified candidate only under explicit authority, then operate sustained real customer Missions inside a declared provider, capacity, spend, data and support envelope.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-056"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-006"
+      ],
+      "source_implementation": [
+        "production deployment",
+        "promotion record",
+        "canary",
+        "provider accounts",
+        "Mirai/public operator contracts",
+        "usage/billing",
+        "status/support",
+        "incident response",
+        "rollback controls"
+      ],
+      "tests": [
+        "production preflight",
+        "canary whole-product journey",
+        "sustained operations evaluation",
+        "live receipt and cost reconciliation",
+        "incident and support drill",
+        "rollback readiness check"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/production-and-customer-cohort/",
+      "release_gate": "G9",
+      "acceptance_criteria": [
+        "Explicit user/founder production authority is recorded",
+        "Region, customer/tenant cap, provider accounts, data classes, spend, SLOs, support hours and rollback owner are recorded",
+        "Canary and live full-product Mission pass with reconciled receipts and cost",
+        "The cohort runs for a declared evidence window with handoff and incident ownership exercised",
+        "Failure triggers stop-admission, provider-lane disablement, handoff or rollback as designed",
+        "No global, 24x7, every-provider or general-availability claim is made",
+        "Push, merge, publication and tag actions remain separately authorised"
+      ],
+      "status": "NOT_SATISFIED"
+    },
+    {
+      "id": "ATLAS-BMR2-REQ-057",
+      "product_requirement": "Issue a truthful terminal verdict, close or isolate residual risk, and preserve exact programme provenance.",
+      "gap_ids": [
+        "ATLAS-BMR2-GAP-057"
+      ],
+      "work_item_ids": [
+        "ATLAS-BMR2-P7-007"
+      ],
+      "source_implementation": [
+        "execution board",
+        "execution log",
+        "release decisions",
+        "evidence index",
+        "checksums",
+        "tag proposal"
+      ],
+      "tests": [
+        "board/dependency validator",
+        "whole-product evidence audit",
+        "checksum verification",
+        "history boundary check",
+        "independent closure review"
+      ],
+      "environment_evidence": ".factory/evidence/atlas-bmr-002/P7/final-certification/",
+      "release_gate": "G9",
+      "acceptance_criteria": [
+        "All dependency-reachable work items have defensible disposition",
+        "Independent review replays the complete staging evidence and critical product-plane evidence",
+        "Known limitations, deferred work and external blockers remain visible",
+        "BMR-001 history remains unchanged",
+        "If P7-006 is not PASS solely for missing production authority/cohort access, issue the staging-certified terminal verdict",
+        "ATLAS_BMR_002_EXECUTION_COMPLETE requires P7-006 PASS",
+        "Closure tag, merge, push and publication are only prepared unless separately authorised"
+      ],
+      "status": "NOT_SATISFIED"
+    }
+  ]
+}

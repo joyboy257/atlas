@@ -1,0 +1,313 @@
+{
+  "schema_version": "1.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "severity_vocabulary": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW"
+  ],
+  "risks": [
+    {
+      "id": "RISK-001",
+      "title": "BMR-001 closure differs from handover",
+      "severity": "CRITICAL",
+      "phase": "P0",
+      "control": "Record erratum/regression; do not mutate history; repair prerequisite.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-002",
+      "title": "BMR-002 becomes an infrastructure programme without Agent product",
+      "severity": "CRITICAL",
+      "phase": "P1",
+      "control": "Constitution, P1/P2 gates and independent anti-renaming review.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-003",
+      "title": "Mission is implemented as renamed request/workflow",
+      "severity": "CRITICAL",
+      "phase": "P1",
+      "control": "Durable lifecycle, restart, waits, control, action and outcome tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-004",
+      "title": "Duplicate committed effects on retry/crash",
+      "severity": "CRITICAL",
+      "phase": "P2",
+      "control": "Transactional Action/outbox, idempotency, fault-point tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-005",
+      "title": "Agent self-approval or scope escalation",
+      "severity": "CRITICAL",
+      "phase": "P2/P6",
+      "control": "Server policy, separate actors/scopes, forgery/escalation tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-006",
+      "title": "Memory poisoning becomes durable authority",
+      "severity": "HIGH",
+      "phase": "P2",
+      "control": "Provenance, review, retention and poisoning tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-007",
+      "title": "External runtime bypasses Atlas",
+      "severity": "CRITICAL",
+      "phase": "P3",
+      "control": "Proposal-only protocol, credential/tenant negative tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-008",
+      "title": "Local experience regresses due to Cloud work",
+      "severity": "HIGH",
+      "phase": "P1-P4",
+      "control": "Zero-credential journey at every relevant gate.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-009",
+      "title": "Memory/test authorities reach production",
+      "severity": "CRITICAL",
+      "phase": "P4",
+      "control": "Production boot fail-closed matrix.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-010",
+      "title": "Queue/worker topology creates noisy neighbours",
+      "severity": "HIGH",
+      "phase": "P4",
+      "control": "Partition/fairness/admission tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-011",
+      "title": "Capacity or SLO claims are unmeasured",
+      "severity": "HIGH",
+      "phase": "P4",
+      "control": "Versioned workload and independently reproduced envelope.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-012",
+      "title": "Backup exists but business recovery fails",
+      "severity": "CRITICAL",
+      "phase": "P4",
+      "control": "Restore plus outbox/provider/receipt reconciliation drill.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-013",
+      "title": "Migration rollback loses active Missions",
+      "severity": "CRITICAL",
+      "phase": "P4",
+      "control": "Expand/contract and old/new compatibility/canary.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-014",
+      "title": "Provider mocks promoted as production support",
+      "severity": "CRITICAL",
+      "phase": "P5",
+      "control": "Scoped readiness registry and independent promotion review.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-015",
+      "title": "Provider credential/content leaks into evidence",
+      "severity": "CRITICAL",
+      "phase": "P5/P6",
+      "control": "Secret manager, redaction tests, evidence scan.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-016",
+      "title": "Provider eligibility or policy blocks chosen lane",
+      "severity": "HIGH",
+      "phase": "P5",
+      "control": "Scorecard and BLOCKED_PROVIDER state; continue other work.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-017",
+      "title": "Retry storm/uncontrolled provider spend",
+      "severity": "HIGH",
+      "phase": "P4/P5/P6",
+      "control": "Retry budgets, circuit breakers, quotas and spend reservations.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-018",
+      "title": "Atlas and Mirai write competing authority",
+      "severity": "CRITICAL",
+      "phase": "P0/P2/P6",
+      "control": "Ownership census and public control contracts.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-019",
+      "title": "Unsupported compliance or residency claims",
+      "severity": "HIGH",
+      "phase": "P6",
+      "control": "Control/evidence/process/audit classification and claim review.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-020",
+      "title": "Cross-tenant data or billing leakage",
+      "severity": "CRITICAL",
+      "phase": "P1/P4/P6",
+      "control": "Isolation tests across every storage/queue/export/usage boundary.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-021",
+      "title": "Billing settlement diverges from runtime truth",
+      "severity": "HIGH",
+      "phase": "P6",
+      "control": "Canonical usage ledger and reconciliation.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-022",
+      "title": "Hard spend cap races under concurrency",
+      "severity": "HIGH",
+      "phase": "P2/P6",
+      "control": "Atomic reservation and overshoot tests.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-023",
+      "title": "Marketplace built before safe extension model",
+      "severity": "MEDIUM",
+      "phase": "P7",
+      "control": "Extension conformance/adoption first; decision gate.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-024",
+      "title": "Only founding team can adopt Atlas",
+      "severity": "HIGH",
+      "phase": "P3/P7",
+      "control": "Fresh-context developer and extension cohorts.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-025",
+      "title": "Production promoted without support/rollback authority",
+      "severity": "CRITICAL",
+      "phase": "P7",
+      "control": "Explicit promotion record and G9.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-026",
+      "title": "Claude workers redesign or implement conflicting solutions",
+      "severity": "HIGH",
+      "phase": "All",
+      "control": "Workers restricted to verification/test/review/commit.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-027",
+      "title": "Chat/session compaction loses programme state",
+      "severity": "HIGH",
+      "phase": "All",
+      "control": "Execution log, board, SessionStart compact hook.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-028",
+      "title": "Unrelated repository work is overwritten",
+      "severity": "CRITICAL",
+      "phase": "P0/All",
+      "control": "Worktree census, isolated lane, no reset/clean/rebase/force-push.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-029",
+      "title": "Evidence belongs to wrong commit/environment",
+      "severity": "CRITICAL",
+      "phase": "All",
+      "control": "Evidence metadata, checksums and independent freshness review.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    },
+    {
+      "id": "RISK-030",
+      "title": "External blocker stops entire programme",
+      "severity": "MEDIUM",
+      "phase": "All",
+      "control": "Block only affected lane and continue DAG-ready work.",
+      "status": "OPEN",
+      "owner": null,
+      "evidence_refs": []
+    }
+  ]
+}

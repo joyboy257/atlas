@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.mirai.dev/schemas/atlas-bmr002-execution-board-v3.json",
+  "title": "Atlas BMR-002 Execution Board",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "programme",
+    "phases",
+    "work_items",
+    "status_vocabulary",
+    "maturity_vocabulary",
+    "active_work_item"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "programme": {
+      "const": "ATLAS-BMR-002"
+    },
+    "package_version": {
+      "type": "string"
+    },
+    "mission": {
+      "type": "string"
+    },
+    "status_vocabulary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "maturity_vocabulary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "active_work_item": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "outcome"
+        ],
+        "properties": {
+          "id": {
+            "pattern": "^P[0-9]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "work_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "phase",
+          "title",
+          "outcome",
+          "dependencies",
+          "implementation_surfaces",
+          "acceptance_criteria",
+          "tests",
+          "required_environment",
+          "evidence",
+          "rollback",
+          "owner",
+          "release_gate",
+          "falsifier",
+          "status",
+          "maturity"
+        ],
+        "properties": {
+          "id": {
+            "pattern": "^ATLAS-BMR2-P[0-9]+-[0-9]{3}$"
+          },
+          "phase": {
+            "pattern": "^P[0-9]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "implementation_surfaces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "required_environment": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "rollback": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "release_gate": {
+            "pattern": "^G[0-9]+$"
+          },
+          "falsifier": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "maturity": {
+            "type": "string"
+          },
+          "gap_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requirement_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

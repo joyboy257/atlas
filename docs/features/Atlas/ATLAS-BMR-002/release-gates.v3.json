@@ -1,0 +1,250 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "verdict_vocabulary": [
+    "NOT_EVALUATED",
+    "IN_PROGRESS",
+    "PASS",
+    "FAIL",
+    "BLOCKED_EXTERNAL",
+    "ROLLED_BACK"
+  ],
+  "gate_semantics": {
+    "G0": "baseline truth",
+    "G1-G6": "product-plane build readiness only; never a release claim",
+    "G7": "complete integrated candidate exists",
+    "G8": "exact integrated candidate is whole-product staging-proven",
+    "G9": "authorised bounded production and closure"
+  },
+  "gates": [
+    {
+      "id": "G0",
+      "title": "Certified baseline gate",
+      "phase": "P0",
+      "pass_when": [
+        "Closure commit/tag are verified or a versioned erratum exists",
+        "Current branch/worktree/drift is recorded",
+        "BMR-001 history and tag remain unchanged",
+        "BMR-002 package is installed and validation-clean",
+        "Complete-product thesis and boundaries are reconciled against repository truth"
+      ],
+      "falsifiers": [
+        "Closure claim cannot be reconciled",
+        "Unrelated work would be overwritten",
+        "Historical evidence was silently edited",
+        "A first-class product plane is removed without an evidence-backed decision"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G1",
+      "title": "Shared agentic foundations build-readiness gate",
+      "phase": "P1",
+      "pass_when": [
+        "Versioned Agent and durable Mission contracts exist",
+        "Proposal/Decision/Action/Receipt/Outcome/Learning authority is explicit",
+        "Persistent zero-credential local Mission survives restart",
+        "Public/private/Mirai boundaries are schema- and adversarially tested",
+        "Verdict is recorded as build readiness only"
+      ],
+      "falsifiers": [
+        "Mission is only an HTTP request or prompt",
+        "Agent can bypass tenant/policy/action authority",
+        "Restart loses Mission state",
+        "G1 is presented as complete-product certification"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G2",
+      "title": "Durable execution build-readiness gate",
+      "phase": "P2",
+      "pass_when": [
+        "Coordinator leasing/resume and wait/trigger semantics pass",
+        "Action-specific autonomy and budgets are server-enforced",
+        "Approvals, handoff and cancellation are durable",
+        "Fault injection shows no duplicate logical effect",
+        "Memory and learning carry provenance and review state",
+        "Verdict is recorded as build readiness only"
+      ],
+      "falsifiers": [
+        "Agent self-approves",
+        "Retries duplicate effects",
+        "Untrusted memory becomes durable truth",
+        "Paused/cancelled Missions continue acting",
+        "G2 is presented as complete-product certification"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G3",
+      "title": "Developer product build-readiness gate",
+      "phase": "P3",
+      "pass_when": [
+        "Empty-folder and existing-agent journeys pass",
+        "CLI/SDK/API are version matched",
+        "Atlas-native and one external runtime produce governed Proposals",
+        "Local journey remains zero credential",
+        "Verdict is recorded as build readiness only"
+      ],
+      "falsifiers": [
+        "External runtime can send directly",
+        "Docs require hidden monorepo knowledge",
+        "Local journey requires Cloud/provider/model credentials",
+        "G3 is presented as complete-product certification"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G4",
+      "title": "Production Atlas Cloud build-readiness gate",
+      "phase": "P4",
+      "pass_when": [
+        "Production mode rejects memory/test authorities",
+        "Capacity and cost envelope are measured",
+        "SLOs and error-budget actions are computable",
+        "Backup/restore, migration and rollback drills pass",
+        "Cloud interfaces support all other product planes",
+        "Verdict is recorded as Cloud build readiness only"
+      ],
+      "falsifiers": [
+        "Only local proof exists",
+        "False success appears during dependency failure",
+        "Restore cannot reconcile receipts",
+        "No named incident owner",
+        "G4 is presented as complete-product certification"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G5",
+      "title": "Provider and channel product build-readiness gate",
+      "phase": "P5",
+      "pass_when": [
+        "Readiness is account/environment specific",
+        "Webhook authenticity, retry, limit, spend, reconciliation and outage behavior pass",
+        "Resend is hardened",
+        "One additional provider reaches sandbox proof or is truthfully blocked",
+        "Provider operations integrate with usage, support and audit",
+        "Verdict is recorded as provider-plane readiness only"
+      ],
+      "falsifiers": [
+        "Mocks are promoted as live proof",
+        "Provider credentials leak",
+        "Unsupported account/region is called production-supported",
+        "G5 is presented as complete-product certification"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G6",
+      "title": "Enterprise and commercial product build-readiness gate",
+      "phase": "P6",
+      "pass_when": [
+        "Tenant isolation and RBAC negative tests pass",
+        "Audit and data-lifecycle controls are exercised",
+        "Canonical usage/cost ledger reconciles",
+        "Quota/spend actions are enforced",
+        "Self-serve and billing test settlement pass",
+        "Verdict is recorded as enterprise/commercial build readiness only"
+      ],
+      "falsifiers": [
+        "Billing provider becomes runtime source of truth",
+        "Unsupported compliance claim is made",
+        "Deletion/retention behavior is untested",
+        "G6 is presented as complete-product certification"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G7",
+      "title": "Complete product integration gate",
+      "phase": "P7",
+      "pass_when": [
+        "All required G1-G6 product planes have defensible build-readiness evidence",
+        "One exact source/dependency/migration/configuration/artifact candidate is sealed",
+        "Cross-plane contracts have no duplicate writable authority",
+        "Agent, Cloud, provider, enterprise, commercial, ecosystem and Mirai-compatible controls are included",
+        "Candidate is reproducible and deployable"
+      ],
+      "falsifiers": [
+        "A partial product is labelled complete",
+        "Candidate is assembled from incompatible or untracked versions",
+        "A first-class plane is omitted without an explicit scope decision",
+        "Public/private/Mirai authority is duplicated"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G8",
+      "title": "Whole-product staging certification gate",
+      "phase": "P7",
+      "pass_when": [
+        "Exact integrated candidate is deployed to staging with provenance",
+        "One causally connected full-product journey passes from signup through outcome, usage, billing and audit",
+        "Provider, tenant-isolation, abuse, load, fault, recovery, migration and rollback campaigns pass",
+        "Independent developer and extension adoption pass",
+        "Evidence index/checksums validate and no critical defect remains"
+      ],
+      "falsifiers": [
+        "Component demos replace the whole-product journey",
+        "Staging source/artifact differs from the reviewed candidate",
+        "Required migration or secret steps are manual/unrecorded",
+        "Critical evidence is stale",
+        "A workstream gate is substituted for G8"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    },
+    {
+      "id": "G9",
+      "title": "Bounded production and closure gate",
+      "phase": "P7",
+      "pass_when": [
+        "Explicit promotion authority is recorded",
+        "Bounded production envelope, provider accounts, budget, data classes, support hours and rollback authority are recorded",
+        "Canary and sustained customer cohort pass",
+        "Live usage, cost, delivery, audit and outcome receipts reconcile",
+        "Independent release review passes",
+        "All work items are PASS, truthfully blocked, or explicitly removed from closure scope"
+      ],
+      "falsifiers": [
+        "Production is promoted without authority",
+        "Programme claims global/24x7/general availability without proof",
+        "Open critical risks lack owner and disposition",
+        "Execution complete is declared without the production cohort"
+      ],
+      "verdict": "NOT_EVALUATED",
+      "evidence_refs": [],
+      "reviewed_by": null,
+      "reviewed_at": null
+    }
+  ]
+}

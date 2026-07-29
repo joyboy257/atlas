@@ -1,0 +1,1463 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "maturity_vocabulary": [
+    "DOCUMENTED_ONLY",
+    "STUBBED",
+    "IMPLEMENTED_UNVERIFIED",
+    "LOCAL_PROVEN",
+    "CI_PROVEN",
+    "STAGING_PROVEN",
+    "PROVIDER_SANDBOX_PROVEN",
+    "LIMITED_PRODUCTION",
+    "PRODUCTION_PROVEN"
+  ],
+  "gaps": [
+    {
+      "id": "ATLAS-BMR2-GAP-001",
+      "domain": "Programme truth and provenance",
+      "title": "Verify BMR-001 closure and live Git state",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "evidence": "Reported BMR-001 handover and packaged historical authorities; live repository and environment verification required.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Create a repository-derived closure verification record or a versioned post-closure erratum without mutating BMR-001 history.",
+      "technical_impact": "Any closure claim is accepted from handover text without repository proof",
+      "owner": "principal orchestrator",
+      "dependencies": [],
+      "proposed_work_item": "ATLAS-BMR2-P0-001",
+      "verification_method": [
+        "git object/ref validation",
+        "board count validation",
+        "checksum verification",
+        "closure diff inventory"
+      ],
+      "release_impact": "Blocks G0",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-002",
+      "domain": "Programme truth and provenance",
+      "title": "Inventory the certified Atlas product and maturity",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "evidence": "Reported BMR-001 handover and packaged historical authorities; live repository and environment verification required.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Map public packages, private cloud, Mirai interfaces, runtime adapters, channels, providers, deployment, tests, and evidence to truthful maturity states.",
+      "technical_impact": "A source path or passing unit test is treated as production proof",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P0-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P0-002",
+      "verification_method": [
+        "path existence validator",
+        "registry schema validation",
+        "source/evidence sampling"
+      ],
+      "release_impact": "Blocks G0",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-003",
+      "domain": "Programme truth and provenance",
+      "title": "Reconcile residual risks, drift, and adjacent programme ownership",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "evidence": "Reported BMR-001 handover and packaged historical authorities; live repository and environment verification required.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Create a current gap and dependency map without absorbing Mirai ONE, AI Front Desk, AtlasAPI, Runtime-003, performance, provenance, or GTM authorities.",
+      "technical_impact": "BMR-002 silently becomes every Atlas/Mirai roadmap",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P0-002"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P0-003",
+      "verification_method": [
+        "cross-reference validator",
+        "ownership contradiction review",
+        "post-tag diff tests"
+      ],
+      "release_impact": "Blocks G0",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-004",
+      "domain": "Programme truth and provenance",
+      "title": "Reconcile BMR-002 execution thesis with repository evidence",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "evidence": "Reported BMR-001 handover and packaged historical authorities; live repository and environment verification required.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Confirm or narrowly amend the Production Agentic Business Messaging Platform thesis using verified BMR-001 reality while preserving every first-class product plane and boundary.",
+      "technical_impact": "The selected programme can be satisfied by either a standalone Agent runtime or a standalone Cloud/provider/billing platform",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P0-003"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P0-004",
+      "verification_method": [
+        "thesis falsification review",
+        "scope/non-goal review",
+        "independent architecture review"
+      ],
+      "release_impact": "Blocks G0",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-005",
+      "domain": "Programme truth and provenance",
+      "title": "Install and seal the execution authority",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "evidence": "Reported BMR-001 handover and packaged historical authorities; live repository and environment verification required.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Install the BMR-002 package canonically, create the execution branch strategy, validate machine authorities, and establish persistent programme memory.",
+      "technical_impact": "Execution starts from an unvalidated or history-rewriting installation",
+      "owner": "release verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P0-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P0-005",
+      "verification_method": [
+        "package validator",
+        "secret scan",
+        "git diff boundary check",
+        "checksum verification"
+      ],
+      "release_impact": "Blocks G0",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-006",
+      "domain": "Agent and Mission product contracts",
+      "title": "Define AgentPackage and deployed Agent identity",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Make a versioned Agent package and immutable deployed Agent version first-class public contracts.",
+      "technical_impact": "An Agent remains only an unversioned prompt blob",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P0-005"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-001",
+      "verification_method": [
+        "JSON Schema fixtures",
+        "Type-level tests",
+        "compatibility tests",
+        "invalid package negative tests"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-007",
+      "domain": "Agent and Mission product contracts",
+      "title": "Define durable Mission and lifecycle event contracts",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Represent a bounded business goal as durable tenant-scoped state with an append-only lifecycle and explicit terminal outcomes.",
+      "technical_impact": "A Mission is interchangeable with one request/response or conversation row",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-002",
+      "verification_method": [
+        "state-machine property tests",
+        "schema tests",
+        "illegal transition tests",
+        "cross-tenant negative tests"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-008",
+      "domain": "Agent and Mission product contracts",
+      "title": "Define Proposal, Decision, Action, Receipt, Outcome and Learning contracts",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Separate reasoning proposals from Atlas-governed decisions, committed effects, delivery receipts, business outcomes, and reviewed learning.",
+      "technical_impact": "Model output is persisted directly as a completed business outcome",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-002"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-003",
+      "verification_method": [
+        "authority boundary tests",
+        "schema compatibility tests",
+        "forgery negative tests",
+        "receipt completeness tests"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-009",
+      "domain": "Agent and Mission product contracts",
+      "title": "Install durable Mission persistence and migrations",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Persist missions, lifecycle events, steps, waits, decisions, actions and receipt links in tenant-scoped durable storage.",
+      "technical_impact": "Mission continuity depends on process memory",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-002",
+        "ATLAS-BMR2-P1-003"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-004",
+      "verification_method": [
+        "migration contract tests",
+        "restart tests",
+        "concurrency tests",
+        "tenant isolation tests"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-010",
+      "domain": "Agent and Mission product contracts",
+      "title": "Implement deterministic local Mission coordinator",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Run one complete observe\u2013reason\u2013propose\u2013govern\u2013act\u2013observe Mission locally with deterministic fixtures and no credentials.",
+      "technical_impact": "Demo is scripted output or a stateless mock without persistence",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-005",
+      "verification_method": [
+        "outside-in local journey",
+        "restart-at-each-step matrix",
+        "determinism test",
+        "duplicate input replay"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-011",
+      "domain": "Agent and Mission product contracts",
+      "title": "Expose Mission inspect, replay, pause, resume and cancel surfaces",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Give developers safe control and observability over local Missions without database access.",
+      "technical_impact": "Control commands directly mutate rows without runtime validation",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-005"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-006",
+      "verification_method": [
+        "CLI golden tests",
+        "SDK contract tests",
+        "cancel race tests",
+        "replay idempotency tests"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-012",
+      "domain": "Agent and Mission product contracts",
+      "title": "Validate shared agentic product foundations",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Obtain an adversarial build-readiness review proving that the shared Agent/Mission and authority contracts are genuine, durable and safe to integrate with every other product plane.",
+      "technical_impact": "The same implementing context self-certifies the complete Atlas product from a local runtime demonstration",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P1-001",
+        "ATLAS-BMR2-P1-002",
+        "ATLAS-BMR2-P1-003",
+        "ATLAS-BMR2-P1-004",
+        "ATLAS-BMR2-P1-005",
+        "ATLAS-BMR2-P1-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P1-007",
+      "verification_method": [
+        "independent reproduction",
+        "architecture adversarial review",
+        "anti-cheat review"
+      ],
+      "release_impact": "Blocks G1",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-013",
+      "domain": "Durable governed agent runtime",
+      "title": "Implement coordinator leasing, heartbeats and crash-safe resume",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Allow many coordinators to process Missions without concurrent ownership or abandoned work.",
+      "technical_impact": "Two workers can commit the same mission step",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-001",
+      "verification_method": [
+        "lease race tests",
+        "process-kill matrix",
+        "stale heartbeat tests",
+        "duplicate worker tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-014",
+      "domain": "Durable governed agent runtime",
+      "title": "Implement triggers, durable waits and scheduler",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Start and resume Missions from inbound events, schedules, provider callbacks, approvals, deadlines and business signals.",
+      "technical_impact": "A callback can advance the wrong tenant or cancelled Mission",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-002",
+      "verification_method": [
+        "trigger deduplication tests",
+        "clock/timeout tests",
+        "late callback tests",
+        "restart tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-015",
+      "domain": "Durable governed agent runtime",
+      "title": "Install action-specific autonomy, risk and budget policy",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Enforce server-side autonomy levels, risk classes, time/step/token/spend budgets and escalation behavior per action.",
+      "technical_impact": "Agent instructions can raise their own autonomy or spend limit",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-002"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-003",
+      "verification_method": [
+        "policy matrix tests",
+        "budget race tests",
+        "forged autonomy negative tests",
+        "exhaustion tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-016",
+      "domain": "Durable governed agent runtime",
+      "title": "Make approval, handoff, takeover and return durable",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Model human control as first-class commands and state transitions usable by Mirai or another operator surface.",
+      "technical_impact": "A model/tool adapter can self-approve or continue after takeover",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-003"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-004",
+      "verification_method": [
+        "approval forgery tests",
+        "takeover race tests",
+        "expiry tests",
+        "handoff integration contract tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-017",
+      "domain": "Durable governed agent runtime",
+      "title": "Implement provenance-governed memory and reviewed learning",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Allow Missions to read scoped knowledge and memory while keeping source provenance, confidence, retention, tenant boundary and review state explicit.",
+      "technical_impact": "The agent writes raw model conclusions directly to shared durable memory",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-003"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-005",
+      "verification_method": [
+        "provenance tests",
+        "poisoning tests",
+        "cross-tenant retrieval tests",
+        "retention invalidation tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-018",
+      "domain": "Durable governed agent runtime",
+      "title": "Implement transactional action commit, outbox and effect workers",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Commit business actions exactly once and deliver provider/tool effects through a durable outbox with canonical receipts.",
+      "technical_impact": "Success is returned before durable commit or duplicate provider sends are possible",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-003",
+        "ATLAS-BMR2-P2-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-006",
+      "verification_method": [
+        "fault-point transaction tests",
+        "idempotency concurrency tests",
+        "worker retry tests",
+        "credential boundary tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-019",
+      "domain": "Durable governed agent runtime",
+      "title": "Implement cancellation, compensation, dead-letter and replay policy",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Resolve partial failure without fabricating rollback or outcome success.",
+      "technical_impact": "System claims an irreversible provider/business effect was rolled back",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-007",
+      "verification_method": [
+        "cancel/commit race tests",
+        "compensation tests",
+        "poison-message tests",
+        "replay authorization tests"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-020",
+      "domain": "Durable governed agent runtime",
+      "title": "Certify a bounded proactive multi-step Mission",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Prove an agent can initiate and continue a bounded business objective over time while respecting triggers, budgets, approvals, memory, recovery and outcomes.",
+      "technical_impact": "Proactivity is a cron script sending a prompt without durable Mission state",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P2-001",
+        "ATLAS-BMR2-P2-002",
+        "ATLAS-BMR2-P2-003",
+        "ATLAS-BMR2-P2-004",
+        "ATLAS-BMR2-P2-005",
+        "ATLAS-BMR2-P2-006",
+        "ATLAS-BMR2-P2-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P2-008",
+      "verification_method": [
+        "outside-in proactive journey",
+        "fault injection matrix",
+        "independent replay",
+        "anti-cheat review"
+      ],
+      "release_impact": "Blocks G2",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-021",
+      "domain": "Developer platform and interoperability",
+      "title": "Evolve Atlas project schema and scaffold for Agents and Missions",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Make agent packages, mission types, policies, tools, knowledge, tests and deployment intent understandable from one project.",
+      "technical_impact": "Only internal monorepo templates can create a valid agent",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P3-001",
+      "verification_method": [
+        "scaffold snapshot tests",
+        "migration fixtures",
+        "empty-folder outside-in test",
+        "backward compatibility tests"
+      ],
+      "release_impact": "Blocks G3",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-022",
+      "domain": "Developer platform and interoperability",
+      "title": "Ship coherent Mission CLI, SDK and API",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Expose create, signal, inspect, pause, resume, cancel, approve, handoff, replay, deploy and evidence operations consistently.",
+      "technical_impact": "Different surfaces implement conflicting lifecycle semantics",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P3-001",
+        "ATLAS-BMR2-P1-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P3-002",
+      "verification_method": [
+        "contract parity tests",
+        "OpenAPI diff gate",
+        "CLI golden tests",
+        "SDK integration tests"
+      ],
+      "release_impact": "Blocks G3",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-023",
+      "domain": "Developer platform and interoperability",
+      "title": "Certify Atlas-native reasoning adapter",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Connect Atlas-native inference to the proposal protocol with traceable context, tool proposals, budgets and typed failures.",
+      "technical_impact": "Native adapter has privileged side-effect paths unavailable to external adapters",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P2-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P3-003",
+      "verification_method": [
+        "adapter conformance tests",
+        "tool-bypass negative tests",
+        "malformed response tests",
+        "usage receipt tests"
+      ],
+      "release_impact": "Blocks G3",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-024",
+      "domain": "Developer platform and interoperability",
+      "title": "Certify external runtime proposal adapter",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Allow an external agent runtime to reason and propose through Atlas without receiving authority over tenant, approval, credentials, effects or receipts.",
+      "technical_impact": "External runtime can call provider or durable business state directly",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P2-003",
+        "ATLAS-BMR2-P2-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P3-004",
+      "verification_method": [
+        "protocol conformance tests",
+        "forgery/replay tests",
+        "scope tests",
+        "outside-in external agent journey"
+      ],
+      "release_impact": "Blocks G3",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-025",
+      "domain": "Developer platform and interoperability",
+      "title": "Install coding-agent documentation and Claude Code execution skill",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Make Atlas and this programme executable by coding agents from public contracts and repository-resident instructions.",
+      "technical_impact": "Coding agent succeeds only because prior chat context contains missing instructions",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P3-003",
+        "ATLAS-BMR2-P3-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P3-005",
+      "verification_method": [
+        "fresh-context doc test",
+        "example execution",
+        "link/path validation",
+        "skill lint"
+      ],
+      "release_impact": "Blocks G3",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-026",
+      "domain": "Developer platform and interoperability",
+      "title": "Run independent developer adoption and interoperability certification",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "CI_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Prove two independent journeys: empty-folder Atlas-native and existing external agent integration.",
+      "technical_impact": "Only founding-team monorepo execution is demonstrated",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P3-001",
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P3-003",
+        "ATLAS-BMR2-P3-004",
+        "ATLAS-BMR2-P3-005"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P3-006",
+      "verification_method": [
+        "outside-in adoption eval",
+        "runtime parity eval",
+        "documentation ambiguity review"
+      ],
+      "release_impact": "Blocks G3",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-027",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Consolidate production authority and fail-closed configuration",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Ensure production identity, mission, policy, approval, action, outbox, receipt, usage and credential authorities have one durable owner.",
+      "technical_impact": "Production can start with memory-backed mission/action/usage authority",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-001",
+      "verification_method": [
+        "authority census",
+        "environment matrix tests",
+        "negative boot tests",
+        "local regression"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-028",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Define workload, capacity, cost and failure models",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Model representative tenants, conversations, Missions, steps, inference, tools, provider events, media, receipts and operational cost.",
+      "technical_impact": "Capacity target is an unsupported round number without workload trace",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-002",
+      "verification_method": [
+        "fixture validation",
+        "cost reconciliation fixture tests",
+        "model review"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-029",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Implement database, queue and worker partitioning",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Bound failure domains and noisy-neighbour effects across mission coordination, actions, providers and tenants.",
+      "technical_impact": "One tenant/provider can monopolise workers or exhaust shared pools",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P4-001",
+        "ATLAS-BMR2-P4-002",
+        "ATLAS-BMR2-P2-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-003",
+      "verification_method": [
+        "ordering tests",
+        "poison tests",
+        "fairness tests",
+        "pool/lock load tests"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-030",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Install causal observability, SLOs and error-budget policy",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Trace each Mission from trigger through reasoning, decision, action, provider/tool delivery, receipt and outcome with user-relevant SLOs.",
+      "technical_impact": "Dashboard existence is treated as SLO proof or secrets/PII appear in telemetry",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P4-002",
+        "ATLAS-BMR2-P4-003",
+        "ATLAS-BMR2-P2-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-004",
+      "verification_method": [
+        "trace correlation tests",
+        "redaction tests",
+        "SLO query tests",
+        "alert simulation"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-031",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Implement autoscaling, backpressure and graceful degradation",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Scale on meaningful backlog/saturation while preserving bounded admission and truthful degraded states.",
+      "technical_impact": "Autoscaling amplifies retries or the system accepts work it cannot durably process",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P4-003",
+        "ATLAS-BMR2-P4-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-005",
+      "verification_method": [
+        "burst load test",
+        "drain test",
+        "overload test",
+        "dependency chaos tests"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-032",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Prove backup, restore and disaster recovery",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Recover durable authorities with measured RPO/RTO and reconcile missions, outbox, receipts, usage and provider state.",
+      "technical_impact": "Backup existence is claimed without restoring and reconciling",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P4-003",
+        "ATLAS-BMR2-P2-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-006",
+      "verification_method": [
+        "restore drill",
+        "receipt/outbox reconciliation tests",
+        "secret boundary review",
+        "timed recovery exercise"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-033",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Prove deployment, migration, canary and rollback safety",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Create reproducible source-to-artifact promotion with expand/contract migrations and tested rollback.",
+      "technical_impact": "Rollback requires history rewrite or loses committed actions",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P4-001",
+        "ATLAS-BMR2-P4-003",
+        "ATLAS-BMR2-P4-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-007",
+      "verification_method": [
+        "build reproducibility",
+        "migration contract tests",
+        "canary tests",
+        "rollback drill",
+        "secret/SBOM scan"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-034",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Deploy the Atlas Cloud product plane to a production-shaped staging preview",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Operate the durable Atlas Cloud product plane in a production-shaped staging preview for Cloud reliability and integration-readiness testing; do not treat it as the final product release candidate.",
+      "technical_impact": "A Cloud-only staging preview is presented as the complete Atlas staging release",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-008",
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P4-005",
+        "ATLAS-BMR2-P4-006",
+        "ATLAS-BMR2-P4-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-008",
+      "verification_method": [
+        "staging smoke suite",
+        "flagship journey",
+        "load/fault suite",
+        "restore/rollback recheck"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-035",
+      "domain": "Atlas Cloud reliability and operations",
+      "title": "Validate Production Atlas Cloud build readiness",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "CRITICAL",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Publish a falsifiable capacity, reliability, recovery and operational-ownership verdict for the Cloud product plane before whole-product integration.",
+      "technical_impact": "Cloud readiness is inferred from configuration, unit tests, or a partial runtime and promoted as complete Atlas readiness",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P4-002",
+        "ATLAS-BMR2-P4-003",
+        "ATLAS-BMR2-P4-004",
+        "ATLAS-BMR2-P4-005",
+        "ATLAS-BMR2-P4-006",
+        "ATLAS-BMR2-P4-007",
+        "ATLAS-BMR2-P4-008"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P4-009",
+      "verification_method": [
+        "independent reliability review",
+        "evidence freshness check",
+        "anti-cheat review"
+      ],
+      "release_impact": "Blocks G4",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-036",
+      "domain": "Provider and channel operations",
+      "title": "Build provider readiness registry and certification harness",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Evaluate provider/account/environment readiness progressively instead of using one universal supported flag.",
+      "technical_impact": "A local adapter test promotes all accounts/regions to production-supported",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-001",
+      "verification_method": [
+        "registry schema tests",
+        "adapter conformance tests",
+        "evidence promotion negative tests"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-037",
+      "domain": "Provider and channel operations",
+      "title": "Harden Resend email operations",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "evidence": "Reported BMR-001 handover and packaged historical authorities; live repository and environment verification required.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Convert BMR-001 real-send proof into repeatable email operation with inbound/outbound events, authenticity, reconciliation, quotas and outage behavior.",
+      "technical_impact": "One historical email proves ongoing production readiness",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P5-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-002",
+      "verification_method": [
+        "signed webhook tests",
+        "duplicate/replay tests",
+        "live sandbox/limited test",
+        "quota/fault tests",
+        "rotation test"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-038",
+      "domain": "Provider and channel operations",
+      "title": "Score and select the second provider lane",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Choose one provider from repository demand and current eligibility evidence using value, geography, complexity, cost and support burden.",
+      "technical_impact": "Provider is selected because an adapter filename already exists",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P5-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-003",
+      "verification_method": [
+        "scorecard reproducibility",
+        "decision review",
+        "cost/eligibility evidence check"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-039",
+      "domain": "Provider and channel operations",
+      "title": "Reach provider sandbox proof for the selected lane",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Onboard credentials/account, validate authenticity, send/receive or equivalent sandbox events, reconcile delivery and document limitations.",
+      "technical_impact": "Sandbox is unavailable but the lane is marked proven",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P5-003",
+        "ATLAS-BMR2-P2-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-004",
+      "verification_method": [
+        "provider sandbox outside-in test",
+        "webhook forgery tests",
+        "retry/reconciliation tests",
+        "credential rotation test"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-040",
+      "domain": "Provider and channel operations",
+      "title": "Run a bounded provider-plane live Mission journey",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Operate a real multi-step Mission over an authorised provider account to validate the provider product plane before complete-product integration.",
+      "technical_impact": "A single live send or provider-plane journey is presented as complete Atlas product proof",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P2-008",
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P4-008",
+        "ATLAS-BMR2-P5-002",
+        "ATLAS-BMR2-P5-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-005",
+      "verification_method": [
+        "outside-in live journey",
+        "receipt reconciliation",
+        "operator takeover test",
+        "budget enforcement test"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-041",
+      "domain": "Provider and channel operations",
+      "title": "Exercise provider outage, drift and deprecation operations",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Prove Atlas responds truthfully to provider downtime, webhook drift, API/version change, quota exhaustion and planned deprecation.",
+      "technical_impact": "Provider outage triggers uncontrolled retry storm or false success",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P4-005",
+        "ATLAS-BMR2-P5-002",
+        "ATLAS-BMR2-P5-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-006",
+      "verification_method": [
+        "provider fault injection",
+        "contract drift test",
+        "quota exhaustion test",
+        "deprecation tabletop"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-042",
+      "domain": "Provider and channel operations",
+      "title": "Validate provider and channel product readiness",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Review exact account/environment evidence and issue truthful provider-product readiness states before whole-product integration, without extrapolation.",
+      "technical_impact": "Implementer self-promotes a provider state without independent evidence",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P5-001",
+        "ATLAS-BMR2-P5-002",
+        "ATLAS-BMR2-P5-003",
+        "ATLAS-BMR2-P5-004",
+        "ATLAS-BMR2-P5-005",
+        "ATLAS-BMR2-P5-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P5-007",
+      "verification_method": [
+        "independent provider review",
+        "evidence replay",
+        "readiness-state audit"
+      ],
+      "release_impact": "Blocks G5",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-043",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Implement organisation, project and environment governance",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Make ownership, environment separation, lifecycle and server-derived tenant context explicit across Atlas Cloud.",
+      "technical_impact": "A request body can select another tenant/environment",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-001",
+      "verification_method": [
+        "cross-tenant negative tests",
+        "environment isolation tests",
+        "lifecycle state tests"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-044",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Implement RBAC, machine identity and scoped credentials",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Enforce least-privilege human and machine access for development, deployment, operations, approval and billing.",
+      "technical_impact": "Broad administrator token is required by ordinary runtime operations",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P6-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-002",
+      "verification_method": [
+        "RBAC matrix tests",
+        "token/key scope tests",
+        "escalation tests",
+        "rotation/revocation tests"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-045",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Install SSO assessment, audit export, encryption and secret controls",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Provide enterprise-ready control evidence without making unsupported certification claims.",
+      "technical_impact": "Marketing compliance claim is created from a control checklist alone",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P6-002"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-003",
+      "verification_method": [
+        "OIDC negative tests",
+        "audit integrity/export tests",
+        "key rotation test",
+        "secret scan"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-046",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Implement retention, deletion, legal-hold decision and incident controls",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Make data lifecycle and security/abuse response executable across messages, knowledge, memory, missions, receipts and telemetry.",
+      "technical_impact": "Deleting a primary row leaves retrievable derived memory or provider-state ambiguity",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P6-001",
+        "ATLAS-BMR2-P6-003"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-004",
+      "verification_method": [
+        "retention expiry tests",
+        "deletion/export drill",
+        "cross-tenant negative tests",
+        "incident tabletop"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-047",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Build canonical usage, cost and attribution ledger",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Record model, runtime, tool, provider, media, storage and observability usage against tenant/project/environment/agent/mission/action.",
+      "technical_impact": "Stripe/provider aggregate is treated as the only canonical runtime usage record",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-003",
+        "ATLAS-BMR2-P4-002",
+        "ATLAS-BMR2-P6-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-005",
+      "verification_method": [
+        "usage idempotency tests",
+        "invoice fixture reconciliation",
+        "retry accounting tests",
+        "tenant attribution tests"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-048",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Implement quotas, spending controls and abuse/fraud responses",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Enforce understandable plan and customer controls before costly work is admitted.",
+      "technical_impact": "Concurrent Missions can exceed hard spend cap materially",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P6-002",
+        "ATLAS-BMR2-P6-005"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-006",
+      "verification_method": [
+        "quota race tests",
+        "budget overshoot tests",
+        "abuse simulation",
+        "override expiry tests"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-049",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Implement bounded self-serve and billing test settlement",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Operate signup, organisation/project creation, sandbox, deployment, channel connection, usage transparency and Stripe test billing lifecycle.",
+      "technical_impact": "A successful checkout is treated as commercial readiness without usage reconciliation/support",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P4-008",
+        "ATLAS-BMR2-P6-001",
+        "ATLAS-BMR2-P6-002",
+        "ATLAS-BMR2-P6-005",
+        "ATLAS-BMR2-P6-006"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-007",
+      "verification_method": [
+        "outside-in self-serve journey",
+        "billing reconciliation tests",
+        "failed-payment tests",
+        "lifecycle tests",
+        "email/notification tests"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-050",
+      "domain": "Enterprise governance and commercial operations",
+      "title": "Validate enterprise and commercial Cloud product readiness",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "STAGING_PROVEN",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Adversarially verify the enterprise-governance and commercial product plane before whole-product integration.",
+      "technical_impact": "Controls are certified only by their implementer or marketing copy",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P6-001",
+        "ATLAS-BMR2-P6-002",
+        "ATLAS-BMR2-P6-003",
+        "ATLAS-BMR2-P6-004",
+        "ATLAS-BMR2-P6-005",
+        "ATLAS-BMR2-P6-006",
+        "ATLAS-BMR2-P6-007"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P6-008",
+      "verification_method": [
+        "independent trust review",
+        "billing replay",
+        "claim audit",
+        "abuse tabletop"
+      ],
+      "release_impact": "Blocks G6",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-051",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Stabilise extension contracts and certification kit",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Let third parties build runtime, model, tool, channel/provider and solution extensions against bounded public contracts.",
+      "technical_impact": "An extension can bypass Atlas policy, credentials, tenant or receipt authority",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P3-002",
+        "ATLAS-BMR2-P3-004",
+        "ATLAS-BMR2-P5-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-001",
+      "verification_method": [
+        "extension fixture suite",
+        "compatibility tests",
+        "malicious extension tests",
+        "package boundary scan"
+      ],
+      "release_impact": "Blocks G7",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-052",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Prove independent extension adoption",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Have an independent context build one useful extension and solution pack using only the public kit and documentation.",
+      "technical_impact": "Founding-team code is relabelled as third-party adoption",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P7-001"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-002",
+      "verification_method": [
+        "outside-in extension build",
+        "package boundary test",
+        "security review"
+      ],
+      "release_impact": "Blocks G7",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-053",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Integrate and seal the complete Atlas product release candidate",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Assemble exact versions of every first-class product plane into one source-to-artifact release candidate before whole-product certification.",
+      "technical_impact": "A partial Agent demo or isolated Cloud/provider stack is labelled the complete Atlas product candidate",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P1-007",
+        "ATLAS-BMR2-P2-008",
+        "ATLAS-BMR2-P3-006",
+        "ATLAS-BMR2-P4-009",
+        "ATLAS-BMR2-P5-007",
+        "ATLAS-BMR2-P6-008",
+        "ATLAS-BMR2-P7-002"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-003",
+      "verification_method": [
+        "full build and package matrix",
+        "cross-plane contract tests",
+        "migration compatibility tests",
+        "release manifest validator",
+        "secret and licence scan",
+        "artifact reproducibility check"
+      ],
+      "release_impact": "Blocks G7",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-054",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Deploy the exact complete-product candidate to staging",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Deploy the sealed integrated candidate, migrations, configuration and secret references to staging without rebuilding or mutating the artifact.",
+      "technical_impact": "Staging is tested from a locally rebuilt or post-review modified artifact",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P7-003"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-004",
+      "verification_method": [
+        "deployment preflight",
+        "artifact provenance verification",
+        "migration compatibility test",
+        "hosted smoke suite",
+        "rollback rehearsal",
+        "secret-reference check"
+      ],
+      "release_impact": "Blocks G8",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-055",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Run whole-product staging certification and independent adoption",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Test the complete Atlas product after all planes are built, integrated and deployed, then issue an independent staging verdict for the exact candidate.",
+      "technical_impact": "Disconnected component demos or pre-integration tests are substituted for one causally connected whole-product journey",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P7-004"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-005",
+      "verification_method": [
+        "complete flagship outside-in matrix",
+        "provider certification matrix",
+        "tenant-isolation and abuse suite",
+        "usage/cost/billing reconciliation",
+        "load and fault campaign",
+        "backup/restore and rollback campaign",
+        "independent developer cohort",
+        "independent extension adoption",
+        "evidence freshness and anti-cheat review"
+      ],
+      "release_impact": "Blocks G8",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-056",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Promote to bounded production and run the customer operations cohort",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Promote the staging-certified candidate only under explicit authority, then operate sustained real customer Missions inside a declared provider, capacity, spend, data and support envelope.",
+      "technical_impact": "Claude promotes production or onboards unbounded customers without explicit authority and an operable support/rollback envelope",
+      "owner": "principal orchestrator",
+      "dependencies": [
+        "ATLAS-BMR2-P7-005"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-006",
+      "verification_method": [
+        "production preflight",
+        "canary whole-product journey",
+        "sustained operations evaluation",
+        "live receipt and cost reconciliation",
+        "incident and support drill",
+        "rollback readiness check"
+      ],
+      "release_impact": "Blocks G9",
+      "status": "OPEN"
+    },
+    {
+      "id": "ATLAS-BMR2-GAP-057",
+      "domain": "Ecosystem, adoption, release and closure",
+      "title": "Final independent certification and BMR-002 closure",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "evidence": "BMR-002 execution package definition only; no implementation claim.",
+      "desired_maturity": "LIMITED_PRODUCTION",
+      "severity": "HIGH",
+      "customer_impact": "Without this, Atlas cannot truthfully deliver the outcome: Issue a truthful terminal verdict, close or isolate residual risk, and preserve exact programme provenance.",
+      "technical_impact": "Programme declares completion from workstream readiness or a staging pass while required production evidence is absent",
+      "owner": "independent verifier",
+      "dependencies": [
+        "ATLAS-BMR2-P7-005"
+      ],
+      "proposed_work_item": "ATLAS-BMR2-P7-007",
+      "verification_method": [
+        "board/dependency validator",
+        "whole-product evidence audit",
+        "checksum verification",
+        "history boundary check",
+        "independent closure review"
+      ],
+      "release_impact": "Blocks G9",
+      "status": "OPEN"
+    }
+  ]
+}

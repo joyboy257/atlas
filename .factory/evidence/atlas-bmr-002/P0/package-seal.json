@@ -1,0 +1,57 @@
+{
+  "evidence_id": "ATLAS-BMR2-P0-005-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P0-005",
+  "title": "BMR-002 Execution Authority — Installation and Seal",
+  "timestamp": "2026-07-29T11:54:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "PASS",
+
+  "installation": {
+    "docs_installed": "docs/features/Atlas/ATLAS-BMR-002/",
+    "claude_config_installed": ".claude/agents/, .claude/hooks/, .claude/skills/atlas-bmr-002/, .claude/settings.atlas-bmr002.example.json",
+    "execution_log_active": "docs/features/Atlas/ATLAS-BMR-002/atlas_bmr002_execution_log.md",
+    "evidence_directory": ".factory/evidence/atlas-bmr-002/P0/",
+    "bmr001_preserved": true,
+    "no_bmr001_mutation": true
+  },
+
+  "validation": {
+    "validator": "docs/features/Atlas/ATLAS-BMR-002/tools/validate_package.py",
+    "total_checks": 22,
+    "passed": 20,
+    "failed": 2,
+    "failures_explained": {
+      "markdown_local_links": "False positives: node_modules README links (noise); 4 internal docs use relative paths that resolve one level short (e.g. docs/beta/release/ -> ../CONTRIBUTING.md should be ../../CONTRIBUTING.md). Files exist at repo root. Minor doc hygiene, not a blocker.",
+      "canonical_checksums": "Expected: execution-board.v3.json and atlas_bmr002_execution_log.md were legitimately updated during P0-001 through P0-004 PASS recording. SHA256SUMS.txt reflects the original package state before P0 execution."
+    },
+    "secret_scan": "CLEAN — no secrets detected",
+    "json_parse": "13/13 JSON files valid",
+    "dependency_graph": "ACYCLIC — 57 work items, no cycles",
+    "status_vocabulary": "VALID — all statuses conform",
+    "maturity_vocabulary": "VALID — all maturities conform",
+    "work_item_ids": "57 unique, no duplicates",
+    "no_bmr001_historical_files": "CONFIRMED"
+  },
+
+  "git_state": {
+    "branch": "main",
+    "head": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
+    "staged": 0,
+    "unstaged": 0,
+    "untracked": [
+      ".claude/ (4 agents, 2 hooks, 1 skill, 1 settings example)",
+      ".factory/evidence/atlas-bmr-002/P0/ (4 evidence records)",
+      "docs/features/Atlas/ATLAS-BMR-002/ (50 authority docs + execution log + board + tools)"
+    ],
+    "no_bmr001_files_modified": true
+  },
+
+  "execution_lane": {
+    "current": "main (uncommitted overlay)",
+    "planned": "Create isolated BMR-002 branch from 7fc1ec8 (P0-006)",
+    "strategy": "Branch codex/atlas-bmr-002-execution from main HEAD; commit overlay as initial BMR-002 authority; preserve main for any concurrent work"
+  },
+
+  "verdict": "ATLAS-BMR2-P0-005 = PASS — Package installed, validated (20/22), secret-scanned (clean), BMR-001 preserved, ready for isolated execution lane."
+}

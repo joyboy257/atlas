@@ -1,0 +1,359 @@
+{
+  "evidence_id": "ATLAS-BMR2-P0-002-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P0-002",
+  "title": "BMR-001 Product Inventory — Honest Alpha Baseline",
+  "timestamp": "2026-07-29T11:45:00+08:00",
+  "reviewer": "principal orchestrator (Claude Code / DeepSeek Pro)",
+  "repository": "/Users/deon/Developer/atlas",
+  "baseline_commit": "7fc1ec836bb907d33ec04bf96a7da4a823d5e3f4",
+  "version": "0.1.0-alpha.0",
+
+  "product_identity": {
+    "name": "Atlas Business Messaging Agent Runtime",
+    "package": "@atlas-runner/atlas",
+    "repository": "github.com/joyboy257/atlas",
+    "license": "Apache-2.0",
+    "status": "Public Alpha",
+    "release_status": "unpublished_local_artifact",
+    "npm_published": false,
+    "repository_visibility": "private_or_unpublished"
+  },
+
+  "package_structure": {
+    "monorepo_root": "atlas",
+    "package_manager": "npm workspaces",
+    "runtime_requirement": "Node.js >= 22",
+    "language": "TypeScript 6.0.3",
+    "test_framework": "Vitest 4.1.10",
+    "packages": {
+      "@atlas-runner/atlas": {
+        "version": "0.1.0-alpha.0",
+        "status": "ALPHA — primary implementation",
+        "source_files": 34,
+        "test_files": 27,
+        "tests_pass": 158,
+        "tests_fail": 1,
+        "description": "CLI, local runtime, simulator, workbench, contracts"
+      },
+      "@atlas-runner/project-spec": {
+        "version": "0.1.0-alpha.0",
+        "status": "STUB — progressive extraction target",
+        "source_files": 1,
+        "test_files": 0,
+        "description": "Schema, contract types, validation"
+      },
+      "@atlas-runner/sdk": {
+        "version": "0.1.0-alpha.0",
+        "status": "STUB — progressive extraction target",
+        "source_files": 1,
+        "test_files": 0,
+        "description": "Pure types, runtime interfaces"
+      },
+      "@atlas-runner/cli": {
+        "status": "PLANNED — empty package.json only"
+      },
+      "@atlas-runner/local-runtime": {
+        "status": "PLANNED — empty package.json only"
+      },
+      "@atlas-runner/channel-sdk": {
+        "status": "PLANNED — empty package.json only"
+      },
+      "@atlas-runner/runtime-adapters": {
+        "version": "0.1.0-alpha.0",
+        "status": "PLANNED — empty package.json only, no tests"
+      },
+      "@atlas-runner/testkit": {
+        "version": "0.1.0-alpha.0",
+        "status": "PLANNED — empty package.json only, no tests"
+      }
+    }
+  },
+
+  "implemented_capabilities": {
+    "cli": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/cli.ts",
+      "commands_implemented": [
+        "atlas init",
+        "atlas dev",
+        "atlas test",
+        "atlas doctor",
+        "atlas capabilities",
+        "atlas explain",
+        "atlas inspect",
+        "atlas replay",
+        "atlas deploy",
+        "atlas upgrade"
+      ],
+      "tests": "packages/atlas/__tests__/cli.test.ts (passing)"
+    },
+    "project_contract": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/project-contract.ts",
+      "schema_version": "1",
+      "config_file": "atlas.config.ts",
+      "validates": ["project identity", "runtime mode", "model config", "agent instructions/tools/policies", "knowledge", "channels", "evals"],
+      "tests": "packages/atlas/__tests__/project-contract.test.ts (passing)"
+    },
+    "local_runtime": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/local-runtime.ts",
+      "implements": "full agent loop with tool proposals, policy checks, approval gates, outcome receipts",
+      "tests": "packages/atlas/__tests__/local-runtime.test.ts (passing)"
+    },
+    "messaging_simulator": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/messaging-simulator.ts",
+      "implements": "16-channel business messaging simulator",
+      "tests": "packages/atlas/__tests__/messaging-simulator.test.ts (passing)"
+    },
+    "channel_fabric": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/channel-fabric.ts",
+      "implements": "abstraction layer over all business messaging channels",
+      "tests": "packages/atlas/__tests__/channel-fabric.test.ts (passing)"
+    },
+    "channel_adapters": {
+      "maturity": "LOCAL_CONFORMANCE",
+      "source": "packages/atlas/src/channel-adapters.ts",
+      "channels_implemented": 16,
+      "channels_with_conformance": 16,
+      "channels_provider_proven": 0,
+      "tests": "packages/atlas/__tests__/channel-conformance.test.ts (passing)"
+    },
+    "runtime_protocol": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/runtime-protocol.ts",
+      "implements": "versioned turn protocol for runtime interop",
+      "tests": "packages/atlas/__tests__/runtime-protocol.test.ts (passing)"
+    },
+    "runtime_adapters": {
+      "maturity": "LOCAL_CONFORMANCE",
+      "source": "packages/atlas/src/runtime-adapters.ts",
+      "adapters": ["Atlas Native (reference)", "OpenAI Agents SDK", "Eve", "Generic Webhook/HTTP"],
+      "tests": "packages/atlas/__tests__/runtime-adapters.test.ts (passing)"
+    },
+    "model_routing": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/model-routing.ts",
+      "modes": ["local-fixture", "managed", "byok", "gateway"],
+      "tests": "packages/atlas/__tests__/model-routing.test.ts (passing)"
+    },
+    "auth_device_flow": {
+      "maturity": "IMPLEMENTED_UNVERIFIED",
+      "source": "packages/atlas/src/auth/device-flow.ts",
+      "tests": "packages/atlas/__tests__/device-flow.test.ts (passing)"
+    },
+    "credential_management": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/credentials/",
+      "backends": ["macOS Keychain", "Linux Secret Service", "Encrypted File"],
+      "tests": "packages/atlas/__tests__/credential-fallback.test.ts, secure-file.test.ts (passing)"
+    },
+    "dev_server": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/dev-server.ts",
+      "tests": "packages/atlas/__tests__/dev-server.test.ts (passing)"
+    },
+    "workbench": {
+      "maturity": "IMPLEMENTED_UNVERIFIED",
+      "source": "packages/atlas/src/workbench.ts",
+      "description": "Browser-based UI for chat, trace, tool proposals, receipts"
+    },
+    "scaffold_and_init": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/init-engine.ts, scaffold.ts",
+      "tests": "packages/atlas/__tests__/init-engine.test.ts, scaffold.test.ts (1 version-string drift)"
+    },
+    "doctor": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/doctor.ts",
+      "tests": "packages/atlas/__tests__/doctor.test.ts (passing)"
+    },
+    "operation_journal": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/operation-journal.ts",
+      "tests": "packages/atlas/__tests__/operation-journal.test.ts (passing)"
+    },
+    "receipt_integrity": {
+      "maturity": "IMPLEMENTED_UNVERIFIED",
+      "source": "packages/atlas/src/receipt-integrity.ts"
+    },
+    "deployment_config": {
+      "maturity": "DOCUMENTED_ONLY",
+      "source": "packages/atlas/src/deployment-config.ts",
+      "tests": "packages/atlas/__tests__/deployment-config.test.ts (passing)",
+      "notes": "Sandbox docker-compose exists; no live hosted deployment"
+    },
+    "p2_conformance": {
+      "maturity": "LOCAL_CONFORMANCE",
+      "source": "packages/atlas/src/p2-conformance.ts",
+      "tests": "packages/atlas/__tests__/p2-conformance.test.ts (passing)"
+    },
+    "mcp_integration": {
+      "maturity": "LOCAL_PROVEN",
+      "source": "packages/atlas/src/mcp-config.ts, mcp-manager.ts",
+      "tests": "packages/atlas/__tests__/mcp-config.test.ts, mcp-manager.test.ts (passing)"
+    }
+  },
+
+  "templates": {
+    "count": 3,
+    "templates": [
+      {
+        "name": "customer-support",
+        "has_agent_instructions": true,
+        "has_policies": true,
+        "has_tools": ["create-ticket", "handoff-to-human", "search-knowledge-base"],
+        "has_channels": ["email", "web-chat"],
+        "has_evals": true,
+        "has_knowledge": true
+      },
+      {
+        "name": "front-desk",
+        "has_agent_instructions": true,
+        "has_policies": true,
+        "has_tools": ["book-room", "check-availability", "reschedule-booking"],
+        "has_channels": ["web-chat"],
+        "has_evals": true,
+        "has_knowledge": true
+      },
+      {
+        "name": "lead-qualification",
+        "has_agent_instructions": true,
+        "has_policies": true,
+        "has_tools": ["enrich-lead", "schedule-meeting", "score-lead", "update-crm"],
+        "has_channels": ["web-chat"],
+        "has_evals": true,
+        "has_knowledge": true
+      }
+    ]
+  },
+
+  "schemas": {
+    "count": 5,
+    "files": [
+      "atlas-project.v1.schema.json",
+      "atlas-turn-request.v1.schema.json",
+      "atlas-turn-proposal.v1.schema.json",
+      "atlas-model-route.v1.schema.json",
+      "atlas-channel-profile.v1.schema.json"
+    ]
+  },
+
+  "documentation": {
+    "public_docs_manifest": "packages/atlas/docs/public-docs.manifest.json",
+    "technical_docs": [
+      "QUICKSTART.md",
+      "AGENT-GUIDE.md",
+      "AUTHORITY.md",
+      "COMMANDS.md",
+      "PROJECT-CONTRACT.md",
+      "CHANNEL-FABRIC.md",
+      "CHANNEL-READINESS.md",
+      "MODEL-ROUTING.md",
+      "RUNTIME-PROTOCOL.md",
+      "RUNTIME-ADAPTERS.md",
+      "P2-CERTIFICATION.md",
+      "ERROR-CATALOG.md",
+      "MIGRATION.md",
+      "REPAIR.md",
+      "README.md"
+    ],
+    "beta_release_docs": [
+      "beta-agreement.md",
+      "beta-release-checklist.md",
+      "billing-integration-plan.md",
+      "incident-response.md",
+      "rollback-procedures.md",
+      "security-review-template.md"
+    ],
+    "sandbox_docs": [
+      "sandbox/README.md",
+      "sandbox/provider-onboarding.md"
+    ],
+    "root_docs": [
+      "README.md",
+      "ROADMAP.md",
+      "CHANGELOG.md",
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "LICENSE",
+      "NOTICE"
+    ]
+  },
+
+  "deploy_infrastructure": {
+    "docker_compose": "deploy/docker-compose.sandbox.yml",
+    "dockerfile": "deploy/dockerfiles/atlas.Dockerfile",
+    "env_template": "deploy/env/sandbox.env.example",
+    "otel_config": "deploy/otel-collector.sandbox.yml",
+    "services_defined": ["atlas-api", "atlas-worker", "postgres", "redis", "otel-collector", "jaeger"],
+    "status": "SANDBOX_ONLY — no staging or production deployment"
+  },
+
+  "provider_state": {
+    "total_channels": 16,
+    "channels_with_conformance": 16,
+    "channels_with_live_provider": 0,
+    "resend_integration": "DECLARED (mentions in roadmap/docs but no live evidence in repo)",
+    "infisical_integration": "DECLARED (mentioned in memory but no code or config in repo)",
+    "all_channels_status": "LOCAL_CONFORMANCE (simulator-proven only)"
+  },
+
+  "known_limitations": [
+    "No live provider connections — 0 provider-connected channels",
+    "No hosted deployment — local-only",
+    "No npm publication — @atlas-runner/* packages not on npm registry",
+    "Progressive package extraction incomplete — 5 of 8 packages are stubs",
+    "No human adoption testing — deferred to beta gate",
+    "No multi-client certification — deferred to beta gate",
+    "Managed inference mode is IMPLEMENTING — local fixture works, hosted not available",
+    "No CI/CD pipeline evidence in repository",
+    "No staging or production environment evidence",
+    "No billing or commercial subsystem",
+    "No enterprise governance (SSO, RBAC, audit export) implementation"
+  ],
+
+  "public_private_boundary": {
+    "public_surface": [
+      "project schema and validation",
+      "CLI (zero-credential local commands)",
+      "SDK contracts (pure types)",
+      "local runtime and simulator",
+      "channel conformance surfaces",
+      "runtime protocol and adapter interfaces",
+      "documentation, examples, skills"
+    ],
+    "private_surface_excluded_from_public_package": [
+      "Atlas Cloud internals",
+      "managed provider credentials",
+      "hosted tenant operations",
+      "private billing systems",
+      "Team Inbox",
+      "Command Center",
+      "Mirai vertical-product implementation",
+      "private monorepo source not required by public contract"
+    ],
+    "mirai_interfaces": "DECLARED in authority doc — Mirai owns Team Inbox, Command Center, operator experience; Atlas owns governed runtime. No code interfaces exist yet."
+  },
+
+  "adjacent_programmes_identified": [
+    {
+      "programme": "Mirai ONE",
+      "relationship": "CONSUMER — Mirai consumes Atlas public contracts for operator control",
+      "repo": "/Users/deon/Developer/mirai",
+      "overlap_risk": "Mirai ONE is building commercial truth gate, developer console, WhatsApp scorecard — adjacent but distinct from Atlas runtime"
+    }
+  ],
+
+  "maturity_summary": {
+    "local_proven_count": 14,
+    "local_conformance_count": 2,
+    "implemented_unverified_count": 3,
+    "documented_only_count": 1,
+    "stub_count": 5,
+    "overall_product_maturity": "LOCAL_PROVEN — framework works locally; zero cloud/provider/commercial proof"
+  }
+}

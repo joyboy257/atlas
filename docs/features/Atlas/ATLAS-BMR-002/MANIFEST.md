@@ -1,0 +1,67 @@
+# Atlas BMR-002 Complete Product Execution Package Manifest
+
+- Programme: `ATLAS-BMR-002`
+- Package version: `3.0.0-execution`
+- Generated: `2026-07-29`
+- Mission: Turn the certified BMR-001 foundation into Atlas's complete production agentic product: a production-scale, commercially operable, multi-provider, enterprise-governed developer platform in which versioned Agents pursue durable Missions and Atlas safely governs, executes, delivers, observes, bills, and proves business outcomes.
+- Work items: `57`
+- Product planes: `Agent/Mission, durable execution, developer, Cloud, providers, enterprise, commercial, ecosystem/operator`
+- Final test order: `G7 integrated candidate → G8 whole-product staging → G9 bounded production`
+
+## Files
+
+- `.claude/agents/atlas-bmr002-commit-worker.md`
+- `.claude/agents/atlas-bmr002-release-reviewer.md`
+- `.claude/agents/atlas-bmr002-test-runner.md`
+- `.claude/agents/atlas-bmr002-verifier.md`
+- `.claude/hooks/atlas_bmr002_context.py`
+- `.claude/hooks/atlas_bmr002_subagent_event.py`
+- `.claude/settings.atlas-bmr002.example.json`
+- `.claude/skills/atlas-bmr-002/SKILL.md`
+- `CLAUDE_CODE_START_ATLAS_BMR_002.md`
+- `INSTALL_ATLAS_BMR_002_EXECUTION_PACKAGE.md`
+- `docs/features/Atlas/ATLAS-BMR-002/00_README.md`
+- `docs/features/Atlas/ATLAS-BMR-002/01_HANDOVER_BASELINE_AND_PRESERVATION.md`
+- `docs/features/Atlas/ATLAS-BMR-002/02A_COMPLETE_PRODUCT_SCOPE_AND_BUILD_TEST_STRATEGY.md`
+- `docs/features/Atlas/ATLAS-BMR-002/02_AGENTIC_PRODUCT_CONSTITUTION.md`
+- `docs/features/Atlas/ATLAS-BMR-002/03_LOCKED_DECISIONS_AND_DEFAULTS.md`
+- `docs/features/Atlas/ATLAS-BMR-002/04_POST_CLOSURE_STOCKTAKE_PROTOCOL.md`
+- `docs/features/Atlas/ATLAS-BMR-002/05_CURRENT_AND_TARGET_ARCHITECTURE.md`
+- `docs/features/Atlas/ATLAS-BMR-002/06_AGENT_MISSION_AND_LEARNING_CONTRACT.md`
+- `docs/features/Atlas/ATLAS-BMR-002/07_DURABLE_AGENT_RUNTIME_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/08_DEVELOPER_PLATFORM_AND_INTEROPERABILITY_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/09_PROVIDER_AND_CHANNEL_OPERATIONS_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/10_PRODUCTION_CLOUD_RELIABILITY_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/11_ENTERPRISE_TRUST_AND_GOVERNANCE_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/12_COMMERCIAL_SELF_SERVE_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/13_ECOSYSTEM_AND_EXTENSION_SPEC.md`
+- `docs/features/Atlas/ATLAS-BMR-002/14_FLAGSHIP_OUTSIDE_IN_JOURNEYS.md`
+- `docs/features/Atlas/ATLAS-BMR-002/15_EXECUTION_PROGRAMME.md`
+- `docs/features/Atlas/ATLAS-BMR-002/16_VERIFICATION_EVAL_AND_RELEASE_GATES.md`
+- `docs/features/Atlas/ATLAS-BMR-002/17_DEPLOYMENT_PROMOTION_AND_ROLLBACK_RUNBOOK.md`
+- `docs/features/Atlas/ATLAS-BMR-002/18_RISK_BLOCKER_AND_EXTERNAL_DEPENDENCY_REGISTER.md`
+- `docs/features/Atlas/ATLAS-BMR-002/19_REQUIREMENTS_TRACEABILITY_MATRIX.md`
+- `docs/features/Atlas/ATLAS-BMR-002/20_CLAUDE_CODE_END_TO_END_EXECUTION_PROMPT.md`
+- `docs/features/Atlas/ATLAS-BMR-002/21_WORKER_DELEGATION_AND_VERIFICATION_PROTOCOL.md`
+- `docs/features/Atlas/ATLAS-BMR-002/22_SESSION_RESTART_AND_CONTEXT_RECOVERY.md`
+- `docs/features/Atlas/ATLAS-BMR-002/23_EXTERNAL_RESEARCH_REGISTER.md`
+- `docs/features/Atlas/ATLAS-BMR-002/24_INDEPENDENT_REVIEW_PROTOCOL.md`
+- `docs/features/Atlas/ATLAS-BMR-002/25_FINAL_RELEASE_AND_CLOSURE_DECISION_TEMPLATE.md`
+- `docs/features/Atlas/ATLAS-BMR-002/ATLAS_BMR_002_EXECUTION_AUTHORITY_COMBINED.md`
+- `docs/features/Atlas/ATLAS-BMR-002/MANIFEST.md`
+- `docs/features/Atlas/ATLAS-BMR-002/atlas_bmr002_execution_log.md`
+- `docs/features/Atlas/ATLAS-BMR-002/capability-maturity.v1.json`
+- `docs/features/Atlas/ATLAS-BMR-002/evidence-index.v1.json`
+- `docs/features/Atlas/ATLAS-BMR-002/execution-board.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/founder-decisions.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/gap-register.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/package-metadata.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/provider-readiness.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/release-gates.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/requirements-traceability.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/risk-register.v1.json`
+- `docs/features/Atlas/ATLAS-BMR-002/schemas/evidence-record.schema.json`
+- `docs/features/Atlas/ATLAS-BMR-002/schemas/execution-board.schema.json`
+- `docs/features/Atlas/ATLAS-BMR-002/tools/board_next.py`
+- `docs/features/Atlas/ATLAS-BMR-002/tools/record_evidence.py`
+- `docs/features/Atlas/ATLAS-BMR-002/tools/validate_package.py`

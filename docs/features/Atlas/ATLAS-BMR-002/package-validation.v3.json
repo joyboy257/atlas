@@ -1,0 +1,121 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "package_version": "3.0.0-execution",
+  "validator": "docs/features/Atlas/ATLAS-BMR-002/tools/validate_package.py",
+  "passed": true,
+  "checks": [
+    {
+      "name": "required_files",
+      "passed": true,
+      "detail": "missing=[]"
+    },
+    {
+      "name": "json_parse",
+      "passed": true,
+      "detail": "12 JSON files parsed"
+    },
+    {
+      "name": "work_item_ids_unique",
+      "passed": true,
+      "detail": "items=57 unique=57"
+    },
+    {
+      "name": "work_item_phases",
+      "passed": true,
+      "detail": "bad=[]"
+    },
+    {
+      "name": "dependency_references",
+      "passed": true,
+      "detail": "missing=[]"
+    },
+    {
+      "name": "dependency_acyclic",
+      "passed": true,
+      "detail": "cycle=None"
+    },
+    {
+      "name": "gate_references",
+      "passed": true,
+      "detail": "bad=[]"
+    },
+    {
+      "name": "status_vocabulary",
+      "passed": true,
+      "detail": "bad=[]"
+    },
+    {
+      "name": "maturity_vocabulary",
+      "passed": true,
+      "detail": "bad=[]"
+    },
+    {
+      "name": "work_item_completeness",
+      "passed": true,
+      "detail": "incomplete={} empty_core=[]"
+    },
+    {
+      "name": "traceability_refs",
+      "passed": true,
+      "detail": "bad_gaps=[] bad_requirements=[]"
+    },
+    {
+      "name": "rtm_integrity",
+      "passed": true,
+      "detail": "bad_items=[] bad_gaps=[]"
+    },
+    {
+      "name": "metadata_counts",
+      "passed": true,
+      "detail": "metadata=57 actual=57"
+    },
+    {
+      "name": "initial_active_item",
+      "passed": true,
+      "detail": "'ATLAS-BMR2-P0-001'"
+    },
+    {
+      "name": "no_bmr001_historical_files",
+      "passed": true,
+      "detail": "found=[]"
+    },
+    {
+      "name": "high_confidence_secret_scan",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "name": "markdown_local_links",
+      "passed": true,
+      "detail": "broken=[]"
+    },
+    {
+      "name": "canonical_checksums",
+      "passed": true,
+      "detail": "verified"
+    },
+    {
+      "name": "complete_product_scope",
+      "passed": true,
+      "detail": "first-class product planes present"
+    },
+    {
+      "name": "build_then_whole_product_test",
+      "passed": true,
+      "detail": "construction and final certification order present"
+    },
+    {
+      "name": "integrated_candidate_before_staging_test",
+      "passed": true,
+      "detail": "P7-003=G7 P7-005_deps=['ATLAS-BMR2-P7-004']"
+    }
+  ],
+  "summary": {
+    "work_items": 57,
+    "phases": 8,
+    "gates": 10,
+    "gaps": 57,
+    "requirements": 57
+  }
+}

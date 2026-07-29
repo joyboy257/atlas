@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atlas.mirai.dev/schemas/atlas-bmr002-evidence-v1.json",
+  "title": "Atlas BMR-002 Evidence Record",
+  "type": "object",
+  "required": [
+    "programme",
+    "phase",
+    "work_item",
+    "gate",
+    "source_commit",
+    "environment",
+    "command_or_journey",
+    "started_at",
+    "finished_at",
+    "actor",
+    "result",
+    "limitations",
+    "checksum"
+  ],
+  "properties": {
+    "programme": {
+      "const": "ATLAS-BMR-002"
+    },
+    "phase": {
+      "pattern": "^P[0-9]+$"
+    },
+    "work_item": {
+      "pattern": "^ATLAS-BMR2-P[0-9]+-[0-9]{3}$"
+    },
+    "gate": {
+      "pattern": "^G[0-9]+$"
+    },
+    "source_commit": {
+      "type": "string"
+    },
+    "artifact_digest": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environment": {
+      "type": "string"
+    },
+    "region": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider_account_scope": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "command_or_journey": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "finished_at": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "reviewer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED_EXTERNAL",
+        "INCONCLUSIVE"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "checksum": {
+      "type": "string"
+    }
+  }
+}

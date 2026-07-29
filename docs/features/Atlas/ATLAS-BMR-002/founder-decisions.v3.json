@@ -1,0 +1,91 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "decisions": [
+    {
+      "id": "BMR2-FD-001",
+      "decision": "BMR-002 primary product thesis",
+      "default": "Production Agentic Business Messaging Platform",
+      "status": "LOCKED_BY_USER_DIRECTION",
+      "reason": "The programme must build the complete production agentic product, not separate the Agent runtime from Cloud, providers, governance, billing or ecosystem."
+    },
+    {
+      "id": "BMR2-FD-002",
+      "decision": "Execution behavior",
+      "default": "Claude Code executes P0\u2013P7 end to end and does not return another planning package",
+      "status": "LOCKED_BY_USER_DIRECTION",
+      "reason": "User explicitly requested execution, testing and deployment."
+    },
+    {
+      "id": "BMR2-FD-003",
+      "decision": "Main/worker responsibility",
+      "default": "Main agent owns architecture and implementation; workers verify, test, review and commit bounded slices only",
+      "status": "LOCKED_BY_USER_DIRECTION",
+      "reason": "Project operating rule."
+    },
+    {
+      "id": "BMR2-FD-004",
+      "decision": "Product-plane status",
+      "default": "Agent runtime, Cloud, providers, enterprise governance, billing and ecosystem are co-equal first-class product planes",
+      "status": "LOCKED_BY_USER_DIRECTION",
+      "reason": "Each is necessary for Atlas to be a real operable agentic product."
+    },
+    {
+      "id": "BMR2-FD-005",
+      "decision": "Test order",
+      "default": "Test continuously during construction; certify the whole integrated product after build on staging",
+      "status": "LOCKED_BY_USER_DIRECTION",
+      "reason": "Early tests prevent compounded defects; final certification must exercise the completed integrated product."
+    },
+    {
+      "id": "BMR2-FD-006",
+      "decision": "Initial cloud topology",
+      "default": "Single primary region with explicit failure boundary; no automatic global multi-region promise",
+      "status": "DEFAULT_REVIEW_AT_P0",
+      "reason": "Fastest falsifiable path to production-shaped operation."
+    },
+    {
+      "id": "BMR2-FD-007",
+      "decision": "Second provider lane",
+      "default": "Score at least three candidates; Twilio SMS is recommendation, not a pre-approved fact",
+      "status": "DECIDE_AT_P5",
+      "reason": "Provider choice must follow demand, eligibility, geography, cost and support evidence."
+    },
+    {
+      "id": "BMR2-FD-008",
+      "decision": "Autonomy",
+      "default": "Action-specific L0\u2013L4; unrestricted L5 forbidden",
+      "status": "LOCKED_SAFETY_DEFAULT",
+      "reason": "Atlas owns policy, approval and committed effects."
+    },
+    {
+      "id": "BMR2-FD-009",
+      "decision": "Learning",
+      "default": "Reviewed LearningProposal; no autonomous mutation of durable policy/knowledge",
+      "status": "LOCKED_SAFETY_DEFAULT",
+      "reason": "Prevents untrusted observations from becoming authority."
+    },
+    {
+      "id": "BMR2-FD-010",
+      "decision": "Marketplace",
+      "default": "Build extension contracts/certification first; marketplace remains decision-gated",
+      "status": "LOCKED_SCOPE_DEFAULT",
+      "reason": "Distribution is not valuable before safe extension adoption exists."
+    },
+    {
+      "id": "BMR2-FD-011",
+      "decision": "Pricing",
+      "default": "Use versioned illustrative GBP scenarios only; no final price until cost/adoption evidence",
+      "status": "LOCKED_SCOPE_DEFAULT",
+      "reason": "Avoid unsupported commercial commitment."
+    },
+    {
+      "id": "BMR2-FD-012",
+      "decision": "Production promotion",
+      "default": "Deploy the integrated candidate to staging when access permits; limited production requires explicit user/founder authority",
+      "status": "LOCKED_GIT_AND_DEPLOYMENT_RULE",
+      "reason": "Production, push, merge, tag and public release are irreversible/external actions."
+    }
+  ]
+}

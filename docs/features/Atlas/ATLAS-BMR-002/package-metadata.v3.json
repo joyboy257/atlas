@@ -1,0 +1,51 @@
+{
+  "schema_version": "3.0.0",
+  "programme": "ATLAS-BMR-002",
+  "package_version": "3.0.0-execution",
+  "generated_at": "2026-07-29",
+  "title": "Atlas BMR-002 \u2014 Production Agentic Business Messaging Platform",
+  "mission": "Turn the certified BMR-001 foundation into Atlas's complete production agentic product: a production-scale, commercially operable, multi-provider, enterprise-governed developer platform in which versioned Agents pursue durable Missions and Atlas safely governs, executes, delivers, observes, bills, and proves business outcomes.",
+  "package_type": "CLAUDE_CODE_COMPLETE_PRODUCT_EXECUTION_AUTHORITY",
+  "work_item_count": 57,
+  "phase_count": 8,
+  "gate_count": 10,
+  "gap_count": 57,
+  "requirement_count": 57,
+  "provider_registry_count": 17,
+  "initial_pass_count": 0,
+  "initial_active_item": "ATLAS-BMR2-P0-001",
+  "execution_model": {
+    "P0": "baseline truth and preservation",
+    "P1": "shared authority contracts",
+    "P2-P6": "co-equal dependency-driven product build streams",
+    "P7": "complete integration, staging whole-product certification, authorised production and closure"
+  },
+  "test_model": {
+    "during_build": "continuous focused tests",
+    "G1-G6": "product-plane build readiness only",
+    "G7": "complete candidate integration",
+    "G8": "whole-product staging certification",
+    "G9": "bounded production and closure"
+  },
+  "reported_baseline": {
+    "worktree": "/Users/deon/Developer/mirai-atlas-bmr001",
+    "branch": "codex/atlas-bmr-001-p0-audit",
+    "commit": "4bf5da957d",
+    "tag": "atlas-bmr-001-closed",
+    "work_items": "50/50 PASS",
+    "verification_status": "UNVERIFIED_BY_PACKAGE"
+  },
+  "preservation": {
+    "contains_bmr001_historical_files": false,
+    "modifies_bmr001_tag": false,
+    "requires_p0_verification": true
+  },
+  "research_access_date": "2026-07-29",
+  "terminal_verdicts": [
+    "ATLAS_BMR_002_EXECUTION_COMPLETE",
+    "ATLAS_BMR_002_STAGING_CERTIFIED_PRODUCTION_APPROVAL_REQUIRED",
+    "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
+    "ATLAS_BMR_002_EXECUTION_FAILED",
+    "ATLAS_BMR_002_ROLLED_BACK"
+  ]
+}

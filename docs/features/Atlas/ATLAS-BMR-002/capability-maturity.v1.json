@@ -1,0 +1,238 @@
+{
+  "schema_version": "1.0.0",
+  "programme": "ATLAS-BMR-002",
+  "generated_at": "2026-07-29",
+  "maturity_vocabulary": [
+    "DOCUMENTED_ONLY",
+    "STUBBED",
+    "IMPLEMENTED_UNVERIFIED",
+    "LOCAL_PROVEN",
+    "CI_PROVEN",
+    "STAGING_PROVEN",
+    "PROVIDER_SANDBOX_PROVEN",
+    "LIMITED_PRODUCTION",
+    "PRODUCTION_PROVEN"
+  ],
+  "capabilities": [
+    {
+      "id": "CAP-AGENT-PACKAGE",
+      "title": "Versioned AgentPackage and deployed Agent identity",
+      "owner_boundary": "Public Atlas",
+      "target_phase": "P1",
+      "release_gate": "G1",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-MISSION",
+      "title": "Durable Mission lifecycle",
+      "owner_boundary": "Public contract + private Cloud implementation",
+      "target_phase": "P1",
+      "release_gate": "G1",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-PROPOSAL",
+      "title": "Runtime-neutral Proposal and Decision protocol",
+      "owner_boundary": "Public Atlas",
+      "target_phase": "P1",
+      "release_gate": "G1",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-ACTION",
+      "title": "Transactional Action and idempotency authority",
+      "owner_boundary": "Private Atlas Cloud implementing public contracts",
+      "target_phase": "P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-RECEIPTS",
+      "title": "Commit, delivery, usage, cost, audit and outcome receipts",
+      "owner_boundary": "Public schema + private persistence",
+      "target_phase": "P1/P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-COORDINATOR",
+      "title": "Lease-based resumable Mission coordinator",
+      "owner_boundary": "Private Atlas Cloud; local reference implementation public where portable",
+      "target_phase": "P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-TRIGGERS",
+      "title": "Inbound, scheduled, callback and deadline triggers",
+      "owner_boundary": "Public trigger contract + private Cloud scheduler",
+      "target_phase": "P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-AUTONOMY",
+      "title": "Action-specific autonomy, risk and budget policy",
+      "owner_boundary": "Public policy interface + private enforcement",
+      "target_phase": "P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-HUMAN-CONTROL",
+      "title": "Approval, handoff, takeover, pause and cancel",
+      "owner_boundary": "Public control contract; Mirai operator UX",
+      "target_phase": "P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-MEMORY",
+      "title": "Provenance-governed memory and reviewed learning",
+      "owner_boundary": "Public interfaces + private storage",
+      "target_phase": "P2",
+      "release_gate": "G2",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-CLI-SDK",
+      "title": "Mission CLI, SDK and OpenAPI",
+      "owner_boundary": "Public Atlas",
+      "target_phase": "P3",
+      "release_gate": "G3",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-NATIVE-RUNTIME",
+      "title": "Atlas-native reasoning adapter",
+      "owner_boundary": "Public adapter + managed private execution",
+      "target_phase": "P3",
+      "release_gate": "G3",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-EXTERNAL-RUNTIME",
+      "title": "External runtime proposal adapter",
+      "owner_boundary": "Public Atlas",
+      "target_phase": "P3",
+      "release_gate": "G3",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-OBSERVABILITY",
+      "title": "Causal mission observability",
+      "owner_boundary": "Public trace conventions + private hosted observability",
+      "target_phase": "P4",
+      "release_gate": "G4",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "STAGING_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-RELIABILITY",
+      "title": "Capacity, SLO, recovery and deployment safety",
+      "owner_boundary": "Private Atlas Cloud",
+      "target_phase": "P4",
+      "release_gate": "G4",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "STAGING_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-PROVIDER-OPS",
+      "title": "Progressive provider readiness and certification",
+      "owner_boundary": "Public adapter kit + private provider operations",
+      "target_phase": "P5",
+      "release_gate": "G5",
+      "current_maturity": "IMPLEMENTED_UNVERIFIED",
+      "target_maturity": "LIMITED_PRODUCTION",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-ENTERPRISE",
+      "title": "Organisation, RBAC, identity, audit and data lifecycle",
+      "owner_boundary": "Private Atlas Cloud; public representation contracts",
+      "target_phase": "P6",
+      "release_gate": "G6",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "LIMITED_PRODUCTION",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-COMMERCIAL",
+      "title": "Usage/cost ledger, quotas and billing settlement",
+      "owner_boundary": "Private Atlas Cloud",
+      "target_phase": "P6",
+      "release_gate": "G6",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "LIMITED_PRODUCTION",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-ECOSYSTEM",
+      "title": "Extension contracts and certification",
+      "owner_boundary": "Public Atlas",
+      "target_phase": "P7",
+      "release_gate": "G7",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "LIMITED_PRODUCTION",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    },
+    {
+      "id": "CAP-OPERATOR",
+      "title": "Team Inbox and Command Center experience",
+      "owner_boundary": "Mirai, consuming public Atlas control contracts",
+      "target_phase": "DEPENDENCY",
+      "release_gate": "N/A",
+      "current_maturity": "DOCUMENTED_ONLY",
+      "target_maturity": "CI_PROVEN",
+      "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
+      "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
+    }
+  ]
+}
