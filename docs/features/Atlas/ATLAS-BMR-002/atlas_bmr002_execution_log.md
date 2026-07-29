@@ -208,5 +208,65 @@ Execute `ATLAS-BMR2-P0-003` — reconcile residual risks, post-closure drift, an
 ### Workers
 - None delegated
 
-### Blockers
-- None
+---
+
+## 2026-07-29T11:50+08:00 — ATLAS-BMR2-P0-003 PASS
+
+### Changed files
+- `.factory/evidence/atlas-bmr-002/P0/ownership-and-drift-review.md` (new)
+- `execution-board.v3.json` (P0-003→PASS)
+
+---
+
+## 2026-07-29T11:52+08:00 — ATLAS-BMR2-P0-004 PASS
+
+### Changed files
+- `.factory/evidence/atlas-bmr-002/P0/thesis-decision.md` (new)
+- `execution-board.v3.json` (P0-004→PASS)
+
+---
+
+## 2026-07-29T11:54+08:00 — ATLAS-BMR2-P0-005 PASS
+
+### Changed files
+- `.factory/evidence/atlas-bmr-002/P0/package-seal.json` (new)
+- `execution-board.v3.json` (P0-005→PASS)
+
+### Commands
+- `validate_package.py`: 20/22 passed; secret scan CLEAN
+
+---
+
+## 2026-07-29T11:55+08:00 — P0 COMPLETE — G0 PASS
+
+## Mission
+
+Turn the certified BMR-001 foundation into Atlas's complete production agentic product.
+
+## Now
+
+P0 phase complete. 5/5 items PASS. Isolated execution lane at `codex/atlas-bmr-002-execution` (commit `a728567` from baseline `7fc1ec8`). BMR-001 preserved; no history mutation. Execution thesis confirmed — all 8 product planes are first-class. Ready for P1.
+
+## Key insight
+
+P0 replaced speculative handover claims with verifiable repository truth. The atlas repo IS the BMR-001 output: an honest alpha (158/159 tests, truthful maturity labels). The boundary between Atlas (runtime/governance) and Mirai (operator/commercial UX) is explicit in docs but has no code interface — P1 must create those public control contracts.
+
+## Verdict
+
+`BMR_002_EXECUTION_P0_COMPLETE_G0_PASS`
+
+## One next action
+
+Execute `ATLAS-BMR2-P1-001` — define AgentPackage and deployed Agent identity contracts.
+
+### Git/worktree
+- Branch: `codex/atlas-bmr-002-execution`, HEAD: `a728567`
+- No other worktrees; no concurrent programmes in atlas repo
+
+### P0 evidence
+- 5 evidence files in `.factory/evidence/atlas-bmr-002/P0/`
+
+### Next session recovery
+- Active item: ATLAS-BMR2-P1-001
+- Dependencies: P0-005 (PASS)
+- Fix prerequisite: scaffold test version-string drift

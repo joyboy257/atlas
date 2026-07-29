@@ -231,10 +231,10 @@
       "owner": "principal orchestrator",
       "release_gate": "G0",
       "falsifier": "The selected programme can be satisfied by either a standalone Agent runtime or a standalone Cloud/provider/billing platform",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "a728567",
       "gap_ids": [
         "ATLAS-BMR2-GAP-004"
       ],
@@ -274,10 +274,10 @@
       "owner": "release verifier",
       "release_gate": "G0",
       "falsifier": "Execution starts from an unvalidated or history-rewriting installation",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
-      "commit_sha": null,
+      "commit_sha": "a728567",
       "gap_ids": [
         "ATLAS-BMR2-GAP-005"
       ],
