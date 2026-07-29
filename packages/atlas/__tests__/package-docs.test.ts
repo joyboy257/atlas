@@ -44,6 +44,12 @@ describe('Atlas package-local documentation', () => {
       'schema/atlas-agent-package.v2.schema.json',
       'schema/atlas-mission.v1.schema.json',
       'schema/atlas-mission-lifecycle-event.v1.schema.json',
+      'schema/atlas-proposal.v1.schema.json',
+      'schema/atlas-decision.v1.schema.json',
+      'schema/atlas-action.v1.schema.json',
+      'schema/atlas-receipt.v1.schema.json',
+      'schema/atlas-outcome.v1.schema.json',
+      'schema/atlas-learning-proposal.v1.schema.json',
     ]));
     expect(manifest.examples).toContain('examples/front-desk');
     expect(manifest.skills).toEqual(expect.arrayContaining([

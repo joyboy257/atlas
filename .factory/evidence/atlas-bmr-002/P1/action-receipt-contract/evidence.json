@@ -1,0 +1,48 @@
+{
+  "evidence_id": "ATLAS-BMR2-P1-003-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P1-003",
+  "title": "Governed Proposal, Decision, Action, Receipt, Outcome and Learning contracts",
+  "timestamp": "2026-07-29T12:52:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "contract_kinds": ["Proposal", "Decision", "Action", "Receipt", "Outcome", "LearningProposal"],
+  "changed_files": [
+    "packages/atlas/src/action-contract.ts",
+    "packages/atlas/__tests__/action-contract.test.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/schema/atlas-proposal.v1.schema.json",
+    "packages/atlas/schema/atlas-decision.v1.schema.json",
+    "packages/atlas/schema/atlas-action.v1.schema.json",
+    "packages/atlas/schema/atlas-receipt.v1.schema.json",
+    "packages/atlas/schema/atlas-outcome.v1.schema.json",
+    "packages/atlas/schema/atlas-learning-proposal.v1.schema.json",
+    "packages/atlas/__tests__/package-docs.test.ts",
+    "packages/atlas/docs/public-docs.manifest.json",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "invariants_verified": [
+    "Proposal records runtime identity, bounded intent, action/wait/handoff/child-Mission/completion proposal, risk hints, context references, citations and provenance without approval or receipt authority.",
+    "Only system or operator actors can issue Decisions.",
+    "Committed Actions require a matching Decision with allow or modify disposition and exact scope/identity binding.",
+    "Receipt types distinguish commit, tool, provider, delivery, usage, cost, audit and outcome evidence.",
+    "Unknown provider/business state remains UNKNOWN_PENDING_RECONCILIATION.",
+    "Outcome is evidence-backed and distinct from message delivery.",
+    "LearningProposal acceptance requires an independent governed reviewer; runtime cannot self-accept its own proposal.",
+    "Contract digests are deterministic and receipt integrity is verifiable."
+  ],
+  "verification": {
+    "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
+    "metadata": "PASS",
+    "tests": { "test_files": 30, "tests": 234, "passed": 234, "failed": 0 },
+    "typescript_build": "PASS",
+    "diff_check": "PASS"
+  },
+  "limitations": [
+    "This item proves public contract validation and local authority behavior only.",
+    "Action outbox persistence, transactional commit, worker leases, provider execution, settlement, CI, staging, and production proof remain later work.",
+    "No credentials, provider, paid service, package publication, or production operation was used."
+  ],
+  "verdict": "ATLAS-BMR2-P1-003 = PASS — governed action and evidence contract family is locally proven; durable execution and external provider maturity remain unclaimed."
+}
