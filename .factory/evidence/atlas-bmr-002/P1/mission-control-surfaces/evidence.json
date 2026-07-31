@@ -2,14 +2,15 @@
   "evidence_id": "ATLAS-BMR2-P1-006-EVIDENCE-001",
   "programme": "ATLAS-BMR-002",
   "work_item": "ATLAS-BMR2-P1-006",
-  "timestamp": "2026-07-29T13:45:00+08:00",
+  "timestamp": "2026-07-31T10:48:54+08:00",
   "reviewer": "principal orchestrator",
-  "status": "PASS",
+  "status": "BLOCKED_EXTERNAL",
   "maturity": "LOCAL_PROVEN",
   "changed_files": [
     "packages/atlas/src/mission-persistence.ts",
     "packages/atlas/src/local-runtime.ts",
     "packages/atlas/src/mission-coordinator.ts",
+    "packages/atlas/src/operation-journal.ts",
     "packages/atlas/src/local-commands.ts",
     "packages/atlas/src/cli.ts",
     "packages/atlas/__tests__/mission-control.test.ts",
@@ -32,14 +33,18 @@
     "Successful control results expose the Mission correlation ID and current lifecycle, wait, runtime and ledger state."
   ],
   "verification": {
-    "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build && git diff --check",
-    "test_files": 33,
-    "tests": 256,
-    "passed": 256,
+    "command": "cd packages/atlas && npm run metadata:check && npm test && npm run build && git diff --check",
+    "test_files": 42,
+    "tests": 419,
+    "passed": 419,
     "failed": 0,
     "typescript_build": "PASS",
     "metadata": "PASS",
+    "metadata_digest": "sha256:78098ff49640d747bdf6e1d9dd0b6d9244b2623a93d0a7b3482dfd3e5e0a6ee4",
     "diff_check": "PASS",
+    "focused_mission_control_files": 3,
+    "focused_mission_control_tests": 59,
+    "focused_mission_control_passed": 59,
     "mission_control_suite": "PASS",
     "cli_suite": "PASS",
     "concurrent_control": "PASS",
@@ -49,7 +54,85 @@
     "This evidence proves a zero-credential local filesystem-backed coordinator and CLI only.",
     "No Atlas Cloud API, hosted worker, PostgreSQL deployment, provider account, staging environment, production environment, billing settlement or commercial readiness is claimed.",
     "The existing top-level atlas inspect/replay simulator commands remain backward-compatible; durable Mission controls are versioned under the atlas mission namespace.",
-    "P1-007 independent build-readiness review remains required before the P1 gate can close."
+    "P1-007 independent build-readiness review passed for the repaired local authority boundary; this remains local build-readiness evidence only.",
+    "The local usage/cost ledger is now implemented and tested, but the public Mission inspect/runtime projection does not yet expose its summary; CI, staging and settlement proof remain unavailable."
   ],
-  "verdict": "ATLAS-BMR2-P1-006 = PASS — local Mission inspect, replay, pause, resume, cancel and approval control surfaces are durable, scoped, typed and locally proven without claiming hosted or production maturity."
+  "verification_addenda": [
+    {
+      "timestamp": "2026-07-29T15:15:00Z",
+      "scope": "P1-006 authority and recovery follow-up",
+      "verification": {
+        "command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm test && npm run build && git diff --check",
+        "test_files": 33,
+        "tests": 262,
+        "passed": 262,
+        "failed": 0,
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "diff_check": "PASS"
+      },
+      "repairs": [
+        "Approval decisions persist an exact payload digest and result; identical approved/rejected replays are idempotent and changed decision/operator/reason payloads are rejected.",
+        "OperationLock stale takeover is atomically claimed and release is operation-id fenced, so competing reclaimers and late stale owners cannot remove a replacement owner lock.",
+        "Delivery callbacks use an explicit legal transition table and reject delivered/read to failed regression.",
+        "Pause and cancel lifecycle transitions close active Mission waits and clear activeWait in one persistence transaction."
+      ],
+      "maturity": "LOCAL_PROVEN",
+      "absent_proof": ["CI", "Atlas Cloud", "provider sandbox", "staging", "production", "usage/cost ledger", "billing settlement"]
+    },
+    {
+      "timestamp": "2026-07-29T21:11:00+08:00",
+      "scope": "P1-007 fresh public-boundary and reproducibility verification",
+      "verification": {
+        "command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm run build && npm test -- --run && git diff --check",
+        "test_files": 33,
+        "tests": 281,
+        "passed": 281,
+        "failed": 0,
+        "full_suite_repetitions": 4,
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "metadata_digest": "sha256:6043d52939ad2c10618c0c397e7092db2573fb088cbc06cb04499fa81755dcfc",
+        "diff_check": "PASS",
+        "package_root_runtime_forbidden_exports": [],
+        "package_root_declaration_forbidden_exports": []
+      },
+      "repairs": [
+        "Package-root Mission exports were narrowed from a wildcard barrel to explicit public Mission values and types, preventing MissionScope from becoming a root-importable internal alias.",
+        "ActionScope now uses an explicit tenant, organisation, project, environment and mission shape rather than importing MissionScope into reachable public declarations.",
+        "Runtime and Mission public projections remain explicit allowlists; local replay, approval and control results do not return raw internal payloads.",
+        "Provider message identity reuse across outboxes, contradictory accepted replays and ambiguous legacy callback identities remain fenced by typed idempotency errors."
+      ],
+      "maturity": "LOCAL_PROVEN",
+      "absent_proof": ["CI", "Atlas Cloud", "provider sandbox", "staging", "limited production", "production", "usage/cost ledger", "billing settlement", "commercial readiness", "whole-product certification"]
+    },
+    {
+      "timestamp": "2026-07-29T21:18:00+08:00",
+      "scope": "P1-007 independent gate disposition after provider identity repair",
+      "verification": {
+        "command": "cd packages/atlas && npm run metadata:check && npm run build && npx vitest run --testTimeout=20000 && git diff --check",
+        "test_files": 33,
+        "tests": 282,
+        "passed": 282,
+        "failed": 0,
+        "full_suite_repetitions": 2,
+        "focused_authority_tests": 51,
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "metadata_digest": "sha256:e6cd377e0647ddbc7bf9ad673e094ec4e617a68a897af2f9345b528d4ec3fba5",
+        "diff_check": "PASS",
+        "independent_verdict": "PASS",
+        "package_root_runtime_forbidden_exports": [],
+        "package_root_declaration_forbidden_exports": []
+      },
+      "repairs": [
+        "Direct delivered attempts now require a non-empty provider message identity and fail without mutating the queued outbox.",
+        "The providerless-delivery regression is covered in local-runtime tests and the coordinator/dev-server path remains coordinator-owned.",
+        "The fresh independent verifier confirmed root boundaries, explicit projections, redaction, coordinator authority, scope/lock fencing, provider identity preservation and callback chronology."
+      ],
+      "maturity": "LOCAL_PROVEN",
+      "absent_proof": ["CI", "Atlas Cloud", "provider sandbox", "staging", "limited production", "production", "usage/cost ledger", "billing settlement", "commercial readiness", "whole-product certification"]
+    }
+  ],
+  "verdict": "ATLAS-BMR2-P1-006 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local Mission inspect, replay, pause, resume, cancel and approval control surfaces are durable, scoped, typed and locally proven; the required CI evidence and the acceptance-specified usage/cost projection are not available, so the work item is not PASS."
 }

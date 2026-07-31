@@ -111,7 +111,7 @@ export async function runCli(argv: readonly string[], dependencies: CliDependenc
         fetchImpl: dependencies.fetchImpl ?? fetch,
         ...(projectRoot ? { projectRoot } : {}),
       });
-      const identity = server.runtime?.snapshot().identity ?? null;
+      const identity = server.identity;
       writeResult(output, { ok: true, command: 'dev', data: {
         url: server.url,
         workbench_url: projectRoot ? `${server.url}/` : null,
@@ -120,7 +120,7 @@ export async function runCli(argv: readonly string[], dependencies: CliDependenc
         mcp_url: `${server.url}/mcp`,
         webhook_url: `${server.url}/webhooks`,
         deterministic: true,
-        governed_runtime: server.runtime !== null,
+        governed_runtime: server.identity !== null,
         project_root: projectRoot ?? null,
         project_hash: identity?.project_hash ?? null,
       }, next_action: projectRoot
@@ -463,8 +463,21 @@ export async function runCli(argv: readonly string[], dependencies: CliDependenc
         writeResult(output, { ok: true, command: 'deploy', data, next_action: { code: 'dev', label: data.next_action } }, json);
         return 0;
       }
-      const local=await planDeployment(parsed.values.dir!,parsed.values.file);if(!local.valid){writeResult(output,{ok:true,command:`deploy ${action}`,data:local},json);return 1;}
-      const credential=await selection.store.get(selection.reference);if(!credential&&action==='plan'){writeResult(output,{ok:true,command:'deploy plan',data:{local,remote:null,offline:true}},json);return 0;}if(!credential)throw new AtlasCliError('AUTHENTICATION_REQUIRED','No Atlas credential is stored',{nextAction:'Run atlas login'});const platform=new AtlasPlatformClient({apiBase:credential.apiBase,token:credential.accessToken,fetchImpl:dependencies.fetchImpl});const active=await new LocalConfigStore(parsed.values.dir!).read();const project=parsed.values.project??active?.active.project_id;if(!project)throw missingProject();const environment=parsed.values.environment??active?.active.environment_id;
+      const activeForTarget = await new LocalConfigStore(parsed.values.dir!).read();
+      const effectiveProject = parsed.values.project ?? activeForTarget?.active.project_id;
+      const requestedEnvironment = typeof parsed.values.environment === 'string' ? parsed.values.environment : undefined;
+      const requestedPromotionDestination = action === 'promote' && typeof parsed.values.to === 'string' ? parsed.values.to : undefined;
+      const targetEnvironmentId = requestedPromotionDestination ?? requestedEnvironment ?? activeForTarget?.active.environment_id;
+      const credentialForTarget = await selection.store.get(selection.reference);
+      const environmentHint = targetEnvironmentId && credentialForTarget && effectiveProject
+        ? await new AtlasPlatformClient({ apiBase: credentialForTarget.apiBase, token: credentialForTarget.accessToken, fetchImpl: dependencies.fetchImpl }).showEnvironment(effectiveProject, targetEnvironmentId)
+        : undefined;
+      const local = await planDeployment(parsed.values.dir!, parsed.values.file, {
+        targetEnvironmentSlug: environmentHint?.slug ?? requestedEnvironment,
+        targetEnvironmentType: environmentHint?.environment_type,
+      });
+      if (!local.valid) throw new AtlasCliError('LOCAL_STATE_ERROR', `Atlas deployment configuration is invalid: ${local.errors.join('; ')}`, { nextAction: 'Run atlas validate and correct the configuration before deploying' });
+      const credential=await selection.store.get(selection.reference);if(!credential&&action==='plan'){writeResult(output,{ok:true,command:'deploy plan',data:{local,remote:null,offline:true}},json);return 0;}if(!credential)throw new AtlasCliError('AUTHENTICATION_REQUIRED','No Atlas credential is stored',{nextAction:'Run atlas login'});const platform=new AtlasPlatformClient({apiBase:credential.apiBase,token:credential.accessToken,fetchImpl:dependencies.fetchImpl});const project=effectiveProject;if(!project)throw missingProject();const environment=action==='promote' ? parsed.values.to : parsed.values.environment??activeForTarget?.active.environment_id;
       let data:unknown;
       if(action==='plan'){if(!environment)throw missingEnvironment();data={local,remote:await platform.planDeployment(project,environment,local.config_digest)};}
       else if(action==='apply'){if(!environment)throw missingEnvironment();const key=parsed.values['idempotency-key']??await deploymentIdempotencyKey(parsed.values.dir!,{action,project,environment,digest:local.config_digest});data=await platform.applyDeployment(project,environment,{config:local.config as Record<string,unknown>,config_digest:local.config_digest,idempotency_key:key,...(parsed.values['approval-id']?{approval_id:parsed.values['approval-id']}:{})});}
@@ -496,8 +509,14 @@ function assertCommandArity(command: string, positionals: readonly string[]): vo
   if (command === 'explain' && (positionals.length !== 2 || positionals[1] !== 'project')) {
     throw new AtlasCliError('USAGE_ERROR', 'explain requires project');
   }
-  if (command === 'mission' && (positionals.length < 2 || positionals.length > 3 || !['inspect', 'replay', 'pause', 'resume', 'cancel', 'approve', 'reject'].includes(positionals[1]!))) {
-    throw new AtlasCliError('USAGE_ERROR', 'mission requires inspect, replay, pause, resume, cancel, approve, or reject');
+  if (command === 'mission') {
+    const action = positionals[1];
+    if (!action || !['inspect', 'replay', 'pause', 'resume', 'cancel', 'approve', 'reject'].includes(action)) {
+      throw new AtlasCliError('USAGE_ERROR', 'mission requires inspect, replay, pause, resume, cancel, approve, or reject');
+    }
+    const allowsMissionIdPositional = ['inspect', 'pause', 'resume', 'cancel'].includes(action);
+    const validLength = allowsMissionIdPositional ? positionals.length >= 2 && positionals.length <= 3 : positionals.length === 2;
+    if (!validLength) throw new AtlasCliError('USAGE_ERROR', `mission ${action} received an unexpected positional argument`);
   }
   if (command === 'init' && (positionals.length < 1 || positionals.length > 2)) {
     throw new AtlasCliError('USAGE_ERROR', 'init accepts at most one template name');

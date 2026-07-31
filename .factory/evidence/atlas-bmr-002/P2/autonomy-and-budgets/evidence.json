@@ -1,0 +1,40 @@
+{
+  "evidence_id": "ATLAS-BMR2-P2-003-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P2-003",
+  "timestamp": "2026-07-31T12:33:20+08:00",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "scope": "Local zero-credential action-specific autonomy policy and in-memory budget reservation ledger",
+  "implemented": [
+    "Server-owned action-specific policy rules keyed by actionClass",
+    "Explicit L0-L4 autonomy vocabulary with L5 and malformed values rejected",
+    "Server policy limit prevents agent or runtime input from raising autonomy",
+    "Policy version, risk class, disposition, reason codes and explanation are returned by every evaluation",
+    "Unknown actions, uncertain actions, critical actions and budget exhaustion fail closed through deny, handoff, fail or defer dispositions",
+    "Atomic local reservation, commit and release operations with idempotent identical replay",
+    "Reservation conflicts, missing reservations, invalid states, currency mismatch and budget exhaustion are typed failures",
+    "No provider credentials, external services or paid model calls were used"
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/autonomy-policy.test.ts",
+    "focused_test_files": 1,
+    "focused_tests": 4,
+    "focused_passed": 4,
+    "full_command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm test",
+    "full_test_files": 37,
+    "full_tests": 370,
+    "full_passed": 370,
+    "metadata": "PASS",
+    "metadata_digest": "sha256:d1f6845215962e6941472e662a4464bdd5f5e4cf4d6e508230236b7956225096",
+    "typescript_build": "PASS",
+    "diff_check": "PASS"
+  },
+  "limitations": [
+    "The budget ledger is an in-memory local authority and does not prove database transactionality or multi-worker atomicity.",
+    "No CI execution evidence is available in the current environment.",
+    "No disposable database or database-equivalent persistence evidence is available.",
+    "No hosted Atlas Cloud, provider, staging, production, billing, capacity, commercial or whole-product certification is claimed."
+  ],
+  "verdict": "ATLAS-BMR2-P2-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — action-specific autonomy limits, policy identity/explanations, fail-closed uncertainty and local atomic budget reservation semantics are proven; CI and disposable-database evidence remain unavailable."
+}

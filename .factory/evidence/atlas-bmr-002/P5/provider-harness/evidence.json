@@ -1,0 +1,92 @@
+{
+  "schema_version": "atlas.provider-readiness-evidence/v1",
+  "work_item": "ATLAS-BMR2-P5-001",
+  "verdict": "BLOCKED_EXTERNAL / LOCAL_PROVEN",
+  "maturity": "LOCAL_PROVEN",
+  "implementation": {
+    "module": "packages/atlas/src/provider-readiness.ts",
+    "test": "packages/atlas/__tests__/provider-readiness.test.ts",
+    "export": "packages/atlas/src/index.ts",
+    "readiness_states": [
+      "DECLARED",
+      "LOCAL_CONFORMANCE",
+      "PROVIDER_SANDBOX_PROVEN",
+      "LIMITED_PRODUCTION",
+      "PRODUCTION_PROVEN",
+      "BLOCKED_PROVIDER",
+      "DEPRECATED"
+    ],
+    "scope_fields": [
+      "channelId",
+      "provider",
+      "adapterVersion",
+      "contractVersion",
+      "accountId/businessId/appId",
+      "environment",
+      "region",
+      "capability",
+      "consentConstraints",
+      "evidence observedAt/expiresAt",
+      "evidence scopeKey/checksum/redacted",
+      "supportOwner",
+      "limitations",
+      "deprecation stop-admission/migration/active-Mission/customer-communication fields"
+    ],
+    "certification_checks": [
+      "auth",
+      "eligibility",
+      "webhooks",
+      "retry",
+      "rate",
+      "spend",
+      "media",
+      "templates",
+      "reconciliation"
+    ]
+  },
+  "local_proof": {
+    "focused_tests": "6/6 passed",
+    "evidence_gated_promotion": true,
+    "expired_evidence_rejected": true,
+    "provider_claims_from_local_evidence_rejected": true,
+    "provider_evidence_requires_injected_verifier": true,
+    "evidence_scope_binding_enforced": true,
+    "future_observed_at_rejected": true,
+    "historical_claims_suppressed_after_block_or_deprecation": true,
+    "blocked_and_deprecated_states_visible": true,
+    "credentials_used": false,
+    "external_services_called": false
+  },
+  "external_boundary": {
+    "ci_proven": false,
+    "provider_sandbox_proven": false,
+    "limited_production_proven": false,
+    "production_proven": false,
+    "blockers": [
+      "CI execution evidence is unavailable in the current environment",
+      "Provider sandbox/test-account evidence and credentials are unavailable"
+    ]
+  },
+  "commands": [
+    {
+      "command": "cd packages/atlas && npx vitest run __tests__/provider-readiness.test.ts",
+      "result": "PASS — 1 file, 6 tests"
+    },
+    {
+      "command": "cd packages/atlas && npm test",
+      "result": "PASS — 36 files, 362 tests"
+    },
+    {
+      "command": "cd packages/atlas && npm run build",
+      "result": "PASS"
+    },
+    {
+      "command": "cd packages/atlas && npm run metadata:check",
+      "result": "PASS — sha256:51af71629fb7a7ca67d7bd73556e3bf673ff58546ba5bd3642b7c4dfd76fc588"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ]
+}

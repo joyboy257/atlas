@@ -8,6 +8,12 @@ import { AtlasLocalMissionCoordinator } from './mission-coordinator.js';
 import type { MissionScope } from './mission-contract.js';
 import { AtlasMessagingSimulator, type AtlasSimulatorScenario } from './messaging-simulator.js';
 import {
+  projectCoordinatorResult,
+  projectMissionControlResult,
+  type AtlasPublicCoordinatorResult,
+  type AtlasPublicMissionControlResult,
+} from './public-projections.js';
+import {
   ATLAS_PROJECT_CONFIG_FILE,
   loadAtlasProject,
   migrateAtlasProject,
@@ -24,6 +30,43 @@ export type AtlasLocalDoctorCheck = Readonly<{
   metadata?: Readonly<Record<string, unknown>>;
 }>;
 
+export type AtlasPublicDeliveryState = 'queued' | 'retry_scheduled' | 'sent' | 'delivered' | 'read' | 'rejected' | 'failed';
+
+export type AtlasLocalTestResult = Readonly<{
+  schema_version: 'atlas.local-test/v1';
+  status: 'passed';
+  scenario_id: 'front-desk-first-agent-loop';
+  project_hash: string;
+  exactly_once: boolean;
+  action_count: number;
+  delivery_state: AtlasPublicDeliveryState | null;
+  replayed: boolean;
+  receipt_kinds: readonly string[];
+  trace_event_types: readonly string[];
+  next_action: string;
+}>;
+
+export type AtlasLocalReplayResult = Readonly<{
+  schema_version: 'atlas.local-replay/v1';
+  status: 'passed';
+  scenario_id: string;
+  project_hash: string;
+  transcript: readonly Readonly<{
+    index: number;
+    type: string;
+    capture_as: string | null;
+    status: 'passed';
+  }>[];
+  final: Readonly<{
+    action_count: number;
+    delivery_state: AtlasPublicDeliveryState | null;
+    receipt_count: number;
+    trace_count: number;
+    replayed: boolean;
+  }>;
+  next_action: string;
+}>;
+
 export type AtlasLocalDoctorResult = Readonly<{
   schema_version: 'atlas.local-doctor/v1';
   project_root: string;
@@ -36,7 +79,7 @@ const CLI_COMMANDS = [
   'init', 'dev', 'test', 'doctor', 'capabilities', 'explain project', 'inspect', 'replay', 'deploy', 'upgrade',
 ] as const;
 
-export async function testLocalProject(root: string) {
+export async function testLocalProject(root: string): Promise<AtlasLocalTestResult> {
   const result = await runCanonicalScenario(root);
   return {
     schema_version: 'atlas.local-test/v1',
@@ -50,11 +93,28 @@ export async function testLocalProject(root: string) {
     receipt_kinds: uniqueSorted(result.final_state.receipts.map((receipt) => receipt.kind)),
     trace_event_types: uniqueSorted(result.final_state.traces.flatMap((trace) => trace.events.map((event) => event.type))),
     next_action: 'Run atlas dev and complete the same scenario in the local workbench.',
-  } as const;
+  };
 }
 
-export async function replayLocalProject(root: string, scenario?: AtlasSimulatorScenario) {
-  const result = scenario ? await runScenarioInSandbox(root, scenario) : await runCanonicalScenario(root);
+export type AtlasPublicSimulatorScenario = Readonly<{
+  id: string;
+  events: readonly Readonly<Record<string, unknown>>[];
+}>;
+
+export type AtlasPublicMissionMessage = Readonly<{
+  message_id: string;
+  conversation_id: string;
+  customer_id: string;
+  channel_id: string;
+  sequence: number;
+  occurred_at: string;
+  text: string;
+  consent: boolean;
+  within_messaging_window: boolean;
+}>;
+
+export async function replayLocalProject(root: string, scenario?: unknown): Promise<AtlasLocalReplayResult> {
+  const result = scenario ? await runScenarioInSandbox(root, scenario as AtlasSimulatorScenario) : await runCanonicalScenario(root);
   return {
     schema_version: 'atlas.local-replay/v1',
     status: result.status,
@@ -184,6 +244,10 @@ export type LocalMissionScopeInput = Readonly<{
   environmentId: string;
 }>;
 
+export type LocalMissionCommandOptions = Readonly<{
+  clock?: () => string;
+}>;
+
 export async function controlLocalMission(
   root: string,
   scope: LocalMissionScopeInput,
@@ -191,18 +255,21 @@ export async function controlLocalMission(
   missionId: string,
   actorIdentity = '',
   reason = '',
-) {
-  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope });
-  return coordinator.control(missionId, command, actorIdentity, reason);
+  options: LocalMissionCommandOptions = {},
+): Promise<AtlasPublicMissionControlResult> {
+  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, ...options });
+  const result = await coordinator.control(missionId, command, actorIdentity, reason);
+  return projectMissionControlResult(result);
 }
 
 export async function replayLocalMission(
   root: string,
   scope: LocalMissionScopeInput,
-  message: AtlasLocalInboundMessage,
-) {
-  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope });
-  return coordinator.replay(message);
+  message: AtlasPublicMissionMessage,
+  options: LocalMissionCommandOptions = {},
+): Promise<AtlasPublicCoordinatorResult> {
+  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, ...options });
+  return projectCoordinatorResult(await coordinator.replay(message));
 }
 
 export async function decideLocalMissionApproval(
@@ -212,11 +279,14 @@ export async function decideLocalMissionApproval(
   decision: 'approve' | 'reject',
   operatorId: string,
   reason?: string,
-) {
-  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope });
-  return decision === 'approve'
-    ? coordinator.approve(approvalId, operatorId, reason)
-    : coordinator.reject(approvalId, operatorId, reason);
+  options: LocalMissionCommandOptions = {},
+): Promise<AtlasPublicCoordinatorResult> {
+  const coordinator = await AtlasLocalMissionCoordinator.open({ root, scope, ...options });
+  return projectCoordinatorResult(
+    await (decision === 'approve'
+      ? coordinator.approve(approvalId, operatorId, reason)
+      : coordinator.reject(approvalId, operatorId, reason)),
+  );
 }
 
 export async function inspectLocalProject(root: string) {
@@ -332,7 +402,18 @@ async function runScenarioInSandbox(root: string, scenario: AtlasSimulatorScenar
   try {
     let milliseconds = Date.parse('2026-07-24T08:00:00.000Z');
     const runtime = await AtlasLocalRuntime.open({ root: sandbox, clock: () => new Date(milliseconds).toISOString() });
-    const simulator = new AtlasMessagingSimulator(runtime, { advance: (value) => { milliseconds += value; } });
+    const identity = runtime.snapshot().identity;
+    const coordinator = await AtlasLocalMissionCoordinator.open({
+      root: sandbox,
+      scope: {
+        tenantId: identity.tenant_id,
+        organisationId: `local-org-${identity.project_hash.slice(0, 16)}`,
+        projectId: identity.project_hash,
+        environmentId: 'local',
+      },
+      clock: () => new Date(milliseconds).toISOString(),
+    });
+    const simulator = new AtlasMessagingSimulator(coordinator, { advance: (value) => { milliseconds += value; } });
     return await simulator.runScenario(scenario);
   } finally {
     await rm(sandbox, { recursive: true, force: true });
@@ -430,7 +511,7 @@ function parseRuntimeStateForInspection(raw: string, expectedHash: string): Insp
 }
 
 function summarizeConversation(value: any) {
-  return value ? { id: value.id, state: value.state, last_sequence: value.last_sequence, operator_id: value.operator_id, handoff_reason: value.handoff_reason } : null;
+  return value ? { id: value.id, state: value.state, last_sequence: value.last_sequence, operator_id: value.operator_id } : null;
 }
 function summarizeApproval(value: any) {
   return value ? { id: value.id, proposal_id: value.proposal_id, status: value.status, operator_id: value.operator_id, action_id: value.action_id } : null;

@@ -5,6 +5,21 @@ import { loadAtlasProject } from './project-contract.js';
 export const ATLAS_LOCAL_RUNTIME_VERSION = 'atlas.local-runtime/v1' as const;
 export const ATLAS_LOCAL_FIXTURE_MODEL = 'atlas.local-fixture/v1' as const;
 export const ATLAS_LOCAL_STATE_FILE = '.atlas/runtime-state.json' as const;
+export const ATLAS_LOCAL_APPROVAL_TTL_MS = 15 * 60_000;
+
+export type AtlasLocalAuthorityScope = Readonly<{
+  tenant_id: string;
+  organisation_id: string;
+  project_id: string;
+  environment_id: string;
+}>;
+
+export type AtlasLocalTakeover = Readonly<{
+  operator_id: string;
+  scope: AtlasLocalAuthorityScope;
+  reason: string;
+  taken_over_at: string;
+}>;
 
 export type AtlasLocalRuntimeErrorCode =
   | 'INVALID_MESSAGE'
@@ -14,7 +29,8 @@ export type AtlasLocalRuntimeErrorCode =
   | 'NOT_FOUND'
   | 'RETRY_NOT_READY'
   | 'DELIVERY_STATE_REGRESSION'
-  | 'PROJECT_STATE_MISMATCH';
+  | 'PROJECT_STATE_MISMATCH'
+  | 'AUTHORIZATION_FAILED';
 
 export class AtlasLocalRuntimeError extends Error {
   readonly code: AtlasLocalRuntimeErrorCode;
@@ -106,6 +122,9 @@ export type AtlasLocalApproval = Readonly<{
   proposal_id: string;
   trace_id: string;
   conversation_id: string;
+  scope: AtlasLocalAuthorityScope;
+  policy_ref: string;
+  expires_at: string;
   status: 'pending' | 'approved' | 'rejected' | 'cancelled';
   requested_at: string;
   decided_at: string | null;
@@ -142,6 +161,7 @@ export type AtlasLocalOutboxMessage = Readonly<{
   retry_after_ms: number | null;
   provider_message_id: string | null;
   provider_code: string | null;
+  provider_occurred_at?: string | null;
   created_at: string;
   updated_at: string;
 }>;
@@ -154,6 +174,7 @@ export type AtlasLocalConversation = Readonly<{
   last_sequence: number;
   operator_id: string | null;
   handoff_reason: string | null;
+  takeover: AtlasLocalTakeover | null;
   created_at: string;
   updated_at: string;
 }>;
@@ -232,6 +253,7 @@ export class AtlasLocalRuntime {
   private readonly knowledge: AtlasLocalEvidence;
   private state: MutableState;
   private persistTail: Promise<void> = Promise.resolve();
+  private readonly commitGuards = new Set<(operation: () => Promise<void>) => Promise<void>>();
 
   private constructor(root: string, state: MutableState, knowledge: AtlasLocalEvidence, clock: () => string) {
     this.root = root;
@@ -300,10 +322,14 @@ export class AtlasLocalRuntime {
         nextAction: 'Run atlas upgrade or remove only .atlas/runtime-state.json after preserving required local evidence',
       });
     }
-    return new AtlasLocalRuntime(root, state, knowledge, clock);
+    const migrated = migrateTakeoverState(state);
+    const runtime = new AtlasLocalRuntime(root, migrated.state, knowledge, clock);
+    if (migrated.changed) await runtime.persist();
+    return runtime;
   }
 
   async reload(): Promise<void> {
+    await this.persistTail;
     const existing = await readUtf8Safe(this.statePath);
     if (existing === null) {
       throw new AtlasLocalRuntimeError('PROJECT_STATE_MISMATCH', 'Local Atlas runtime state disappeared during coordination', {
@@ -317,6 +343,18 @@ export class AtlasLocalRuntime {
       });
     }
     this.state = state;
+  }
+
+  addCommitGuard(guard: (operation: () => Promise<void>) => Promise<void>): () => void {
+    this.commitGuards.add(guard);
+    return () => this.commitGuards.delete(guard);
+  }
+
+  pendingMessages(conversationId: string): readonly AtlasLocalInboundMessage[] {
+    return Object.values(this.state.pending_messages[conversationId] ?? {})
+      .map((pending) => pending.message)
+      .sort((left, right) => left.sequence - right.sequence)
+      .map((message) => deepClone(message));
   }
 
   snapshot(): AtlasLocalRuntimeSnapshot {
@@ -346,6 +384,12 @@ export class AtlasLocalRuntime {
     }
 
     const conversation = this.ensureConversation(message);
+    if (conversation.takeover || conversation.state === 'human_takeover') {
+      const result = this.fenceInboundMessage(message);
+      this.state.inbound_idempotency[message.message_id] = { digest, result };
+      await this.persist();
+      return deepClone(result);
+    }
     if (message.sequence > conversation.last_sequence + 1) {
       const result = {
         status: 'held_out_of_order',
@@ -357,7 +401,19 @@ export class AtlasLocalRuntime {
         next_action: `Deliver sequence ${conversation.last_sequence + 1} before replaying ${message.message_id}`,
       };
       this.state.pending_messages[message.conversation_id] ??= {};
-      this.state.pending_messages[message.conversation_id]![String(message.sequence)] = { digest, message };
+      const pendingKey = String(message.sequence);
+      const existingPending = this.state.pending_messages[message.conversation_id]![pendingKey];
+      if (existingPending) {
+        if (existingPending.digest !== digest) {
+          throw new AtlasLocalRuntimeError('CONFLICT', `Conversation ${message.conversation_id} already has a different pending message at sequence ${message.sequence}`, {
+            nextAction: 'Replay the original pending message or use the next available sequence',
+          });
+        }
+        this.state.inbound_idempotency[message.message_id] = { digest, result };
+        await this.persist();
+        return deepClone({ ...result, replayed: true });
+      }
+      this.state.pending_messages[message.conversation_id]![pendingKey] = { digest, message };
       this.state.inbound_idempotency[message.message_id] = { digest, result };
       await this.persist();
       return deepClone(result);
@@ -386,13 +442,36 @@ export class AtlasLocalRuntime {
     return deepClone(finalResult);
   }
 
-  async decideApproval(approvalId: string, decision: Readonly<{ decision: 'approved' | 'rejected'; operator_id: string; reason?: string }>): Promise<Record<string, any>> {
+  async decideApproval(approvalId: string, decision: Readonly<{
+    decision: 'approved' | 'rejected';
+    operator_id: string;
+    reason?: string;
+    scope?: AtlasLocalAuthorityScope;
+  }>): Promise<Record<string, any>> {
     const approval = this.state.approvals[approvalId];
     if (!approval) throw notFound('approval', approvalId);
-    if (!decision.operator_id) throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'operator_id is required for an approval decision');
+    const operatorId = normalizeOperatorId(decision.operator_id);
+    const approvalScope = approval.scope ?? localAuthorityScope(this.state.identity);
+    if (decision.scope && !sameAuthorityScope(decision.scope, approvalScope)) {
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', `Approval ${approvalId} is outside the supplied operator scope`, {
+        nextAction: 'Use the server-derived scope bound to this Mission approval',
+      });
+    }
+    const conversation = this.state.conversations[approval.conversation_id];
+    if (conversation?.takeover || conversation?.state === 'human_takeover') {
+      throw new AtlasLocalRuntimeError('CONFLICT', `Conversation ${approval.conversation_id} is under human control`, {
+        nextAction: 'Do not decide an approval after human takeover',
+      });
+    }
+    if (approval.status === 'pending' && approval.expires_at && Date.parse(this.clock()) >= Date.parse(approval.expires_at)) {
+      throw new AtlasLocalRuntimeError('CONFLICT', `Approval ${approvalId} has expired`, {
+        nextAction: 'Create a new governed proposal instead of deciding an expired approval',
+      });
+    }
     if (approval.status === 'approved' && approval.action_id) {
       const committed = this.state.commit_results[approval.action_id];
       if (!committed) throw new AtlasLocalRuntimeError('PROJECT_STATE_MISMATCH', 'Approved action result is missing from local state');
+      await this.persist();
       return { ...deepClone(committed), replayed: true };
     }
     if (approval.status !== 'pending') {
@@ -404,20 +483,19 @@ export class AtlasLocalRuntime {
     const proposal = this.state.proposals[approval.proposal_id];
     if (!proposal) throw notFound('proposal', approval.proposal_id);
     if (decision.decision === 'rejected') {
-      this.state.approvals[approvalId] = { ...approval, status: 'rejected', decided_at: now, operator_id: decision.operator_id, reason: decision.reason ?? null };
+      this.state.approvals[approvalId] = { ...approval, status: 'rejected', decided_at: now, operator_id: operatorId, reason: decision.reason ?? null };
       this.state.proposals[proposal.id] = { ...proposal, status: 'rejected' };
       const conversation = this.state.conversations[approval.conversation_id]!;
       this.state.conversations[conversation.id] = { ...conversation, state: 'human_handoff', handoff_reason: decision.reason ?? 'approval_rejected', updated_at: now };
-      this.appendTraceEvent(approval.trace_id, 'approval.rejected', { approval_id: approval.id, operator_id: decision.operator_id, reason: decision.reason ?? null });
-      const receipt = this.addReceipt('approval', approval.trace_id, approval.conversation_id, approval.id, 'rejected', { operator_id: decision.operator_id, reason: decision.reason ?? null });
+      this.appendTraceEvent(approval.trace_id, 'approval.rejected', { approval_id: approval.id, operator_id: operatorId, reason: decision.reason ?? null });
+      const receipt = this.addReceipt('approval', approval.trace_id, approval.conversation_id, approval.id, 'rejected', { operator_id: operatorId, reason: decision.reason ?? null });
       this.completeTrace(approval.trace_id, 'handoff_required');
       await this.persist();
       return { status: 'rejected', replayed: false, approval: this.state.approvals[approvalId], receipt, trace: this.trace(approval.trace_id) };
     }
-    this.state.approvals[approvalId] = { ...approval, status: 'approved', decided_at: now, operator_id: decision.operator_id, reason: decision.reason ?? null };
     return this.commitProposal(proposal.id, {
       idempotency_key: `approval:${approval.id}`,
-      operator_id: decision.operator_id,
+      operator_id: operatorId,
       input: proposal.input,
     });
   }
@@ -452,9 +530,21 @@ export class AtlasLocalRuntime {
       });
     }
 
+    const previousState = deepClone(this.state);
     const now = this.clock();
     const approval = Object.values(this.state.approvals).find((item) => item.proposal_id === proposal.id);
     if (!approval) throw new AtlasLocalRuntimeError('PROJECT_STATE_MISMATCH', 'High-risk proposal has no approval record');
+    if (approval.expires_at && Date.parse(now) >= Date.parse(approval.expires_at)) {
+      throw new AtlasLocalRuntimeError('CONFLICT', `Approval ${approval.id} has expired`, {
+        nextAction: 'Create a new governed proposal instead of committing an expired approval',
+      });
+    }
+    const guardedConversation = this.state.conversations[proposal.conversation_id];
+    if (guardedConversation?.takeover || guardedConversation?.state === 'human_takeover') {
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', `Conversation ${proposal.conversation_id} is under human control`, {
+        nextAction: 'Do not commit agent work after human takeover',
+      });
+    }
     if (approval.status === 'pending') {
       this.state.approvals[approval.id] = { ...approval, status: 'approved', decided_at: now, operator_id: request.operator_id, reason: 'explicit_operator_commit' };
     } else if (approval.status !== 'approved') {
@@ -498,6 +588,7 @@ export class AtlasLocalRuntime {
       retry_after_ms: null,
       provider_message_id: null,
       provider_code: null,
+      provider_occurred_at: null,
       created_at: now,
       updated_at: now,
     };
@@ -530,29 +621,146 @@ export class AtlasLocalRuntime {
     };
     this.state.action_idempotency[request.idempotency_key] = { digest: commitDigest, result: commitResult };
     this.state.commit_results[actionId] = commitResult;
-    await this.persist();
+    try {
+      await this.persist();
+    } catch (error) {
+      this.state = previousState;
+      throw error;
+    }
     return deepClone(commitResult);
   }
 
-  async takeHumanControl(conversationId: string, request: Readonly<{ operator_id: string; reason: string }>): Promise<Record<string, any>> {
+  async returnToAgent(
+    conversationId: string,
+    request: Readonly<{
+      operator_id: string;
+      reason: string;
+      scope?: AtlasLocalAuthorityScope;
+      mission_receipts?: readonly Readonly<{ mission_id: string; trace_id?: string }>[];
+    }>,
+  ): Promise<Record<string, any>> {
+    const operatorId = normalizeOperatorId(request.operator_id);
+    if (!request.reason.trim()) throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'Returning control to the Agent requires operator_id and reason');
+    const authorityScope = localAuthorityScope(this.state.identity);
+    if (request.scope && !sameAuthorityScope(request.scope, authorityScope)) {
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', 'Return-to-Agent scope must match the runtime-derived authority scope', {
+        nextAction: 'Use the server-derived local authority scope for return-to-Agent',
+      });
+    }
+    const scope = authorityScope;
     const conversation = this.state.conversations[conversationId];
-    if (!conversation) throw notFound('conversation', conversationId);
-    if (!request.operator_id || !request.reason) throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'Human takeover requires operator_id and reason');
+    if (!conversation?.takeover || conversation.state !== 'human_takeover') {
+      throw new AtlasLocalRuntimeError('CONFLICT', `Conversation ${conversationId} is not under human control`, {
+        nextAction: 'Return control only after an explicit human takeover',
+      });
+    }
+    if (conversation.takeover.operator_id !== operatorId || !sameAuthorityScope(conversation.takeover.scope, scope)) {
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', `Operator ${operatorId} cannot return control for conversation ${conversationId}`, {
+        nextAction: 'Use the recorded takeover operator and authority scope',
+      });
+    }
     const now = this.clock();
-    this.state.conversations[conversationId] = { ...conversation, state: 'human_takeover', operator_id: request.operator_id, handoff_reason: request.reason, updated_at: now };
+    this.state.conversations[conversationId] = {
+      ...conversation,
+      state: 'automated',
+      operator_id: null,
+      handoff_reason: request.reason,
+      takeover: null,
+      updated_at: now,
+    };
+    const receipts: AtlasLocalReceipt[] = [];
+    const requestedReceipts = request.mission_receipts ?? [{ mission_id: conversationId }];
+    for (const requested of requestedReceipts) {
+      const trace = requested.trace_id
+        ? this.state.traces.find((candidate) => candidate.id === requested.trace_id && candidate.conversation_id === conversationId)
+        : undefined;
+      const traceId = trace?.id ?? deterministicId('mission-return-trace', requested.mission_id);
+      if (trace) {
+        this.appendTraceEvent(trace.id, 'human.returned_to_agent', { operator_id: operatorId, reason: request.reason, scope, mission_id: requested.mission_id });
+      }
+      receipts.push(this.addReceipt('handoff', traceId, conversationId, requested.mission_id, 'returned_to_agent', {
+        operator_id: operatorId,
+        reason: request.reason,
+        scope,
+        mission_id: requested.mission_id,
+      }));
+    }
+    await this.persist();
+    return { conversation_id: conversationId, state: 'automated', operator_id: operatorId, reason: request.reason, scope, receipts, replayed: false };
+  }
+
+  async takeHumanControl(conversationId: string, request: Readonly<{ operator_id: string; reason: string; scope?: AtlasLocalAuthorityScope; channel_id?: string }>): Promise<Record<string, any>> {
+    const operatorId = normalizeOperatorId(request.operator_id);
+    if (!request.reason.trim()) throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'Human takeover requires operator_id and reason');
+    const authorityScope = localAuthorityScope(this.state.identity);
+    if (request.scope && !sameAuthorityScope(request.scope, authorityScope)) {
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', 'Human takeover scope must match the runtime-derived authority scope', {
+        nextAction: 'Use the server-derived local authority scope for takeover',
+      });
+    }
+    const scope = authorityScope;
+    let conversation = this.state.conversations[conversationId];
+    if (!conversation) {
+      const now = this.clock();
+      const takeover: AtlasLocalTakeover = {
+        operator_id: operatorId,
+        scope,
+        reason: request.reason,
+        taken_over_at: now,
+      };
+      conversation = {
+        id: conversationId,
+        customer_id: unboundCustomerId(conversationId),
+        channel_id: request.channel_id?.trim() || 'unbound-local-channel',
+        state: 'human_takeover',
+        last_sequence: 0,
+        operator_id: operatorId,
+        handoff_reason: request.reason,
+        takeover,
+        created_at: now,
+        updated_at: now,
+      };
+      this.state.conversations[conversationId] = conversation;
+      await this.persist();
+      return {
+        conversation_id: conversationId,
+        state: 'human_takeover',
+        operator_id: operatorId,
+        reason: request.reason,
+        scope,
+        cancelled_approval_ids: [],
+      };
+    }
+    if (conversation.takeover) {
+      if (conversation.takeover.operator_id === operatorId && sameAuthorityScope(conversation.takeover.scope, scope) && conversation.takeover.reason === request.reason) {
+        return { conversation_id: conversationId, state: 'human_takeover', operator_id: operatorId, reason: request.reason, scope, cancelled_approval_ids: [], replayed: true };
+      }
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', `Conversation ${conversationId} is already under human control`, {
+        nextAction: 'Use the recorded takeover identity or an explicit governed return-to-agent command',
+      });
+    }
+    const now = this.clock();
+    const takeover: AtlasLocalTakeover = { operator_id: operatorId, scope, reason: request.reason, taken_over_at: now };
+    this.state.conversations[conversationId] = { ...conversation, state: 'human_takeover', operator_id: operatorId, handoff_reason: request.reason, takeover, updated_at: now };
     const cancelled: string[] = [];
     for (const approval of Object.values(this.state.approvals)) {
       if (approval.conversation_id !== conversationId || approval.status !== 'pending') continue;
-      this.state.approvals[approval.id] = { ...approval, status: 'cancelled', decided_at: now, operator_id: request.operator_id, reason: request.reason };
+      this.state.approvals[approval.id] = { ...approval, status: 'cancelled', decided_at: now, operator_id: operatorId, reason: request.reason };
       const proposal = this.state.proposals[approval.proposal_id];
       if (proposal) this.state.proposals[proposal.id] = { ...proposal, status: 'cancelled' };
-      this.appendTraceEvent(approval.trace_id, 'human.takeover', { operator_id: request.operator_id, reason: request.reason, approval_id: approval.id });
+      this.appendTraceEvent(approval.trace_id, 'human.takeover', { operator_id: operatorId, reason: request.reason, scope, approval_id: approval.id });
       this.completeTrace(approval.trace_id, 'handoff_required');
-      this.addReceipt('handoff', approval.trace_id, conversationId, conversationId, 'human_takeover', { operator_id: request.operator_id, reason: request.reason });
+      this.addReceipt('handoff', approval.trace_id, conversationId, conversationId, 'human_takeover', { operator_id: operatorId, reason: request.reason, scope });
       cancelled.push(approval.id);
     }
+    const pending = this.state.pending_messages[conversationId] ?? {};
+    for (const queued of Object.values(pending).sort((left, right) => left.message.sequence - right.message.sequence)) {
+      const result = this.fenceInboundMessage(queued.message);
+      this.state.inbound_idempotency[queued.message.message_id] = { digest: queued.digest, result };
+    }
+    delete this.state.pending_messages[conversationId];
     await this.persist();
-    return { conversation_id: conversationId, state: 'human_takeover', operator_id: request.operator_id, reason: request.reason, cancelled_approval_ids: cancelled };
+    return { conversation_id: conversationId, state: 'human_takeover', operator_id: operatorId, reason: request.reason, scope, cancelled_approval_ids: cancelled };
   }
 
   async attemptDelivery(outboxId: string, attempt: Readonly<{
@@ -563,6 +771,12 @@ export class AtlasLocalRuntime {
     const index = this.state.outbox.findIndex((item) => item.id === outboxId);
     if (index < 0) throw notFound('outbox message', outboxId);
     const current = this.state.outbox[index]!;
+    const conversation = this.state.conversations[current.conversation_id];
+    if (conversation?.takeover || conversation?.state === 'human_takeover') {
+      throw new AtlasLocalRuntimeError('AUTHORIZATION_FAILED', `Conversation ${current.conversation_id} is under human control`, {
+        nextAction: 'Do not deliver agent outbox work after human takeover',
+      });
+    }
     if (['delivered', 'read', 'rejected', 'failed'].includes(current.state)) {
       throw new AtlasLocalRuntimeError('CONFLICT', `Outbox message ${outboxId} is terminal in state ${current.state}`, {
         nextAction: 'Inspect its delivery receipt instead of retrying',
@@ -587,10 +801,46 @@ export class AtlasLocalRuntime {
       outcome = 'rejected';
     } else if (attempt.outcome === 'accepted') {
       if (!attempt.provider_message_id) throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'accepted delivery requires provider_message_id');
-      updated = { ...current, state: 'sent', attempts, retry_after_ms: null, next_attempt_at: null, provider_message_id: attempt.provider_message_id, provider_code: attempt.provider_code ?? null, updated_at: now };
+      const conflictingOutbox = this.state.outbox.find((item) => item.id !== outboxId && item.provider_message_id === attempt.provider_message_id);
+      if (conflictingOutbox) {
+        throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Provider message identity ${attempt.provider_message_id} is already bound to outbox ${conflictingOutbox.id}`, {
+          nextAction: 'Replay the original provider identity or use a new provider message identity',
+        });
+      }
+      if (current.state === 'sent') {
+        if (current.provider_message_id !== attempt.provider_message_id) {
+          throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Outbox message ${outboxId} provider identity does not match the recorded provider message`, {
+            nextAction: 'Replay the original provider identity or use a new outbox message',
+          });
+        }
+        return { delivery: deepClone(current), replayed: true };
+      }
+      if (current.provider_message_id && current.provider_message_id !== attempt.provider_message_id) {
+        throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Outbox message ${outboxId} provider identity does not match the recorded provider message`, {
+          nextAction: 'Replay the original provider identity or use a new outbox message',
+        });
+      }
+      updated = { ...current, state: 'sent', attempts, retry_after_ms: null, next_attempt_at: null, provider_message_id: attempt.provider_message_id, provider_code: attempt.provider_code ?? null, provider_occurred_at: now, updated_at: now };
       outcome = 'accepted';
     } else {
-      updated = { ...current, state: 'delivered', attempts, retry_after_ms: null, next_attempt_at: null, provider_message_id: attempt.provider_message_id ?? current.provider_message_id, provider_code: attempt.provider_code ?? null, updated_at: now };
+      const providerMessageId = attempt.provider_message_id ?? current.provider_message_id;
+      if (!providerMessageId) {
+        throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'delivered outcome requires provider_message_id', {
+          nextAction: 'Provide the provider message identity before recording delivery',
+        });
+      }
+      const conflictingOutbox = this.state.outbox.find((item) => item.id !== outboxId && item.provider_message_id === providerMessageId);
+      if (conflictingOutbox) {
+        throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Provider message identity ${providerMessageId} is already bound to outbox ${conflictingOutbox.id}`, {
+          nextAction: 'Replay the original provider identity or use a new provider message identity',
+        });
+      }
+      if (current.provider_message_id && attempt.provider_message_id && current.provider_message_id !== attempt.provider_message_id) {
+        throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Outbox message ${outboxId} provider identity does not match the recorded provider message`, {
+          nextAction: 'Replay the original provider identity or use a new outbox message',
+        });
+      }
+      updated = { ...current, state: 'delivered', attempts, retry_after_ms: null, next_attempt_at: null, provider_message_id: providerMessageId, provider_code: attempt.provider_code ?? null, provider_occurred_at: current.provider_occurred_at ?? now, updated_at: now };
       outcome = 'delivered';
     }
     this.state.outbox[index] = updated;
@@ -607,6 +857,20 @@ export class AtlasLocalRuntime {
     return { delivery: updated, receipt, replayed: false };
   }
 
+  deliveryCallbackReplay(callback: Readonly<{
+    callback_id: string;
+    provider_message_id: string;
+    state: 'sent' | 'delivered' | 'read' | 'failed';
+    occurred_at: string;
+  }>): Record<string, any> | null {
+    if (!callback.callback_id || !callback.provider_message_id || !isIsoDate(callback.occurred_at)) return null;
+    const prior = this.state.callbacks[callback.callback_id];
+    if (!prior) return null;
+    const digest = sha256(stableJson(callback));
+    if (prior.digest !== digest) throw idempotencyMismatch('delivery callback', callback.callback_id);
+    return { ...deepClone(prior.result), replayed: true };
+  }
+
   async applyDeliveryCallback(callback: Readonly<{
     callback_id: string;
     provider_message_id: string;
@@ -620,20 +884,30 @@ export class AtlasLocalRuntime {
     const prior = this.state.callbacks[callback.callback_id];
     if (prior) {
       if (prior.digest !== digest) throw idempotencyMismatch('delivery callback', callback.callback_id);
+      await this.persist();
       return { ...deepClone(prior.result), replayed: true };
+    }
+    const matchingOutboxes = this.state.outbox.filter((item) => item.provider_message_id === callback.provider_message_id);
+    if (matchingOutboxes.length > 1) {
+      throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Provider message identity ${callback.provider_message_id} is ambiguous across outbox messages`, {
+        nextAction: 'Repair the duplicate provider identity before applying callbacks',
+      });
     }
     const index = this.state.outbox.findIndex((item) => item.provider_message_id === callback.provider_message_id);
     if (index < 0) throw notFound('provider delivery', callback.provider_message_id);
     const current = this.state.outbox[index]!;
-    const currentRank = deliveryRank(current.state);
-    const nextRank = deliveryRank(callback.state);
-    if (nextRank < currentRank || ['rejected', 'failed'].includes(current.state)) {
+    if (!isLegalDeliveryCallbackTransition(current.state, callback.state)) {
       throw new AtlasLocalRuntimeError('DELIVERY_STATE_REGRESSION', `Delivery callback would regress ${current.state} to ${callback.state}`, {
-        nextAction: 'Ignore stale callbacks and preserve the highest terminal delivery state',
+        nextAction: 'Ignore stale callbacks and preserve the existing delivery state',
+      });
+    }
+    if (current.provider_occurred_at && Date.parse(callback.occurred_at) < Date.parse(current.provider_occurred_at)) {
+      throw new AtlasLocalRuntimeError('DELIVERY_STATE_REGRESSION', 'Delivery callback occurred before the recorded provider event', {
+        nextAction: 'Ignore stale callbacks and preserve the existing delivery state',
       });
     }
     const now = this.clock();
-    const updated: AtlasLocalOutboxMessage = { ...current, state: callback.state, updated_at: now };
+    const updated: AtlasLocalOutboxMessage = { ...current, state: callback.state, provider_occurred_at: callback.occurred_at, updated_at: now };
     this.state.outbox[index] = updated;
     this.appendTraceEvent(current.trace_id, `delivery.callback.${callback.state}`, { callback_id: callback.callback_id, provider_message_id: callback.provider_message_id, occurred_at: callback.occurred_at });
     const receipt = this.addReceipt('delivery', current.trace_id, current.conversation_id, current.id, callback.state, { callback_id: callback.callback_id, provider_message_id: callback.provider_message_id, occurred_at: callback.occurred_at });
@@ -653,9 +927,47 @@ export class AtlasLocalRuntime {
     return deepClone(this.state.receipts);
   }
 
-  private processMessage(message: AtlasLocalInboundMessage, digest: string): Record<string, any> {
+  private fenceInboundMessage(message: AtlasLocalInboundMessage): Record<string, any> {
     const now = this.clock();
-    this.ensureConversation(message);
+    const conversation = this.ensureConversation(message);
+    this.state.customers[message.customer_id] ??= { id: message.customer_id, created_at: now };
+    if (!this.state.messages.some((item) => item.message_id === message.message_id)) this.state.messages.push(message);
+    this.state.conversations[message.conversation_id] = {
+      ...conversation,
+      last_sequence: Math.max(conversation.last_sequence, message.sequence),
+      updated_at: now,
+    };
+    const trace = this.createTrace(message);
+    this.appendTraceEvent(trace.id, 'message.fenced', {
+      message_id: message.message_id,
+      sequence: message.sequence,
+      reason: 'human_takeover',
+      operator_id: conversation.takeover?.operator_id ?? conversation.operator_id,
+      scope: conversation.takeover?.scope,
+    });
+    const messageReceipt = this.addReceipt('message', trace.id, message.conversation_id, message.message_id, 'fenced', { sequence: message.sequence });
+    const handoffReceipt = this.addReceipt('handoff', trace.id, message.conversation_id, message.conversation_id, 'human_takeover', {
+      operator_id: conversation.takeover?.operator_id ?? conversation.operator_id,
+      scope: conversation.takeover?.scope,
+      reason: conversation.takeover?.reason ?? conversation.handoff_reason ?? 'human_takeover',
+    });
+    this.completeTrace(trace.id, 'handoff_required');
+    return {
+      status: 'human_takeover',
+      replayed: false,
+      message,
+      trace_id: trace.id,
+      receipts: [messageReceipt, handoffReceipt],
+      trace: this.trace(trace.id),
+      next_action: 'The recorded human operator owns this conversation; agent mutations are fenced',
+    };
+  }
+
+  private processMessage(message: AtlasLocalInboundMessage, digest: string): Record<string, any> {
+    const takeoverConversation = this.ensureConversation(message);
+    if (takeoverConversation.takeover || takeoverConversation.state === 'human_takeover') return this.fenceInboundMessage(message);
+
+    const now = this.clock();
     this.state.customers[message.customer_id] ??= { id: message.customer_id, created_at: now };
     this.state.messages.push(message);
     const conversation = this.state.conversations[message.conversation_id]!;
@@ -703,6 +1015,9 @@ export class AtlasLocalRuntime {
       const policy: AtlasLocalPolicyDecision = { decision: 'approval_required', reason: 'high_risk_booking_change', risk: 'high' };
       const approval: AtlasLocalApproval = {
         id: deterministicId('approval', proposal.id), proposal_id: proposal.id, trace_id: trace.id, conversation_id: message.conversation_id,
+        scope: localAuthorityScope(this.state.identity),
+        policy_ref: 'atlas.local.fixture/high-risk-booking-change/v1',
+        expires_at: new Date(Date.parse(now) + ATLAS_LOCAL_APPROVAL_TTL_MS).toISOString(),
         status: 'pending', requested_at: now, decided_at: null, operator_id: null, reason: null, action_id: null,
       };
       this.state.proposals[proposal.id] = proposal;
@@ -730,7 +1045,7 @@ export class AtlasLocalRuntime {
       id: deterministicId('outbox', message.message_id, 'knowledge'), trace_id: trace.id, conversation_id: message.conversation_id,
       customer_id: message.customer_id, channel_id: message.channel_id,
       body: this.knowledge.excerpt, state: 'queued', attempts: 0, next_attempt_at: null, retry_after_ms: null,
-      provider_message_id: null, provider_code: null, created_at: now, updated_at: now,
+      provider_message_id: null, provider_code: null, provider_occurred_at: null, created_at: now, updated_at: now,
     };
     this.state.outbox.push(outbox);
     this.appendTraceEvent(trace.id, 'outbox.enqueued', { outbox_id: outbox.id, channel_id: outbox.channel_id });
@@ -752,17 +1067,27 @@ export class AtlasLocalRuntime {
   private ensureConversation(message: AtlasLocalInboundMessage): AtlasLocalConversation {
     const existing = this.state.conversations[message.conversation_id];
     if (existing) {
-      if (existing.customer_id !== message.customer_id || existing.channel_id !== message.channel_id) {
+      if ((existing.channel_id !== message.channel_id && !isUnboundChannelId(existing.channel_id)) ||
+        (existing.customer_id !== message.customer_id && !isUnboundCustomerId(existing.customer_id))) {
         throw new AtlasLocalRuntimeError('IDEMPOTENCY_MISMATCH', `Conversation ${message.conversation_id} authority changed`, {
           nextAction: 'Use a new conversation identifier for a different customer or channel',
         });
       }
-      return existing;
+      if (isUnboundCustomerId(existing.customer_id) || isUnboundChannelId(existing.channel_id)) {
+        const hydrated = {
+          ...existing,
+          customer_id: message.customer_id,
+          channel_id: message.channel_id,
+        };
+        this.state.conversations[message.conversation_id] = hydrated;
+        return hydrated;
+      }
+      return existing.takeover === undefined ? { ...existing, takeover: null } : existing;
     }
     const now = this.clock();
     const conversation: AtlasLocalConversation = {
       id: message.conversation_id, customer_id: message.customer_id, channel_id: message.channel_id,
-      state: 'automated', last_sequence: 0, operator_id: null, handoff_reason: null, created_at: now, updated_at: now,
+      state: 'automated', last_sequence: 0, operator_id: null, handoff_reason: null, takeover: null, created_at: now, updated_at: now,
     };
     this.state.conversations[message.conversation_id] = conversation;
     return conversation;
@@ -821,10 +1146,52 @@ export class AtlasLocalRuntime {
   private persist(): Promise<void> {
     const write = this.persistTail
       .catch(() => undefined)
-      .then(() => atomicWrite(this.statePath, `${JSON.stringify(this.state, null, 2)}\n`, 0o600));
+      .then(async () => {
+        let commit = async (): Promise<void> => {
+          await atomicWrite(this.statePath, `${JSON.stringify(this.state, null, 2)}\n`, 0o600);
+        };
+        for (const guard of [...this.commitGuards].reverse()) {
+          const next = commit;
+          commit = () => guard(next);
+        }
+        await commit();
+      });
     this.persistTail = write;
     return write;
   }
+}
+
+function normalizeOperatorId(value: string): string {
+  if (typeof value !== 'string' || !value.trim()) throw new AtlasLocalRuntimeError('INVALID_MESSAGE', 'operator_id is required and must be non-empty');
+  return value.trim();
+}
+
+function unboundCustomerId(conversationId: string): string {
+  return `unbound:${conversationId}`;
+}
+
+function isUnboundCustomerId(customerId: string): boolean {
+  return customerId.startsWith('unbound:');
+}
+
+function isUnboundChannelId(channelId: string): boolean {
+  return channelId === 'unbound-local-channel';
+}
+
+function localAuthorityScope(identity: AtlasLocalRuntimeSnapshot['identity']): AtlasLocalAuthorityScope {
+  return {
+    tenant_id: identity.tenant_id,
+    organisation_id: `local-org-${identity.project_hash.slice(0, 16)}`,
+    project_id: identity.project_hash,
+    environment_id: 'local',
+  };
+}
+
+function sameAuthorityScope(left: AtlasLocalAuthorityScope, right: AtlasLocalAuthorityScope): boolean {
+  return left.tenant_id === right.tenant_id &&
+    left.organisation_id === right.organisation_id &&
+    left.project_id === right.project_id &&
+    left.environment_id === right.environment_id;
 }
 
 function normalizeInbound(value: unknown): AtlasLocalInboundMessage {
@@ -841,6 +1208,39 @@ function normalizeInbound(value: unknown): AtlasLocalInboundMessage {
     channel_id: String(value.channel_id), sequence: Number(value.sequence), occurred_at: String(value.occurred_at), text: String(value.text),
     consent: Boolean(value.consent), within_messaging_window: Boolean(value.within_messaging_window),
   };
+}
+
+function migrateTakeoverState(state: MutableState): { state: MutableState; changed: boolean } {
+  let changed = false;
+  const migratedConversations = Object.fromEntries(
+    Object.entries(state.conversations).map(([conversationId, conversation]) => {
+      if (conversation.takeover || conversation.state !== 'human_takeover') {
+        return [conversationId, conversation];
+      }
+      if (!conversation.operator_id || !conversation.handoff_reason) {
+        throw new AtlasLocalRuntimeError(
+          'PROJECT_STATE_MISMATCH',
+          `Human takeover conversation ${conversationId} is missing durable operator identity or reason`,
+          {
+            nextAction: 'Preserve the runtime state for evidence, then restore a complete takeover record',
+          },
+        );
+      }
+      changed = true;
+      return [conversationId, {
+        ...conversation,
+        takeover: {
+          operator_id: conversation.operator_id,
+          scope: localAuthorityScope(state.identity),
+          reason: conversation.handoff_reason,
+          taken_over_at: conversation.updated_at,
+        },
+      }];
+    }),
+  ) as Record<string, AtlasLocalConversation>;
+  return changed
+    ? { state: { ...state, conversations: migratedConversations }, changed: true }
+    : { state, changed: false };
 }
 
 function parseState(raw: string): MutableState {
@@ -896,9 +1296,21 @@ function stringField(value: Readonly<Record<string, unknown>>, key: string): str
   return field;
 }
 
-function deliveryRank(state: string): number {
-  const ranks: Record<string, number> = { queued: 0, retry_scheduled: 0, sent: 1, delivered: 2, read: 3, rejected: 4, failed: 4 };
-  return ranks[state] ?? -1;
+function isLegalDeliveryCallbackTransition(
+  current: AtlasLocalOutboxState,
+  next: AtlasLocalOutboxState,
+): boolean {
+  if (current === next) return true;
+  const transitions: Readonly<Record<AtlasLocalOutboxState, readonly AtlasLocalOutboxState[]>> = {
+    queued: ['sent', 'delivered', 'read', 'rejected', 'failed'],
+    retry_scheduled: ['sent', 'delivered', 'read', 'rejected', 'failed'],
+    sent: ['delivered', 'read', 'rejected', 'failed'],
+    delivered: ['read'],
+    read: [],
+    rejected: [],
+    failed: [],
+  };
+  return transitions[current].includes(next);
 }
 
 function idempotencyMismatch(kind: string, id: string): AtlasLocalRuntimeError {

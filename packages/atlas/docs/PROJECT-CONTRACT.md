@@ -26,7 +26,8 @@ export default defineAtlasProject(
   },
   "knowledge": ["./knowledge"],
   "channels": ["./channels/web-chat.ts"],
-  "evals": ["./evals"]
+  "evals": ["./evals"],
+  "missions": ["./missions"]
 }
 );
 ```
@@ -48,12 +49,13 @@ agent/
 knowledge/
 channels/
 evals/
+missions/
 tests/
 AGENTS.md
 README.md
 ```
 
-Optional project-owned paths include `agent/skills/` and `agent/subagents/`.
+Optional project-owned paths include `agent/skills/`, `agent/subagents/`, and `missions/`. New scaffolds include a durable Mission definition under `missions/`; older schema-v1 projects remain valid without the optional `missions` field.
 
 All configured paths must:
 

@@ -1,0 +1,133 @@
+{
+  "evidence_id": "ATLAS-BMR2-P2-004-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P2-004",
+  "timestamp": "2026-07-31T15:58:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "scope": "Bounded local zero-credential human takeover, side-effect fencing and governed return-to-Agent slice",
+  "implemented": [
+    "Approval decisions remain operator-issued and are rejected after human takeover",
+    "Agent action commits are rejected after human takeover",
+    "Agent delivery attempts are rejected after human takeover",
+    "New inbound messages are fenced after human takeover",
+    "Authenticated, idempotent provider delivery callbacks reconcile committed outbox truth after human takeover",
+    "Callback reconciliation does not reopen waits or resume Agent execution for HANDED_OFF Missions",
+    "Takeover scope is derived from runtime identity and mismatched caller scope is rejected before mutation",
+    "Mission takeover durably projects nonterminal conversation Missions to HANDED_OFF and releases active waits",
+    "Return-to-Agent is an explicit governed command, not ordinary resume, and requires the recorded operator, rationale and runtime-derived scope",
+    "Return-to-Agent restores each supported sibling Mission from its persisted pre-handoff lifecycle state and wait context before releasing the runtime takeover fence; unreconstructable CREATED/READY handoffs are explicitly rejected",
+    "Return-to-Agent is retryable after an interrupted coordinator write because a still-active runtime takeover is accepted as the recovery fence",
+    "Mission-scoped return receipts are correlated to the exact trace when available and use a deterministic Mission subject for standalone scheduled Missions",
+    "Public lifecycle projections redact operator identity and free-form rationale from return-to-Agent causation IDs while local audit data retains them",
+    "Scheduled takeover creates and persists a runtime human-takeover record before the first inbound conversation binding",
+    "The first inbound after an unbound scheduled takeover hydrates customer identity without reopening Agent execution",
+    "Takeover fencing survives coordinator/runtime restart"
+  ],
+  "changed_files": [
+    "packages/atlas/src/local-runtime.ts",
+    "packages/atlas/src/mission-coordinator.ts",
+    "packages/atlas/src/mission-persistence.ts",
+    "packages/atlas/src/public-projections.ts",
+    "packages/atlas/__tests__/mission-control.test.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/mission-control.test.ts --testTimeout=30000",
+    "focused_test_files": 1,
+    "focused_tests": 15,
+    "focused_passed": 15,
+    "full_command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm test -- --testTimeout=30000 && npm run build && git diff --check",
+    "full_test_files": 40,
+    "full_tests": 406,
+    "full_passed": 406,
+    "full_failed": 0,
+    "typescript_build": "PASS",
+    "metadata_write": "PASS",
+    "metadata_check": "PASS",
+    "metadata_digest": "sha256:c0804af79c2024e9f6a386dbb4b6ad58f135e49c20b28e187bd456599bd56b22",
+    "json_validation": "PASS",
+    "change_detection": "PASS",
+    "diff_check": "PASS"
+  },
+  "local_acceptance_coverage": [
+    "approval, action-commit and delivery-attempt fencing after takeover",
+    "authoritative direct runtime delivery-callback reconciliation after takeover",
+    "coordinator callback reconciliation for HANDED_OFF Missions without Agent continuation",
+    "runtime-derived takeover scope validation with no mutation on mismatch",
+    "durable HANDED_OFF projection and restart recovery",
+    "new inbound fencing after takeover",
+    "ordinary resume rejection after takeover",
+    "explicit governed return-to-Agent with operator, rationale, scope and HANDED_OFF checks",
+    "return-to-Agent restoration of WAITING_APPROVAL and its active approval wait",
+    "return-to-Agent restoration of WAITING_SCHEDULE and its active schedule wait",
+    "conversation-wide sibling Mission restoration for supported lifecycle states",
+    "standalone scheduled Mission return receipt without a runtime trace",
+    "public causation redaction for operator identity and rationale",
+    "return-to-Agent receipt and restart durability"
+  ],
+  "limitations": [
+    "This evidence proves a zero-credential local filesystem-backed coordinator and runtime only.",
+    "The ordered local recovery protocol does not prove a database transaction spanning separate runtime and Mission stores, hosted worker transactionality or cross-process exactly-once effects.",
+    "Trusted hosted operator identity and an operator-principal contract are not proven.",
+    "Provider-worker fencing and production-side-effect fencing are not proven.",
+    "Mirai operator-surface integration and public handoff contract harness evidence are not proven."
+  ],
+  "absent_proof": [
+    "CI",
+    "trusted operator identity",
+    "operator-contract harness",
+    "hosted Atlas Cloud",
+    "database or queue transactionality",
+    "provider-worker fencing",
+    "provider sandbox",
+    "staging",
+    "production",
+    "billing settlement",
+    "commercial readiness",
+    "whole-product certification"
+  ],
+  "verification_addenda": [
+    {
+      "timestamp": "2026-07-31T15:58:00+08:00",
+      "scope": "Return-to-Agent lifecycle consistency and public-boundary repair",
+      "verification": {
+        "focused_mission_control_tests": 15,
+        "focused_mission_control_passed": 15,
+        "full_test_files": 40,
+        "full_tests": 406,
+        "full_passed": 406,
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "metadata_digest": "sha256:c0804af79c2024e9f6a386dbb4b6ad58f135e49c20b28e187bd456599bd56b22",
+        "json_validation": "PASS",
+        "change_detection": "PASS",
+        "diff_check": "PASS"
+      },
+      "repairs": [
+        "Restoration now derives the pre-handoff Mission state from the persisted HANDED_OFF lifecycle event and restores every nonterminal sibling Mission sharing the conversation.",
+        "Released pre-handoff approval, event and schedule waits are reactivated and projected after the Mission returns through ACTIVE, preserving governed wait context.",
+        "Mission restoration is ordered before runtime takeover release; an interrupted operation remains fenced by the active runtime takeover and can be retried without ordinary resume bypass.",
+        "Return receipts are Mission-scoped, trace-correlated when possible and deterministic for standalone scheduled Missions without traces.",
+        "Public lifecycle causation IDs normalize return-to-Agent commands so operator identity and free-form rationale do not cross the public projection boundary.",
+        "Regression coverage now verifies prior approval restoration, standalone scheduled return receipts, sibling Mission restoration and public causation redaction."
+      ],
+      "maturity": "LOCAL_PROVEN",
+      "absent_proof": [
+        "CI",
+        "trusted hosted operator identity",
+        "operator-contract harness",
+        "hosted Atlas Cloud",
+        "provider-worker fencing",
+        "provider sandbox",
+        "staging",
+        "production",
+        "billing settlement",
+        "commercial readiness",
+        "whole-product certification"
+      ]
+    }
+  ],
+  "verdict": "ATLAS-BMR2-P2-004 = IN_PROGRESS / LOCAL_PROVEN — bounded local human takeover, side-effect fencing, authoritative callback reconciliation, retryable governed return-to-Agent restoration, Mission-scoped receipts and public causation redaction are implemented and verified; CI, trusted hosted operator identity, operator-contract harness, hosted/provider-worker fencing, staging, production, billing, commercial and whole-product evidence remain unavailable."
+}

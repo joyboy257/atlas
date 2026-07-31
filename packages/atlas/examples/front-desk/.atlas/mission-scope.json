@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "atlas.local-mission-scope/v1",
+  "projectHash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+  "scope": {
+    "tenantId": "tenant_5e737ac9be8d280b",
+    "organisationId": "local-org-sha256:cdef87f3d",
+    "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+    "environmentId": "local"
+  }
+}

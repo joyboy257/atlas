@@ -1,0 +1,61 @@
+{
+  "evidence_id": "ATLAS-BMR2-P6-002-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P6-002",
+  "timestamp": "2026-07-31T15:20:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "changed_files": [
+    "packages/atlas/src/rbac.ts",
+    "packages/atlas/__tests__/rbac.test.ts",
+    "packages/atlas/src/outbox-worker.ts",
+    "packages/atlas/__tests__/outbox-worker.test.ts",
+    "packages/atlas/src/action-contract.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/metadata/package-source.v1.json",
+    "docs/features/Atlas/ATLAS-BMR-002/execution-board.v3.json",
+    "docs/features/Atlas/ATLAS-BMR-002/atlas_bmr002_execution_log.md"
+  ],
+  "invariants_verified": [
+    "The RBAC policy and role-operation matrix are versioned and reject unsupported policy versions.",
+    "Authorization resolves the server-supplied principal identity and requires an exact tenant, organisation, project and environment scope match.",
+    "Proposal and approval authority are separate; a proposer cannot approve their own proposal.",
+    "Machine credentials are issued only to machine principals, store a SHA-256 digest rather than the raw secret, and bind to one environment.",
+    "Credential authentication rejects wrong secrets, revoked credentials, expired credentials and cross-environment use.",
+    "Credential rotation revokes the current credential and issues a replacement with an incremented version.",
+    "The local outbox worker derives deterministic effect identity, fences competing leases, supports same-owner renewal and recovers expired claims.",
+    "Effect replay and retry paths produce validated canonical receipts with verifiable integrity digests.",
+    "The local worker tests cover fault points before and after simulated effects without claiming external exactly-once provider effects."
+  ],
+  "verification": {
+    "focused_rbac_governance_files": 2,
+    "focused_rbac_governance_tests": 19,
+    "focused_rbac_governance_passed": 19,
+    "focused_rbac_governance_suite": "PASS",
+    "focused_outbox_worker_files": 1,
+    "focused_outbox_worker_tests": 6,
+    "focused_outbox_worker_passed": 6,
+    "focused_outbox_worker_suite": "PASS",
+    "full_test_files": 40,
+    "full_tests": 405,
+    "full_passed": 405,
+    "full_failed": 0,
+    "full_suite": "PASS",
+    "typescript_build": "PASS",
+    "metadata_write": "PASS",
+    "metadata_check": "PASS",
+    "metadata_digest": "sha256:5578162a22604edb7694617cdfc4a209916007a9697501c94f135ad866acb2d6",
+    "json_validation": "PASS",
+    "change_detection": "PASS",
+    "diff_check": "PASS"
+  },
+  "limitations": [
+    "This evidence proves only a local TypeScript RBAC, machine-credential and filesystem outbox-worker slice.",
+    "No CI execution, staging identity provider, hosted identity service, hosted RBAC enforcement, RLS, trusted operator identity or production credential evidence is available.",
+    "The local outbox worker does not prove disposable database/queue transactionality, claim-lease workers, cross-process concurrency, reconciliation-before-retry, or exactly-once external provider effects.",
+    "The current local retryable-failure path remains a bounded simulator behavior and does not establish provider acceptance or unknown-outcome reconciliation.",
+    "No provider sandbox, staging, production, billing settlement, capacity, commercial readiness or whole-product certification is claimed."
+  ],
+  "verdict": "ATLAS-BMR2-P6-002 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local versioned RBAC, exact scope, separated proposal/approval authority, environment-bound digest-only machine credentials, rotation/revocation, and bounded local outbox receipt integrity are proven; CI, staging identity-provider and hosted enforcement evidence remain unavailable."
+}

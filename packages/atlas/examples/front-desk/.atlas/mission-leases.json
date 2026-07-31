@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "atlas.mission-lease-store/v1",
+  "leases": [
+    {
+      "leaseId": "193c6d93-0163-4f74-8dee-58bb7608708d",
+      "missionId": "mission_19a2ad52261b6955",
+      "scope": {
+        "tenantId": "tenant_5e737ac9be8d280b",
+        "organisationId": "local-org-sha256:cdef87f3d",
+        "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+        "environmentId": "local"
+      },
+      "ownerId": "local-coordinator:98152:8f4f8b7a-398d-4304-b122-2acb3464458d",
+      "acquiredAt": "2026-07-31T03:18:31.931Z",
+      "heartbeatAt": "2026-07-31T03:18:32.047Z",
+      "expiresAt": "2026-07-31T03:18:32.047Z",
+      "status": "RELEASED"
+    },
+    {
+      "leaseId": "13e829df-23c3-4f1d-8cac-14e203d9246d",
+      "missionId": "mission_94a494588ccb0472",
+      "scope": {
+        "tenantId": "tenant_5e737ac9be8d280b",
+        "organisationId": "local-org-sha256:cdef87f3d",
+        "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+        "environmentId": "local"
+      },
+      "ownerId": "local-coordinator:5882:9fd83c83-39fd-4d02-a4bf-abe9fd901ace",
+      "acquiredAt": "2026-07-31T08:12:02.768Z",
+      "heartbeatAt": "2026-07-31T08:12:02.781Z",
+      "expiresAt": "2026-07-31T08:12:02.781Z",
+      "status": "RELEASED"
+    }
+  ]
+}

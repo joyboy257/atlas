@@ -1,0 +1,402 @@
+{
+  "schema_version": "atlas.local-runtime/v1",
+  "identity": {
+    "mode": "local",
+    "tenant_id": "tenant_5e737ac9be8d280b",
+    "project_name": "front-desk-example",
+    "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+    "runtime_version": "atlas.local-runtime/v1"
+  },
+  "conversations": {
+    "conv_workbench_001": {
+      "id": "conv_workbench_001",
+      "customer_id": "cust_workbench_001",
+      "channel_id": "local-web-chat",
+      "state": "approval_pending",
+      "last_sequence": 1,
+      "operator_id": null,
+      "handoff_reason": null,
+      "created_at": "2026-07-31T03:18:31.942Z",
+      "updated_at": "2026-07-31T03:18:31.942Z"
+    }
+  },
+  "customers": {
+    "cust_workbench_001": {
+      "id": "cust_workbench_001",
+      "created_at": "2026-07-31T03:18:31.942Z"
+    }
+  },
+  "messages": [
+    {
+      "message_id": "msg_workbench_ms8dhtyq",
+      "conversation_id": "conv_workbench_001",
+      "customer_id": "cust_workbench_001",
+      "channel_id": "local-web-chat",
+      "sequence": 1,
+      "occurred_at": "2026-07-31T03:18:31.922Z",
+      "text": "Can I move booking BK-100 to Friday?",
+      "consent": true,
+      "within_messaging_window": true
+    }
+  ],
+  "pending_messages": {},
+  "inbound_idempotency": {
+    "msg_workbench_ms8dhtyq": {
+      "digest": "sha256:1fe0c364913d2c04d014ff4135614e8e5ce8f72af193d427d03ac873fdb83d34",
+      "result": {
+        "status": "approval_pending",
+        "replayed": false,
+        "fixture_model": "atlas.local-fixture/v1",
+        "message": {
+          "message_id": "msg_workbench_ms8dhtyq",
+          "conversation_id": "conv_workbench_001",
+          "customer_id": "cust_workbench_001",
+          "channel_id": "local-web-chat",
+          "sequence": 1,
+          "occurred_at": "2026-07-31T03:18:31.922Z",
+          "text": "Can I move booking BK-100 to Friday?",
+          "consent": true,
+          "within_messaging_window": true
+        },
+        "trace_id": "trace_6f7c58d5d1d7b59e",
+        "evidence": {
+          "id": "evidence_80a80309c34c7bbd",
+          "source": "knowledge/booking-policy.md",
+          "digest": "sha256:b4cdebd6c772457273eafda1e636dbb81cffdd4393645a162eb7a886710338c4",
+          "excerpt": "A booking can be moved when the customer identity, consent, and messaging window are valid."
+        },
+        "proposal": {
+          "id": "proposal_1a54b5e00d3f1775",
+          "trace_id": "trace_6f7c58d5d1d7b59e",
+          "conversation_id": "conv_workbench_001",
+          "message_id": "msg_workbench_ms8dhtyq",
+          "tool_id": "front-desk.bookings.reschedule",
+          "risk": "high",
+          "execution": "commit",
+          "approval": "required",
+          "input": {
+            "bookingId": "BK-100",
+            "requestedDate": "Friday"
+          },
+          "status": "proposed",
+          "created_at": "2026-07-31T03:18:31.942Z"
+        },
+        "policy": {
+          "decision": "approval_required",
+          "reason": "high_risk_booking_change",
+          "risk": "high"
+        },
+        "approval": {
+          "id": "approval_9128ff3a18aa2f51",
+          "proposal_id": "proposal_1a54b5e00d3f1775",
+          "trace_id": "trace_6f7c58d5d1d7b59e",
+          "conversation_id": "conv_workbench_001",
+          "status": "pending",
+          "requested_at": "2026-07-31T03:18:31.942Z",
+          "decided_at": null,
+          "operator_id": null,
+          "reason": null,
+          "action_id": null
+        },
+        "receipts": [
+          {
+            "receipt_id": "receipt_009432f75313082f",
+            "kind": "message",
+            "trace_id": "trace_6f7c58d5d1d7b59e",
+            "conversation_id": "conv_workbench_001",
+            "subject_id": "msg_workbench_ms8dhtyq",
+            "outcome": "accepted",
+            "created_at": "2026-07-31T03:18:31.942Z",
+            "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+            "digest": "sha256:9bdcee24b813f002fc14bd619fee22f8ed11992cdce181ab1e4eb03fdb0ee913",
+            "data": {
+              "sequence": 1,
+              "channel_id": "local-web-chat"
+            }
+          },
+          {
+            "receipt_id": "receipt_faae9d708f724d3a",
+            "kind": "evidence",
+            "trace_id": "trace_6f7c58d5d1d7b59e",
+            "conversation_id": "conv_workbench_001",
+            "subject_id": "evidence_80a80309c34c7bbd",
+            "outcome": "retrieved",
+            "created_at": "2026-07-31T03:18:31.942Z",
+            "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+            "digest": "sha256:b661cb65835b47ba5e13b8108d117a959ac81c335f8b98c3fd0fc320b6a7dd33",
+            "data": {
+              "source": "knowledge/booking-policy.md",
+              "digest": "sha256:b4cdebd6c772457273eafda1e636dbb81cffdd4393645a162eb7a886710338c4"
+            }
+          },
+          {
+            "receipt_id": "receipt_1e6ee67505a13517",
+            "kind": "policy",
+            "trace_id": "trace_6f7c58d5d1d7b59e",
+            "conversation_id": "conv_workbench_001",
+            "subject_id": "proposal_1a54b5e00d3f1775",
+            "outcome": "approval_required",
+            "created_at": "2026-07-31T03:18:31.942Z",
+            "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+            "digest": "sha256:e05797dadc5170b8c101c1c57e32bc46555a728955e5d3312fda151d48531e8b",
+            "data": {
+              "decision": "approval_required",
+              "reason": "high_risk_booking_change",
+              "risk": "high"
+            }
+          },
+          {
+            "receipt_id": "receipt_89917380d7f069ff",
+            "kind": "approval",
+            "trace_id": "trace_6f7c58d5d1d7b59e",
+            "conversation_id": "conv_workbench_001",
+            "subject_id": "approval_9128ff3a18aa2f51",
+            "outcome": "pending",
+            "created_at": "2026-07-31T03:18:31.942Z",
+            "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+            "digest": "sha256:9713d43841c2795cf91ceb7e8277736da97c9a047f3366a8be971c951cc764ee",
+            "data": {
+              "proposal_id": "proposal_1a54b5e00d3f1775"
+            }
+          }
+        ],
+        "trace": {
+          "id": "trace_6f7c58d5d1d7b59e",
+          "conversation_id": "conv_workbench_001",
+          "message_id": "msg_workbench_ms8dhtyq",
+          "status": "approval_pending",
+          "started_at": "2026-07-31T03:18:31.942Z",
+          "completed_at": null,
+          "events": [
+            {
+              "id": "event_0abec79e7f183a46",
+              "type": "message.accepted",
+              "at": "2026-07-31T03:18:31.942Z",
+              "data": {
+                "message_id": "msg_workbench_ms8dhtyq",
+                "sequence": 1,
+                "channel_id": "local-web-chat"
+              }
+            },
+            {
+              "id": "event_64ea7b4767e19871",
+              "type": "knowledge.retrieved",
+              "at": "2026-07-31T03:18:31.942Z",
+              "data": {
+                "evidence_id": "evidence_80a80309c34c7bbd",
+                "source": "knowledge/booking-policy.md",
+                "digest": "sha256:b4cdebd6c772457273eafda1e636dbb81cffdd4393645a162eb7a886710338c4"
+              }
+            },
+            {
+              "id": "event_219f7868e7dbb56c",
+              "type": "tool.proposed",
+              "at": "2026-07-31T03:18:31.942Z",
+              "data": {
+                "proposal_id": "proposal_1a54b5e00d3f1775",
+                "tool_id": "front-desk.bookings.reschedule",
+                "input": {
+                  "bookingId": "BK-100",
+                  "requestedDate": "Friday"
+                },
+                "risk": "high"
+              }
+            },
+            {
+              "id": "event_8e214ee258cfb8a9",
+              "type": "policy.decided",
+              "at": "2026-07-31T03:18:31.942Z",
+              "data": {
+                "decision": "approval_required",
+                "reason": "high_risk_booking_change",
+                "risk": "high"
+              }
+            },
+            {
+              "id": "event_3616d7ae2cd88174",
+              "type": "approval.requested",
+              "at": "2026-07-31T03:18:31.942Z",
+              "data": {
+                "approval_id": "approval_9128ff3a18aa2f51",
+                "proposal_id": "proposal_1a54b5e00d3f1775"
+              }
+            }
+          ]
+        },
+        "next_action": "Approve or reject approval_9128ff3a18aa2f51",
+        "drained_message_ids": []
+      }
+    }
+  },
+  "proposals": {
+    "proposal_1a54b5e00d3f1775": {
+      "id": "proposal_1a54b5e00d3f1775",
+      "trace_id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "message_id": "msg_workbench_ms8dhtyq",
+      "tool_id": "front-desk.bookings.reschedule",
+      "risk": "high",
+      "execution": "commit",
+      "approval": "required",
+      "input": {
+        "bookingId": "BK-100",
+        "requestedDate": "Friday"
+      },
+      "status": "proposed",
+      "created_at": "2026-07-31T03:18:31.942Z"
+    }
+  },
+  "approvals": {
+    "approval_9128ff3a18aa2f51": {
+      "id": "approval_9128ff3a18aa2f51",
+      "proposal_id": "proposal_1a54b5e00d3f1775",
+      "trace_id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "status": "pending",
+      "requested_at": "2026-07-31T03:18:31.942Z",
+      "decided_at": null,
+      "operator_id": null,
+      "reason": null,
+      "action_id": null
+    }
+  },
+  "actions": [],
+  "action_idempotency": {},
+  "commit_results": {},
+  "outbox": [],
+  "callbacks": {},
+  "traces": [
+    {
+      "id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "message_id": "msg_workbench_ms8dhtyq",
+      "status": "approval_pending",
+      "started_at": "2026-07-31T03:18:31.942Z",
+      "completed_at": null,
+      "events": [
+        {
+          "id": "event_0abec79e7f183a46",
+          "type": "message.accepted",
+          "at": "2026-07-31T03:18:31.942Z",
+          "data": {
+            "message_id": "msg_workbench_ms8dhtyq",
+            "sequence": 1,
+            "channel_id": "local-web-chat"
+          }
+        },
+        {
+          "id": "event_64ea7b4767e19871",
+          "type": "knowledge.retrieved",
+          "at": "2026-07-31T03:18:31.942Z",
+          "data": {
+            "evidence_id": "evidence_80a80309c34c7bbd",
+            "source": "knowledge/booking-policy.md",
+            "digest": "sha256:b4cdebd6c772457273eafda1e636dbb81cffdd4393645a162eb7a886710338c4"
+          }
+        },
+        {
+          "id": "event_219f7868e7dbb56c",
+          "type": "tool.proposed",
+          "at": "2026-07-31T03:18:31.942Z",
+          "data": {
+            "proposal_id": "proposal_1a54b5e00d3f1775",
+            "tool_id": "front-desk.bookings.reschedule",
+            "input": {
+              "bookingId": "BK-100",
+              "requestedDate": "Friday"
+            },
+            "risk": "high"
+          }
+        },
+        {
+          "id": "event_8e214ee258cfb8a9",
+          "type": "policy.decided",
+          "at": "2026-07-31T03:18:31.942Z",
+          "data": {
+            "decision": "approval_required",
+            "reason": "high_risk_booking_change",
+            "risk": "high"
+          }
+        },
+        {
+          "id": "event_3616d7ae2cd88174",
+          "type": "approval.requested",
+          "at": "2026-07-31T03:18:31.942Z",
+          "data": {
+            "approval_id": "approval_9128ff3a18aa2f51",
+            "proposal_id": "proposal_1a54b5e00d3f1775"
+          }
+        }
+      ]
+    }
+  ],
+  "receipts": [
+    {
+      "receipt_id": "receipt_009432f75313082f",
+      "kind": "message",
+      "trace_id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "subject_id": "msg_workbench_ms8dhtyq",
+      "outcome": "accepted",
+      "created_at": "2026-07-31T03:18:31.942Z",
+      "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+      "digest": "sha256:9bdcee24b813f002fc14bd619fee22f8ed11992cdce181ab1e4eb03fdb0ee913",
+      "data": {
+        "sequence": 1,
+        "channel_id": "local-web-chat"
+      }
+    },
+    {
+      "receipt_id": "receipt_faae9d708f724d3a",
+      "kind": "evidence",
+      "trace_id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "subject_id": "evidence_80a80309c34c7bbd",
+      "outcome": "retrieved",
+      "created_at": "2026-07-31T03:18:31.942Z",
+      "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+      "digest": "sha256:b661cb65835b47ba5e13b8108d117a959ac81c335f8b98c3fd0fc320b6a7dd33",
+      "data": {
+        "source": "knowledge/booking-policy.md",
+        "digest": "sha256:b4cdebd6c772457273eafda1e636dbb81cffdd4393645a162eb7a886710338c4"
+      }
+    },
+    {
+      "receipt_id": "receipt_1e6ee67505a13517",
+      "kind": "policy",
+      "trace_id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "subject_id": "proposal_1a54b5e00d3f1775",
+      "outcome": "approval_required",
+      "created_at": "2026-07-31T03:18:31.942Z",
+      "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+      "digest": "sha256:e05797dadc5170b8c101c1c57e32bc46555a728955e5d3312fda151d48531e8b",
+      "data": {
+        "decision": "approval_required",
+        "reason": "high_risk_booking_change",
+        "risk": "high"
+      }
+    },
+    {
+      "receipt_id": "receipt_89917380d7f069ff",
+      "kind": "approval",
+      "trace_id": "trace_6f7c58d5d1d7b59e",
+      "conversation_id": "conv_workbench_001",
+      "subject_id": "approval_9128ff3a18aa2f51",
+      "outcome": "pending",
+      "created_at": "2026-07-31T03:18:31.942Z",
+      "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+      "digest": "sha256:9713d43841c2795cf91ceb7e8277736da97c9a047f3366a8be971c951cc764ee",
+      "data": {
+        "proposal_id": "proposal_1a54b5e00d3f1775"
+      }
+    }
+  ],
+  "bookings": {
+    "BK-100": {
+      "id": "BK-100",
+      "scheduled_for": "Thursday",
+      "updated_at": "2026-07-31T03:17:49.768Z"
+    }
+  }
+}

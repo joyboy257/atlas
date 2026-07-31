@@ -547,10 +547,14 @@
       "owner": "principal orchestrator",
       "release_gate": "G1",
       "falsifier": "Control commands directly mutate rows without runtime validation",
-      "status": "PASS",
+      "status": "BLOCKED_EXTERNAL",
       "maturity": "LOCAL_PROVEN",
-      "blockers": [],
-      "commit_sha": "9afb99b",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "Usage/cost ledger is locally implemented but is not yet wired into the Mission inspect projection",
+        "Hosted and staging control-plane evidence is unavailable"
+      ],
+      "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-011"
       ],
@@ -596,8 +600,8 @@
       "owner": "independent verifier",
       "release_gate": "G1",
       "falsifier": "The same implementing context self-certifies the complete Atlas product from a local runtime demonstration",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
+      "status": "PASS",
+      "maturity": "LOCAL_PROVEN",
       "blockers": [],
       "commit_sha": null,
       "gap_ids": [
@@ -639,9 +643,14 @@
       "owner": "principal orchestrator",
       "release_gate": "G2",
       "falsifier": "Two workers can commit the same mission step",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "IN_PROGRESS",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "Crash-point coverage does not yet prove every lifecycle commit boundary",
+        "Independent duplicate-worker Mission-step commit proof is unavailable",
+        "Long-step heartbeat and post-crash expiry recovery coverage is incomplete",
+        "CI and database-equivalent multi-worker persistence evidence are unavailable"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-013"
@@ -682,9 +691,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G2",
       "falsifier": "A callback can advance the wrong tenant or cancelled Mission",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "External or database-equivalent durable persistence evidence is unavailable in the current environment"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-014"
@@ -725,9 +737,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G2",
       "falsifier": "Agent instructions can raise their own autonomy or spend limit",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "Disposable database or database-equivalent persistence evidence is unavailable"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-015"
@@ -769,9 +784,13 @@
       "owner": "principal orchestrator",
       "release_gate": "G2",
       "falsifier": "A model/tool adapter can self-approve or continue after takeover",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "IN_PROGRESS",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "Trusted operator identity and operator-contract harness evidence are unavailable",
+        "Hosted/provider-worker and production-side-effect fencing evidence is unavailable"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-016"
@@ -813,9 +832,14 @@
       "owner": "principal orchestrator",
       "release_gate": "G2",
       "falsifier": "The agent writes raw model conclusions directly to shared durable memory",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "IN_PROGRESS",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "Durable storage, restart recovery and multi-worker transactionality are not implemented",
+        "CI execution evidence is unavailable in the current environment",
+        "Hosted lifecycle workers, legal hold, export and production encryption are unavailable",
+        "External provider/model poisoning and policy-boundary harness evidence is unavailable"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-017"
@@ -860,9 +884,14 @@
       "owner": "principal orchestrator",
       "release_gate": "G2",
       "falsifier": "Success is returned before durable commit or duplicate provider sends are possible",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "IN_PROGRESS",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "Local action/outbox, lease semantics and durable ambiguous-effect reconciliation fencing are verified, but database/queue transactionality and hosted worker reconciliation are unavailable",
+        "Disposable database/queue and connected transaction runtime are unavailable",
+        "Cross-process provider-worker retry/idempotency and exactly-once external-effect proof are unavailable",
+        "CI, provider sandbox, staging, production, billing and commercial evidence are unavailable"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-018"
@@ -997,10 +1026,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G3",
       "falsifier": "Only internal monorepo templates can create a valid agent",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
-      "commit_sha": null,
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable"
+      ],
+      "commit_sha": "e2d14ebe604fedf4c9fd9cb31d3463ea94fcad15",
       "gap_ids": [
         "ATLAS-BMR2-GAP-021"
       ],
@@ -1267,10 +1298,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G4",
       "falsifier": "Production can start with memory-backed mission/action/usage authority",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
-      "commit_sha": null,
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI, disposable production-like stack and deployed authority census evidence are unavailable"
+      ],
+      "commit_sha": "e2d14ebe604fedf4c9fd9cb31d3463ea94fcad15",
       "gap_ids": [
         "ATLAS-BMR2-GAP-027"
       ],
@@ -1309,10 +1342,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G4",
       "falsifier": "Capacity target is an unsupported round number without workload trace",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
-      "commit_sha": null,
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "Disposable load environment, observed workload trace and production capacity evidence are unavailable"
+      ],
+      "commit_sha": "e2d14ebe604fedf4c9fd9cb31d3463ea94fcad15",
       "gap_ids": [
         "ATLAS-BMR2-GAP-028"
       ],
@@ -1688,9 +1723,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G5",
       "falsifier": "A local adapter test promotes all accounts/regions to production-supported",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "Provider sandbox/test-account evidence is unavailable and no provider credentials or external service access was used"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-036"
@@ -2009,9 +2047,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G6",
       "falsifier": "A request body can select another tenant/environment",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "Staging and hosted auth-context evidence are unavailable in the current environment"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-043"
@@ -2053,9 +2094,13 @@
       "owner": "principal orchestrator",
       "release_gate": "G6",
       "falsifier": "Broad administrator token is required by ordinary runtime operations",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "IN_PROGRESS",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "CI execution evidence is unavailable in the current environment",
+        "Staging identity provider and hosted identity/RBAC enforcement evidence are unavailable",
+        "Disposable database/queue, cross-process worker and external exactly-once effect evidence are unavailable"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-044"
@@ -2098,9 +2143,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G6",
       "falsifier": "Marketing compliance claim is created from a control checklist alone",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "Local audit integrity, scope export and secret redaction are implemented; staging identity/KMS/secret-system evidence is unavailable",
+        "No hosted SSO, RLS, production key rotation or compliance certification proof exists"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-045"
@@ -2191,9 +2239,13 @@
       "owner": "principal orchestrator",
       "release_gate": "G6",
       "falsifier": "Stripe/provider aggregate is treated as the only canonical runtime usage record",
-      "status": "NOT_STARTED",
-      "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "status": "BLOCKED_EXTERNAL",
+      "maturity": "LOCAL_PROVEN",
+      "blockers": [
+        "Local idempotent usage attribution, dimension-safe summaries and estimated-versus-settled reconciliation are implemented; CI, staging and provider/model cost fixtures are unavailable",
+        "Invoice/provider reconciliation and billing settlement are not proven",
+        "Usage/cost is not yet wired into the Mission inspect projection"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-047"
@@ -2726,5 +2778,5 @@
     "ATLAS_BMR_002_EXECUTION_FAILED",
     "ATLAS_BMR_002_ROLLED_BACK"
   ],
-  "active_work_item": "ATLAS-BMR2-P1-004"
+  "active_work_item": "ATLAS-BMR2-P2-002"
 }

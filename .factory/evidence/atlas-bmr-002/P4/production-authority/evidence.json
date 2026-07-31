@@ -1,0 +1,70 @@
+{
+  "evidence_id": "ATLAS-BMR2-P4-001-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P4-001",
+  "title": "Fail-closed production authority configuration",
+  "timestamp": "2026-07-31T10:19:30+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "scope": {
+    "authority_contract": "Hosted environments require explicit authority declarations for identity, missions, policy, approvals, actions, outbox, receipts, usage and credentials.",
+    "fail_closed": "Staging and production reject absent authorities and memory, test or fixture backends; credentials require secret-manager and other authorities reject secret-manager.",
+    "typed_failure": "Hosted deployment planning raises UNSAFE_AUTHORITY_CONFIGURATION with exit code 10 for unsafe authority configuration; an actual hosted service bootstrap integration is not present in this local repository.",
+    "local_compatibility": "Sandbox/local configurations remain valid without hosted authority declarations, including custom sandbox slugs; malformed local authority maps remain ordinary validation failures rather than hosted startup errors."
+  },
+  "changed_files": [
+    "packages/atlas/src/authority-config.ts",
+    "packages/atlas/src/deployment-config.ts",
+    "packages/atlas/src/errors.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/src/cli.ts",
+    "packages/atlas/__tests__/deployment-config.test.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/deployment-config.test.ts --testTimeout=20000",
+    "focused_tests": 21,
+    "focused_passed": 21,
+    "full_command": "cd packages/atlas && npm test",
+    "full_test_files": 34,
+    "full_tests": 345,
+    "full_passed": 345,
+    "metadata_write": "PASS",
+    "metadata_check": "PASS",
+    "metadata_digest": "sha256:7cc26121a4ca2e1a9e174868741fc4247e08d62fddebcfa94f8f942aeed011e8",
+    "typescript_build": "PASS",
+    "diff_check": "PASS"
+  },
+  "acceptance_coverage": [
+    "Hosted staging and production configuration validation cannot omit authority declarations, including custom slugs with declared hosted types.",
+    "Memory, test and fixture authorities are rejected for hosted environments.",
+    "Unknown authority keys are rejected rather than silently ignored.",
+    "Hosted credentials authority is constrained to secret-manager.",
+    "Unsafe hosted deployment fallback has a typed error and deterministic exit code; hosted process-bootstrap enforcement remains unproven.",
+    "A complete durable production declaration validates.",
+    "Local sandbox configuration remains valid without hosted authorities.",
+    "The existing Atlas package suite remains green."
+  ],
+  "remaining_gate_requirements": [
+    "CI execution evidence required by the CI + disposable production-like stack gate",
+    "Authority census against deployed Atlas Cloud services and durable database, queue and secret-manager owners",
+    "Disposable production-like boot and negative fallback evidence, including hosted process-bootstrap enforcement",
+    "Hosted staging and production evidence required by later programme gates",
+    "Whole-product, capacity, provider, usage/cost, billing, commercial and certification evidence"
+  ],
+  "absent_proof": [
+    "CI",
+    "disposable production-like stack",
+    "Atlas Cloud authority census and one-writable-owner verification",
+    "staging",
+    "production",
+    "provider sandbox",
+    "capacity",
+    "usage/cost ledger",
+    "billing settlement",
+    "commercial readiness",
+    "whole-product certification"
+  ],
+  "verdict": "ATLAS-BMR2-P4-001 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because CI, a disposable production-like stack and deployed authority ownership evidence are unavailable. No hosted or production readiness is claimed."
+}

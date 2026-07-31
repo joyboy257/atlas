@@ -35,6 +35,7 @@ function validConfig(): AtlasProjectConfig {
     knowledge: ['./knowledge'],
     channels: ['./channels/web-chat.ts'],
     evals: ['./evals'],
+    missions: ['./missions'],
   });
 }
 
@@ -48,16 +49,24 @@ async function projectRoot(): Promise<string> {
   await mkdir(path.join(root, 'knowledge'), { recursive: true });
   await mkdir(path.join(root, 'channels'), { recursive: true });
   await mkdir(path.join(root, 'evals'), { recursive: true });
+  await mkdir(path.join(root, 'missions'), { recursive: true });
   await writeFile(path.join(root, 'agent', 'instructions.md'), '# Front desk\n');
   await writeFile(path.join(root, 'agent', 'tools', 'reschedule-booking.ts'), 'export const tool = "reschedule";\n');
   await writeFile(path.join(root, 'agent', 'policies', 'booking-change.policy.ts'), 'export const approval = "required";\n');
   await writeFile(path.join(root, 'knowledge', 'booking-policy.md'), 'Changes require approval.\n');
   await writeFile(path.join(root, 'channels', 'web-chat.ts'), 'export const channel = "web-chat";\n');
   await writeFile(path.join(root, 'evals', 'booking-reschedule.eval.ts'), 'export const scenario = "reschedule";\n');
+  await writeFile(path.join(root, 'missions', 'booking-reschedule.mission.ts'), 'export const mission = "booking-change";\n');
   return root;
 }
 
 describe('Atlas project contract v1', () => {
+  it('accepts legacy schema-v1 projects without a missions field', () => {
+    const legacy = { ...validConfig() } as Record<string, unknown>;
+    delete legacy.missions;
+    expect(validateAtlasProject(legacy).valid).toBe(true);
+  });
+
   it('loads a generated atlas.config.ts and produces a source-bound package hash', async () => {
     const root = await projectRoot();
     await writeAtlasProjectConfig(root, validConfig());
@@ -68,6 +77,7 @@ describe('Atlas project contract v1', () => {
     expect(loaded.config.project.name).toBe('front-desk');
     expect(loaded.package_hash).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(loaded.files).toContain('knowledge/booking-policy.md');
+    expect(loaded.files).toContain('missions/booking-reschedule.mission.ts');
     expect(await readFile(path.join(root, 'atlas.config.ts'), 'utf8')).toContain('defineAtlasProject');
   });
 

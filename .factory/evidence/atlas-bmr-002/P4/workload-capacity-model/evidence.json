@@ -1,0 +1,66 @@
+{
+  "evidence_id": "ATLAS-BMR2-P4-002-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P4-002",
+  "title": "Versioned workload, capacity, cost and failure model",
+  "timestamp": "2026-07-31T10:19:30+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "scope": {
+    "model": "A versioned atlas.capacity-model/v1 local planning model with steady, peak, burst and abuse profiles.",
+    "distribution": "Tenant tiers and provider quota shares are explicit and validated to sum to one.",
+    "cost": "Per-profile inference tokens, tool calls, provider events, media bytes and receipts reconcile to deterministic mission/action estimates.",
+    "faults": "Ingress, coordination, inference, action, provider and reconciliation fault entries declare expected behavior and containment.",
+    "confidence": "The model records an explicit 0.5–0.8 planning confidence range and does not claim observed capacity or SLOs."
+  },
+  "changed_files": [
+    "packages/atlas/src/capacity-model.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/__tests__/deployment-config.test.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/deployment-config.test.ts --testTimeout=20000",
+    "focused_tests": 21,
+    "focused_passed": 21,
+    "full_command": "cd packages/atlas && npm test",
+    "full_test_files": 34,
+    "full_tests": 345,
+    "full_passed": 345,
+    "metadata_write": "PASS",
+    "metadata_check": "PASS",
+    "metadata_digest": "sha256:7cc26121a4ca2e1a9e174868741fc4247e08d62fddebcfa94f8f942aeed011e8",
+    "typescript_build": "PASS",
+    "diff_check": "PASS"
+  },
+  "acceptance_coverage": [
+    "Steady, peak, burst and abuse profiles are versioned.",
+    "Tenant distribution and provider quotas are explicit and validated.",
+    "Per-mission and per-action modeled cost drivers are measurable and reconciled.",
+    "Assumptions and confidence bounds are explicit.",
+    "Malformed distributions, duplicate/missing profiles and invalid cost drivers are rejected.",
+    "No production mutation or external provider operation is performed."
+  ],
+  "remaining_gate_requirements": [
+    "Disposable load environment required by the work-item gate",
+    "Observed workload traces and independently reproduced capacity envelope",
+    "Provider-specific quotas and production topology measurements",
+    "CI execution evidence",
+    "Hosted staging, production, usage/cost ledger, billing, commercial and whole-product certification evidence"
+  ],
+  "absent_proof": [
+    "disposable load environment",
+    "observed workload trace",
+    "production capacity envelope",
+    "provider sandbox",
+    "CI",
+    "staging",
+    "production",
+    "usage/cost ledger",
+    "billing settlement",
+    "commercial readiness",
+    "whole-product certification"
+  ],
+  "verdict": "ATLAS-BMR2-P4-002 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because no disposable load environment, observed workload trace or production capacity evidence is available. The model is a planning fixture, not a production capacity claim."
+}

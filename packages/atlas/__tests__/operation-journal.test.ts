@@ -27,4 +27,25 @@ describe('OperationLock', () => {
     await lock.acquire();
     await lock.release();
   });
+
+  it('does not reclaim an old lock while its owner process is still alive', async () => {
+    const root = await tempRoot();
+    await mkdir(path.join(root, '.atlas'), { recursive: true });
+    await chmod(path.join(root, '.atlas'), 0o700);
+    await writeFile(path.join(root, '.atlas', 'lock'), JSON.stringify({ pid: process.pid, created_at: '1970-01-01T00:00:00Z', operation_id: 'live-owner' }));
+    await expect(new OperationLock(root).acquire()).rejects.toMatchObject({ code: 'LOCAL_STATE_ERROR' });
+  });
+
+  it('does not remove a replacement owner lock during late release', async () => {
+    const root = await tempRoot();
+    const first = new OperationLock(root);
+    await first.acquire();
+    const lockPath = path.join(root, '.atlas', 'lock');
+    await rm(lockPath);
+    const replacement = new OperationLock(root);
+    await replacement.acquire();
+
+    await first.release();
+    await expect(replacement.release()).resolves.toBeUndefined();
+  });
 });

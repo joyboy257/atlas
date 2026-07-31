@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promis
 import os from 'node:os';
 import path from 'node:path';
 import { loadAtlasProject } from '../src/project-contract.js';
+import { validateMission } from '../src/mission-contract.js';
 import {
   detectPackageManager,
   planAtlasScaffold,
@@ -41,6 +42,11 @@ describe('Atlas front-desk scaffold', () => {
 
     const root = path.join(cwd, 'front-desk');
     const loaded = await loadAtlasProject(root);
+    const missionSource = await readFile(path.join(root, 'missions', 'front-desk-reschedule.mission.ts'), 'utf8');
+    const mission = JSON.parse(missionSource
+      .replace(/^import .*?;\s*\n\s*export default defineMission\(\s*/s, '')
+      .replace(/\s*\)\s*$/, ''));
+    expect(validateMission(mission).valid).toBe(true);
     expect(result.status).toBe('completed');
     expect(result.mode).toBe('new');
     expect(result.package_manager).toBe('npm');
@@ -57,6 +63,7 @@ describe('Atlas front-desk scaffold', () => {
       'knowledge/booking-policy.md',
       'channels/web-chat.ts',
       'evals/booking-reschedule.eval.ts',
+      'missions/front-desk-reschedule.mission.ts',
       'tests/first-agent-loop.test.ts',
       'AGENTS.md',
       'README.md',

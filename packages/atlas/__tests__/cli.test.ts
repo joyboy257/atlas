@@ -317,6 +317,51 @@ describe('atlas CLI auth commands', () => {
     } finally { await rm(dir, { recursive: true, force: true }); }
   });
 
+  it('resolves explicit deployment project and promotion destination before target preflight', async () => {
+    const dir = await mkdtemp(path.join(os.tmpdir(), 'atlas-cli-deploy-target-'));
+    try {
+      await writeFile(path.join(dir, 'atlas.yaml'), `apiVersion: atlas.mirai/v1
+kind: Project
+metadata: { name: demo }
+spec:
+  projectId: prj-b
+  environments:
+    production:
+      environment_type: production
+      authorities:
+        identity: database
+        missions: database
+        policy: database
+        approvals: database
+        actions: database
+        outbox: queue
+        receipts: database
+        usage: database
+        credentials: secret-manager
+`);
+      await writeFile(path.join(dir, '.atlas-config-marker'), 'hosted');
+      const output = capture();
+      const store = new MemoryStore();
+      await store.set('default', { accessToken: 'secret-token-at-least-sixteen', tokenType: 'Bearer', apiBase: 'https://api.example.com', scopes: [] });
+      const fetchImpl = vi.fn().mockImplementation(async (input: string | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url.endsWith('/projects/prj-b/environments/env-b')) {
+          return new Response(JSON.stringify({ ok: true, data: { environment: { id: 'env-b', external_id: 'env-b', project_id: 'prj-b', slug: 'production', name: 'Production', environment_type: 'production', status: 'active' } } }), { status: 200 });
+        }
+        if (url.endsWith('/deployments/promote')) {
+          expect(JSON.parse(String(init?.body))).toMatchObject({ from_environment: 'env-a', to_environment: 'env-b' });
+          return new Response(JSON.stringify({ ok: true, data: { promoted: true } }), { status: 200 });
+        }
+        throw new Error(`unexpected request ${url}`);
+      });
+      const code = await runCli(['deploy', 'promote', '--dir', dir, '--project', 'prj-b', '--from', 'env-a', '--to', 'env-b', '--json'], { output: output.writer, fetchImpl, platformCredentialStore: { store, reference: 'default' } });
+      expect(code).toBe(0);
+      expect(JSON.parse(output.stdout[0]!)).toMatchObject({ ok: true, command: 'deploy promote', data: { promoted: true } });
+      expect(fetchImpl.mock.calls[0]![0]).toContain('/projects/prj-b/environments/env-b');
+      expect(fetchImpl.mock.calls[1]![0]).toContain('/projects/prj-b/deployments/promote');
+    } finally { await rm(dir, { recursive: true, force: true }); }
+  });
+
   it('triggers and replays webhook fixtures without live Atlas credentials', async () => {
     const dir = await mkdtemp(path.join(os.tmpdir(), 'atlas-cli-webhook-'));
     const server = await startAtlasDevServer();
@@ -328,7 +373,14 @@ describe('atlas CLI auth commands', () => {
       expect(await runCli(['webhooks', 'replay', eventFile, '--url', server.url, '--json'], dependencies)).toBe(0);
       const events = await fetch(`${server.url}/events`).then((response) => response.json());
       expect(events.events).toHaveLength(2);
-      expect(events.events[1]).toMatchObject({ id: 'evt_replay', data: { run_id: 'run_replayed' } });
+      expect(events.events[1]).toMatchObject({
+        id: 'evt_replay',
+        type: 'atlas.execution.failed',
+        sequence: 2,
+        data_keys: ['run_id'],
+      });
+      expect(events.events[1]).not.toHaveProperty('data');
+      expect(JSON.stringify(events)).not.toContain('run_replayed');
     } finally { await server.close(); await rm(dir, { recursive: true, force: true }); }
   });
 

@@ -1,0 +1,44 @@
+{
+  "evidence_id": "ATLAS-BMR2-P6-003-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P6",
+  "work_item": "ATLAS-BMR2-P6-003",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "environment": "local zero-credential filesystem workspace",
+  "changed_files": [
+    "packages/atlas/src/trust-controls.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/__tests__/trust-controls.test.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "implemented_locally": [
+    "Audit events require exact tenant, organisation, project and environment scope, actor, policy version, target, correlation and timestamp fields.",
+    "Audit events are append-only, idempotent and hash-chained with tamper-evident digests.",
+    "Exact-scope exports use an independent per-scope hash chain and are independently verifiable from the returned events.",
+    "Secret-shaped fields are redacted before persistence.",
+    "Data classification is explicit for public, business, message, knowledge, credential, audit, billing, telemetry and evidence records."
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/trust-controls.test.ts --testTimeout=30000",
+    "focused_tests": 3,
+    "focused_passed": 3,
+    "full_command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm test -- --testTimeout=30000 && npm run build && git diff --check",
+    "full_test_files": 42,
+    "full_tests": 419,
+    "full_passed": 419,
+    "typescript_build": "PASS",
+    "metadata_write": "PASS",
+    "metadata_check": "PASS",
+    "metadata_digest": "sha256:78098ff49640d747bdf6e1d9dd0b6d9244b2623a93d0a7b3482dfd3e5e0a6ee4",
+    "diff_check": "PASS"
+  },
+  "limitations": [
+    "This is local filesystem audit and redaction proof only.",
+    "No OIDC/SSO provider, KMS, production secret manager, RLS, hosted export service or key-rotation environment was available.",
+    "No SOC2, ISO, GDPR, HIPAA or PCI compliance claim is made.",
+    "CI, staging, production, billing and commercial evidence remain unavailable."
+  ],
+  "absent_proof": ["CI", "staging identity/KMS/secret systems", "hosted RLS", "production key rotation", "compliance certification", "billing", "commercial readiness"],
+  "verdict": "ATLAS-BMR2-P6-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded tamper-evident, independently verifiable per-scope export and secret-redacting audit controls are implemented and tested locally; hosted identity, KMS/secret-manager and compliance evidence remain unavailable."
+}

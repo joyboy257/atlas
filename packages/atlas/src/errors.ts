@@ -7,7 +7,8 @@ export type AtlasCliErrorCode =
   | 'CONFLICT'
   | 'NETWORK_ERROR'
   | 'REMOTE_ERROR'
-  | 'LOCAL_STATE_ERROR';
+  | 'LOCAL_STATE_ERROR'
+  | 'UNSAFE_AUTHORITY_CONFIGURATION';
 
 const EXIT_CODES: Readonly<Record<AtlasCliErrorCode, number>> = {
   USAGE_ERROR: 2,
@@ -19,6 +20,7 @@ const EXIT_CODES: Readonly<Record<AtlasCliErrorCode, number>> = {
   NETWORK_ERROR: 7,
   REMOTE_ERROR: 8,
   LOCAL_STATE_ERROR: 9,
+  UNSAFE_AUTHORITY_CONFIGURATION: 10,
 };
 
 export class AtlasCliError extends Error {

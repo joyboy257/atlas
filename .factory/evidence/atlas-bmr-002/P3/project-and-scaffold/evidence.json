@@ -1,0 +1,68 @@
+{
+  "evidence_id": "ATLAS-BMR2-P3-001-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P3-001",
+  "title": "Project schema and scaffold for Agents and Missions",
+  "timestamp": "2026-07-31T10:02:00+08:00",
+  "reviewer": "principal orchestrator",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "scope": {
+    "project_contract": "Schema-v1 project configs accept an optional missions path collection while retaining legacy v1 compatibility.",
+    "scaffold": "New front-desk projects include a project-relative missions directory and a deterministic defineMission-based Mission example.",
+    "packaging": "Mission references are included in governed package file collection and project hashes.",
+    "runtime": "The generated Mission validates against the public Mission contract and remains zero-credential under the local-fixture model."
+  },
+  "changed_files": [
+    "packages/atlas/src/project-contract.ts",
+    "packages/atlas/src/scaffold.ts",
+    "packages/atlas/schema/atlas-project.v1.schema.json",
+    "packages/atlas/__tests__/project-contract.test.ts",
+    "packages/atlas/__tests__/scaffold.test.ts",
+    "packages/atlas/docs/PROJECT-CONTRACT.md",
+    "packages/atlas/docs/MIGRATION.md",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/project-contract.test.ts __tests__/scaffold.test.ts --testTimeout=20000",
+    "focused_test_files": 2,
+    "focused_tests": 22,
+    "focused_passed": 22,
+    "full_command": "cd packages/atlas && npm test",
+    "full_test_files": 34,
+    "full_tests": 327,
+    "full_passed": 327,
+    "metadata": "PASS",
+    "metadata_digest": "sha256:4a93d650ac44b518e1944fd5b408b4f77c0143059a16ebc7f95bcba4b0fc4897",
+    "typescript_build": "PASS",
+    "diff_check": "PASS",
+    "independent_review": "ACTIONABLE_DEFECT_REPAIRED",
+    "repaired_review_defect": "Generated Mission was initially decorative and non-conforming; it now uses defineMission with a complete versioned Mission object and scaffold tests validate the emitted source through validateMission."
+  },
+  "acceptance_coverage": [
+    "New project creates a deterministic Mission definition under missions/.",
+    "Generated Mission validates against the public Mission contract.",
+    "Mission path references are source-bound and included in package hashing.",
+    "Legacy schema-v1 projects without missions remain valid.",
+    "Existing-project adoption, resume, rollback, and dirty-worktree protections remain covered.",
+    "Local simulator remains zero-credential and local-fixture based."
+  ],
+  "remaining_gate_requirements": [
+    "CI execution evidence required by the Local + CI environment gate",
+    "Hosted Atlas Cloud, provider sandbox, staging and production evidence required by later programme gates",
+    "Whole-product, capacity, usage/cost, billing, commercial and independent certification evidence required by later programme gates"
+  ],
+  "absent_proof": [
+    "CI",
+    "Atlas Cloud",
+    "provider sandbox",
+    "staging",
+    "production",
+    "capacity",
+    "usage/cost ledger",
+    "billing settlement",
+    "commercial readiness",
+    "whole-product certification"
+  ],
+  "verdict": "ATLAS-BMR2-P3-001 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because the required CI evidence is unavailable. The local implementation satisfies the project/schema/scaffold acceptance surface without claiming hosted or whole-product readiness."
+}

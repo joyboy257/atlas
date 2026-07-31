@@ -60,6 +60,9 @@
     },
     "evals": {
       "$ref": "#/$defs/projectPaths"
+    },
+    "missions": {
+      "$ref": "#/$defs/projectPaths"
     }
   },
   "$defs": {

@@ -1,0 +1,254 @@
+{
+  "schemaVersion": "atlas.mission-store/v1",
+  "migrationVersion": 1,
+  "missions": [
+    {
+      "apiVersion": "atlas.mirai.dev/v1",
+      "kind": "Mission",
+      "metadata": {
+        "missionId": "mission_19a2ad52261b6955",
+        "schemaVersion": "1"
+      },
+      "spec": {
+        "scope": {
+          "tenantId": "tenant_5e737ac9be8d280b",
+          "organisationId": "local-org-sha256:cdef87f3d",
+          "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+          "environmentId": "local"
+        },
+        "agent": {
+          "agentId": "front-desk",
+          "agentVersionId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+          "deploymentId": "deployment_5e737ac9be8d280b",
+          "runtime": {
+            "mode": "local",
+            "adapter": "atlas-local-fixture"
+          }
+        },
+        "missionType": "business-message",
+        "goal": "Can I move booking BK-100 to Friday?",
+        "successCriteria": "The governed local business message journey reaches an inspectable terminal or controlled wait state.",
+        "subject": {
+          "subjectId": "cust_workbench_001",
+          "kind": "customer"
+        },
+        "conversation": {
+          "conversationId": "conv_workbench_001",
+          "channel": "local-web-chat"
+        },
+        "constraints": {
+          "allowedTools": [
+            "front-desk.bookings.reschedule"
+          ],
+          "allowedChannels": [
+            "local-web-chat"
+          ],
+          "maxSteps": 8,
+          "requiredApprovalFor": [
+            "front-desk.bookings.reschedule"
+          ]
+        },
+        "risk": {
+          "policyRef": "atlas.local.fixture-policy/v1",
+          "riskClass": "high",
+          "autonomyLevel": "L2",
+          "approvalRequired": true,
+          "handoffAllowed": true
+        },
+        "budget": {
+          "maxSteps": 8,
+          "maxCost": 0,
+          "currency": "USD"
+        },
+        "state": "WAITING_APPROVAL",
+        "stateVersion": 4,
+        "correlation": {
+          "correlationId": "correlation_26551dce193aa336",
+          "causationId": "msg_workbench_ms8dhtyq"
+        },
+        "provenance": {
+          "source": "channel",
+          "inputDigest": "sha256:1fe0c364913d2c04d014ff4135614e8e5ce8f72af193d427d03ac873fdb83d34",
+          "knowledgeRefs": [
+            "knowledge/booking-policy.md"
+          ]
+        },
+        "timestamps": {
+          "createdAt": "2026-07-31T03:18:31.953Z",
+          "updatedAt": "2026-07-31T03:18:31.996Z",
+          "activatedAt": "2026-07-31T03:18:31.981Z"
+        },
+        "activeWait": {
+          "kind": "approval",
+          "waitId": "wait-approval_792aac791c33417e"
+        }
+      }
+    }
+  ],
+  "lifecycleEvents": [
+    {
+      "apiVersion": "atlas.mirai.dev/v1",
+      "kind": "MissionLifecycleEvent",
+      "metadata": {
+        "eventId": "mission-created:mission_19a2ad52261b6955",
+        "schemaVersion": "1",
+        "missionId": "mission_19a2ad52261b6955"
+      },
+      "spec": {
+        "missionId": "mission_19a2ad52261b6955",
+        "scope": {
+          "tenantId": "tenant_5e737ac9be8d280b",
+          "organisationId": "local-org-sha256:cdef87f3d",
+          "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+          "environmentId": "local"
+        },
+        "eventType": "CREATED",
+        "priorState": null,
+        "resultingState": "CREATED",
+        "stateVersion": 1,
+        "actor": {
+          "type": "system",
+          "identity": "atlas"
+        },
+        "causationId": "msg_workbench_ms8dhtyq",
+        "correlationId": "correlation_26551dce193aa336",
+        "source": {
+          "kind": "command",
+          "ref": "sha256:1fe0c364913d2c04d014ff4135614e8e5ce8f72af193d427d03ac873fdb83d34"
+        },
+        "occurredAt": "2026-07-31T03:18:31.953Z",
+        "recordedAt": "2026-07-31T03:18:31.953Z",
+        "idempotencyKey": "mission-created:mission_19a2ad52261b6955"
+      }
+    },
+    {
+      "apiVersion": "atlas.mirai.dev/v1",
+      "kind": "MissionLifecycleEvent",
+      "metadata": {
+        "eventId": "mission-event_3aba9b4ea79ae3f8",
+        "schemaVersion": "1",
+        "missionId": "mission_19a2ad52261b6955"
+      },
+      "spec": {
+        "missionId": "mission_19a2ad52261b6955",
+        "scope": {
+          "tenantId": "tenant_5e737ac9be8d280b",
+          "organisationId": "local-org-sha256:cdef87f3d",
+          "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+          "environmentId": "local"
+        },
+        "eventType": "READY",
+        "priorState": "CREATED",
+        "resultingState": "READY",
+        "stateVersion": 2,
+        "actor": {
+          "type": "system",
+          "identity": "atlas.local-mission-coordinator/v1"
+        },
+        "causationId": "local.coordinator.ready",
+        "correlationId": "correlation_26551dce193aa336",
+        "source": {
+          "kind": "system",
+          "ref": "local.coordinator.ready"
+        },
+        "occurredAt": "2026-07-31T03:18:31.967Z",
+        "recordedAt": "2026-07-31T03:18:31.967Z",
+        "idempotencyKey": "mission-event-idempotency_3aba9b4ea79ae3f8"
+      }
+    },
+    {
+      "apiVersion": "atlas.mirai.dev/v1",
+      "kind": "MissionLifecycleEvent",
+      "metadata": {
+        "eventId": "mission-event_2a935079ddd6e826",
+        "schemaVersion": "1",
+        "missionId": "mission_19a2ad52261b6955"
+      },
+      "spec": {
+        "missionId": "mission_19a2ad52261b6955",
+        "scope": {
+          "tenantId": "tenant_5e737ac9be8d280b",
+          "organisationId": "local-org-sha256:cdef87f3d",
+          "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+          "environmentId": "local"
+        },
+        "eventType": "ACTIVATED",
+        "priorState": "READY",
+        "resultingState": "ACTIVE",
+        "stateVersion": 3,
+        "actor": {
+          "type": "system",
+          "identity": "atlas.local-mission-coordinator/v1"
+        },
+        "causationId": "local.coordinator.active",
+        "correlationId": "correlation_26551dce193aa336",
+        "source": {
+          "kind": "system",
+          "ref": "local.coordinator.active"
+        },
+        "occurredAt": "2026-07-31T03:18:31.981Z",
+        "recordedAt": "2026-07-31T03:18:31.981Z",
+        "idempotencyKey": "mission-event-idempotency_2a935079ddd6e826"
+      }
+    },
+    {
+      "apiVersion": "atlas.mirai.dev/v1",
+      "kind": "MissionLifecycleEvent",
+      "metadata": {
+        "eventId": "mission-event_65626e71b21929e9",
+        "schemaVersion": "1",
+        "missionId": "mission_19a2ad52261b6955"
+      },
+      "spec": {
+        "missionId": "mission_19a2ad52261b6955",
+        "scope": {
+          "tenantId": "tenant_5e737ac9be8d280b",
+          "organisationId": "local-org-sha256:cdef87f3d",
+          "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+          "environmentId": "local"
+        },
+        "eventType": "WAITING_APPROVAL",
+        "priorState": "ACTIVE",
+        "resultingState": "WAITING_APPROVAL",
+        "stateVersion": 4,
+        "actor": {
+          "type": "system",
+          "identity": "atlas.local-mission-coordinator/v1"
+        },
+        "causationId": "local.coordinator.approval-required",
+        "correlationId": "correlation_26551dce193aa336",
+        "source": {
+          "kind": "system",
+          "ref": "local.coordinator.approval-required"
+        },
+        "occurredAt": "2026-07-31T03:18:31.996Z",
+        "recordedAt": "2026-07-31T03:18:31.996Z",
+        "idempotencyKey": "mission-event-idempotency_65626e71b21929e9"
+      }
+    }
+  ],
+  "steps": [],
+  "waits": [
+    {
+      "waitId": "wait-approval_792aac791c33417e",
+      "missionId": "mission_19a2ad52261b6955",
+      "scope": {
+        "tenantId": "tenant_5e737ac9be8d280b",
+        "organisationId": "local-org-sha256:cdef87f3d",
+        "projectId": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
+        "environmentId": "local"
+      },
+      "kind": "approval",
+      "status": "ACTIVE",
+      "payload": {
+        "approvalId": "approval_9128ff3a18aa2f51"
+      },
+      "updatedAt": "2026-07-31T03:18:32.008Z"
+    }
+  ],
+  "decisions": [],
+  "actions": [],
+  "receipts": [],
+  "receiptLinks": [],
+  "triggers": []
+}

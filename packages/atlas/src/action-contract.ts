@@ -1,5 +1,5 @@
 import { sha256 } from './fs-safety.js';
-import type { MissionScope, MissionState } from './mission-contract.js';
+import type { MissionState } from './mission-contract.js';
 
 export const ACTION_API_VERSION = 'atlas.mirai.dev/v1' as const;
 export const PROPOSAL_KIND = 'Proposal' as const;
@@ -18,7 +18,13 @@ export const ACTION_SCHEMA_FILES = {
   learningProposal: 'schema/atlas-learning-proposal.v1.schema.json',
 } as const;
 
-export type ActionScope = Readonly<MissionScope & { missionId: string }>;
+export type ActionScope = Readonly<{
+  tenantId: string;
+  organisationId: string;
+  projectId: string;
+  environmentId: string;
+  missionId: string;
+}>;
 export type ContractMetadata = Readonly<{ id: string; schemaVersion: '1'; missionId?: string }>;
 export type ContractActor = Readonly<{
   type: 'system' | 'developer' | 'agent' | 'operator' | 'provider' | 'scheduler' | 'external-runtime';
@@ -206,7 +212,7 @@ export function validateReceipt(value: unknown): ContractValidationResult<Receip
 export function validateOutcome(value: unknown): ContractValidationResult<Outcome> { return validateContract(value, OUTCOME_KIND, validateOutcomeSpec) as ContractValidationResult<Outcome>; }
 export function validateLearningProposal(value: unknown): ContractValidationResult<LearningProposal> { return validateContract(value, LEARNING_PROPOSAL_KIND, validateLearningSpec) as ContractValidationResult<LearningProposal>; }
 
-export function digestContract(value: unknown): string { return `sha256:${sha256(stableJson(value))}`; }
+export function digestContract(value: unknown): string { return sha256(stableJson(value)); }
 export function verifyReceiptIntegrity(receipt: Receipt): boolean {
   const unsigned = { ...receipt, spec: { ...receipt.spec, integrity: undefined } };
   return digestContract(unsigned) === receipt.spec.integrity.digest;

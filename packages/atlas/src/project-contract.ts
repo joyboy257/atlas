@@ -36,6 +36,7 @@ export type AtlasProjectConfig = Readonly<{
   knowledge: readonly string[];
   channels: readonly string[];
   evals: readonly string[];
+  missions?: readonly string[];
 }>;
 
 export type AtlasEnvironmentOverlay = Readonly<{
@@ -87,7 +88,7 @@ export type AtlasProjectMigrationResult = Readonly<{
   patch: readonly string[];
 }>;
 
-const PROJECT_FIELDS = new Set(['schemaVersion', 'project', 'runtime', 'model', 'agent', 'knowledge', 'channels', 'evals']);
+const PROJECT_FIELDS = new Set(['schemaVersion', 'project', 'runtime', 'model', 'agent', 'knowledge', 'channels', 'evals', 'missions']);
 const PROJECT_META_FIELDS = new Set(['name', 'description']);
 const RUNTIME_FIELDS = new Set(['mode']);
 const AGENT_FIELDS = new Set(['instructions', 'tools', 'skills', 'policies', 'subagents']);
@@ -140,6 +141,7 @@ export function validateAtlasProject(value: unknown): AtlasProjectValidationResu
   validatePathArray(value.knowledge, '$.knowledge', true, diagnostics);
   validatePathArray(value.channels, '$.channels', true, diagnostics);
   validatePathArray(value.evals, '$.evals', true, diagnostics);
+  if (value.missions !== undefined) validatePathArray(value.missions, '$.missions', true, diagnostics);
 
   if (diagnostics.length > 0) return { valid: false, diagnostics };
   return { valid: true, diagnostics, config: cloneJson(value) as AtlasProjectConfig };
@@ -486,6 +488,7 @@ async function collectPackageFiles(root: string, config: AtlasProjectConfig): Pr
     ...config.knowledge,
     ...config.channels,
     ...config.evals,
+    ...(config.missions ?? []),
   ].filter((value): value is string => typeof value === 'string');
   const files = new Set<string>();
   for (const reference of references) await collectReference(root, reference, files);

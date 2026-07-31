@@ -1,0 +1,48 @@
+{
+  "evidence_id": "ATLAS-BMR2-P2-005-EVIDENCE-003",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P2",
+  "work_item": "ATLAS-BMR2-P2-005",
+  "gate": "G2",
+  "source_commit": "e2d14ebe604fedf4c9fd9cb31d3463ea94fcad15",
+  "artifact_digest": "sha256:225aeafc77691099133d486a7a33c0406ebd7901ad4587c9413cd2851e100c17",
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npx vitest run __tests__/memory.test.ts --testTimeout=30000 && npx vitest run __tests__/mission-control.test.ts __tests__/local-runtime.test.ts __tests__/mission-contract.test.ts --testTimeout=30000 && npm test -- --testTimeout=30000 && npm run build && git diff --check",
+  "started_at": "2026-07-31T14:58:00+08:00",
+  "finished_at": "2026-07-31T15:00:35+08:00",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "INCONCLUSIVE",
+  "verification": {
+    "memory_test_files": 1,
+    "memory_tests": 14,
+    "memory_passed": 14,
+    "takeover_test_files": 3,
+    "takeover_tests": 52,
+    "takeover_passed": 52,
+    "full_test_files": 38,
+    "full_tests": 393,
+    "full_passed": 393,
+    "typescript_build": "PASS",
+    "metadata": "PASS",
+    "metadata_digest": "sha256:225aeafc77691099133d486a7a33c0406ebd7901ad4587c9413cd2851e100c17",
+    "diff_check": "PASS"
+  },
+  "implemented_locally": [
+    "Reviewer identities are trimmed before authorization, separation-of-duties comparison and reviewer-record persistence",
+    "Promotion revalidates every candidate dependency for existence, exact scope, invalidation and retention expiry",
+    "Supporting evidence and proposed learning source require matching kind, reference, version and digest",
+    "Adversarial tests cover padded self-review and self-rejection, invalidated and expired dependencies, and forged source references with matching digests",
+    "Existing provenance, scope isolation, retention invalidation and reviewed-promotion behavior remains passing"
+  ],
+  "limitations": [
+    "The implementation is an in-memory store and does not prove durable storage, restart recovery, database transactionality or multi-worker concurrency.",
+    "Reviewer identities are locally configured but no trusted hosted operator identity or RBAC integration is proven.",
+    "No CI, disposable storage, hosted lifecycle worker, legal hold, export, encrypted production storage, provider sandbox, staging, production, billing or commercial evidence exists.",
+    "The local tests do not provide an external provider/model poisoning harness or prove hosted policy-boundary enforcement.",
+    "This record is a local implementation verification, not a release-gate PASS."
+  ],
+  "checksum": "sha256:225aeafc77691099133d486a7a33c0406ebd7901ad4587c9413cd2851e100c17"
+}

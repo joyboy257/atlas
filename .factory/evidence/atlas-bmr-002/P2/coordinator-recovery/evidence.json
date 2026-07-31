@@ -1,0 +1,73 @@
+{
+  "evidence_id": "ATLAS-BMR2-P2-001-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "work_item": "ATLAS-BMR2-P2-001",
+  "timestamp": "2026-07-30T09:50:00+08:00",
+  "status": "IN_PROGRESS",
+  "maturity": "LOCAL_PROVEN",
+  "scope": "Local zero-credential Mission coordinator leasing and commit-fencing slice",
+  "implemented": [
+    "Versioned .atlas/mission-leases.json state with atomic filesystem updates",
+    "Tenant, organisation, project and environment scope binding",
+    "Atomic acquire with same-owner renewal and competing-owner conflict",
+    "Lease heartbeat with owner and lease identity fencing",
+    "Explicit release and expiry transition",
+    "Expired lease recovery for a new owner",
+    "Coordinator-owned Mission lease around receive, approval, delivery, callback and control operations",
+    "Periodic coordinator heartbeat during long operations",
+    "Commit-boundary fencing in AtlasLocalRuntime and MissionStore before durable writes",
+    "Stale-owner regression proving lease loss rejects before runtime or Mission persistence is written",
+    "Lease state is separate from the existing Mission persistence authority and does not create a second Mission execution authority",
+    "Scope-local expiry prevents one tenant clock from expiring another tenant's active lease",
+    "Takeover is fenced by the Mission lease before runtime or Mission state mutation",
+    "Process-level SIGKILL recovery allows a replacement worker to recover an expired lease",
+    "Process-level duplicate-worker contention leaves exactly one active lease owner",
+    "Process-level Mission workers persist receive, approval, delivery, pause, resume and cancel checkpoints across SIGKILL restart boundaries",
+    "An independent dependency-free verifier validates persisted Mission and runtime truth after worker termination, including the no-Action invariant for cancelled Missions",
+    "Monotonic release fencing rejects backward-clock cleanup before corrupting persisted lease state",
+    "Lease scope validation rejects unexpected persisted properties before acquisition",
+    "Lease ownership is checked while holding the lease lock across each guarded durable commit",
+    "Stale lock reclamation is serialized with a compare-before-rename reclaim marker"
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npm run build && npx vitest run __tests__/mission-leases.test.ts __tests__/mission-coordinator.test.ts __tests__/mission-control.test.ts --testTimeout=30000",
+    "focused_test_files": 3,
+    "focused_tests": 38,
+    "focused_passed": 38,
+    "process_worker_tests": [
+      "SIGKILL worker then expiry recovery",
+      "two separate worker processes contend for one Mission lease",
+      "SIGKILL coordinator after receive, approval and delivery checkpoints",
+      "independent verifier reads MissionStore and runtime persisted truth"
+    ],
+    "full_command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm run build && npx vitest run --testTimeout=30000 && git diff --check",
+    "full_test_files": 34,
+    "full_tests": 300,
+    "full_passed": 300,
+    "full_suite_repetitions": 1,
+    "metadata": "PASS",
+    "metadata_digest": "sha256:34d4a76ff2a07d42e9862d54570b0fecce8e8cbad9d79dc601804d7a9c9f4ad7",
+    "typescript_build": "PASS",
+    "diff_check": "PASS"
+  },
+  "remaining_gate_requirements": [
+    "Process-kill coverage for every remaining Mission lifecycle/control boundary beyond receive, approval and delivery",
+    "A crash matrix covering partial runtime-versus-Mission commits, wait projection, action/outbox commit and callback reconciliation",
+    "An independent duplicate-worker commit verifier proving one committed Mission step and one action/outbox/receipt chain",
+    "A long-running step heartbeat test across multiple lease TTL intervals followed by owner termination and expiry recovery",
+    "Bounded recovery when a live suspended or wedged owner holds the project operation lock beyond Mission lease expiry"
+  ],
+  "absent_proof": [
+    "CI",
+    "Atlas Cloud",
+    "provider sandbox",
+    "staging",
+    "production",
+    "capacity",
+    "usage/cost ledger",
+    "billing settlement",
+    "commercial readiness",
+    "whole-product certification"
+  ],
+  "verdict": "ATLAS-BMR2-P2-001 = IN_PROGRESS / LOCAL_PROVEN: the local lease and checkpoint slices pass, but the literal recovery acceptance remains unproven because crash points do not cover partial lifecycle commits, duplicate-worker step commits, long-step heartbeat behavior, or every remaining lifecycle boundary. CI, database-equivalent persistence, Cloud, provider, staging and production evidence remain absent."
+}

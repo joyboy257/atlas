@@ -1,0 +1,46 @@
+{
+  "evidence_id": "ATLAS-BMR2-P6-005-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P6",
+  "work_item": "ATLAS-BMR2-P6-005",
+  "status": "BLOCKED_EXTERNAL",
+  "maturity": "LOCAL_PROVEN",
+  "environment": "local zero-credential filesystem workspace",
+  "changed_files": [
+    "packages/atlas/src/usage-ledger.ts",
+    "packages/atlas/src/index.ts",
+    "packages/atlas/__tests__/usage-ledger.test.ts",
+    "packages/atlas/metadata/package-source.v1.json"
+  ],
+  "implemented_locally": [
+    "Canonical usage events are attributable to tenant, organisation, project, environment, optional Agent version, Mission and Action.",
+    "Usage event identity is idempotent and conflicting event reuse is rejected.",
+    "Estimated cost is separated from settled and unsettled non-estimated cost.",
+    "Settlement identity is deterministic and a usage event cannot be settled twice under different settlement identities.",
+    "Settlement provider, currency and amount must reconcile exactly to the recorded usage event.",
+    "Local ledger state is protected by atomic writes and a private operation lock.",
+    "Summaries group by usage kind, unit and currency; mixed dimensions do not produce a combined scalar total."
+  ],
+  "verification": {
+    "focused_command": "cd packages/atlas && npx vitest run __tests__/usage-ledger.test.ts --testTimeout=30000",
+    "focused_tests": 4,
+    "focused_passed": 4,
+    "full_command": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npm test -- --testTimeout=30000 && npm run build && git diff --check",
+    "full_test_files": 42,
+    "full_tests": 419,
+    "full_passed": 419,
+    "typescript_build": "PASS",
+    "metadata_write": "PASS",
+    "metadata_check": "PASS",
+    "metadata_digest": "sha256:78098ff49640d747bdf6e1d9dd0b6d9244b2623a93d0a7b3482dfd3e5e0a6ee4",
+    "diff_check": "PASS"
+  },
+  "limitations": [
+    "This is local filesystem proof only; no CI, staging or hosted ledger proof exists.",
+    "No provider/model invoice fixture, payment processor settlement, pricing service or commercial billing integration was exercised.",
+    "No database transaction, queue worker or cross-process exactly-once accounting proof exists.",
+    "The ledger is exported as a public package API but is not yet wired into the Mission inspect projection; that acceptance gap remains visible in P1-006 evidence."
+  ],
+  "absent_proof": ["CI", "staging", "provider/model invoice reconciliation", "billing settlement", "production", "commercial readiness", "whole-product certification"],
+  "verdict": "ATLAS-BMR2-P6-005 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded idempotent usage attribution and estimated-versus-settled reconciliation are implemented and tested locally; CI, staging, invoice/provider reconciliation and billing settlement remain unavailable."
+}

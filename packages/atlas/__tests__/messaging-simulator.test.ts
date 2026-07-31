@@ -3,6 +3,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { AtlasLocalRuntime } from '../src/local-runtime.js';
+import { AtlasLocalMissionCoordinator } from '../src/mission-coordinator.js';
 import { AtlasMessagingSimulator } from '../src/messaging-simulator.js';
 import { scaffoldAtlasProject, type AtlasScaffoldDependencies } from '../src/scaffold.js';
 
@@ -23,8 +24,20 @@ async function simulatorFixture() {
   let milliseconds = Date.parse('2026-07-24T08:00:00.000Z');
   const clock = () => new Date(milliseconds).toISOString();
   const advance = (value: number) => { milliseconds += value; };
-  const runtime = await AtlasLocalRuntime.open({ root: path.join(base, 'front-desk'), clock });
-  return { simulator: new AtlasMessagingSimulator(runtime, { advance }), runtime };
+  const root = path.join(base, 'front-desk');
+  const runtime = await AtlasLocalRuntime.open({ root, clock });
+  const identity = runtime.snapshot().identity;
+  const coordinator = await AtlasLocalMissionCoordinator.open({
+    root,
+    scope: {
+      tenantId: identity.tenant_id,
+      organisationId: `local-org-${identity.project_hash.slice(0, 16)}`,
+      projectId: identity.project_hash,
+      environmentId: 'local',
+    },
+    clock,
+  });
+  return { simulator: new AtlasMessagingSimulator(coordinator, { advance }), runtime };
 }
 
 describe('Atlas business messaging simulator', () => {
@@ -54,7 +67,7 @@ describe('Atlas business messaging simulator', () => {
     expect(result.captures.commit.status).toBe('committed');
     expect(result.captures.delivery.delivery.state).toBe('delivered');
     expect(result.captures.replay.replayed).toBe(true);
-    expect(runtime.snapshot().actions).toHaveLength(1);
+    expect(result.final_state.actions).toHaveLength(1);
     expect(result.transcript.map((entry) => entry.type)).toEqual(['inbound', 'approve', 'deliver', 'replay_inbound']);
   });
 
@@ -94,7 +107,7 @@ describe('Atlas business messaging simulator', () => {
     expect(result.captures.retry.delivery.state).toBe('retry_scheduled');
     expect(result.captures.accepted.delivery.state).toBe('sent');
     expect(result.captures.delivered.delivery.state).toBe('delivered');
-    expect(runtime.snapshot().actions).toHaveLength(1);
+    expect(result.final_state.actions).toHaveLength(1);
   });
 
   it('simulates policy blocks, approval interruption, and human takeover without hidden commits', async () => {
@@ -125,7 +138,7 @@ describe('Atlas business messaging simulator', () => {
 
     expect(result.captures.blocked.status).toBe('handoff_required');
     expect(result.captures.takeover.state).toBe('human_takeover');
-    expect(runtime.snapshot().actions).toHaveLength(0);
-    expect(runtime.snapshot().outbox).toHaveLength(0);
+    expect(result.final_state.actions).toHaveLength(0);
+    expect(result.final_state.outbox).toHaveLength(0);
   });
 });

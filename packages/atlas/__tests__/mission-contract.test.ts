@@ -102,6 +102,9 @@ describe('Mission state machine', () => {
     expect(canTransitionMission('CREATED', 'READY')).toBe(true);
     expect(canTransitionMission('READY', 'ACTIVE')).toBe(true);
     expect(canTransitionMission('ACTIVE', 'COMPLETED')).toBe(true);
+    expect(canTransitionMission('WAITING_EVENT', 'HANDED_OFF')).toBe(true);
+    expect(canTransitionMission('WAITING_SCHEDULE', 'HANDED_OFF')).toBe(true);
+    expect(canTransitionMission('PAUSED', 'HANDED_OFF')).toBe(true);
     expect(canTransitionMission('COMPLETED', 'ACTIVE')).toBe(false);
     expect(isTerminalMissionState('COMPLETED')).toBe(true);
     expect(isTerminalMissionState('ACTIVE')).toBe(false);

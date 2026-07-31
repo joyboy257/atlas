@@ -1,4 +1,6 @@
-import { AtlasLocalRuntime, type AtlasLocalInboundMessage } from './local-runtime.js';
+import { type AtlasLocalInboundMessage } from './local-runtime.js';
+import { AtlasLocalMissionCoordinator, type MissionCoordinatorResult } from './mission-coordinator.js';
+import { projectCoordinatorResult, projectRuntimeSnapshot } from './public-projections.js';
 
 export type AtlasSimulatorEvent =
   | Readonly<{ type: 'inbound'; message: AtlasLocalInboundMessage; capture_as?: string }>
@@ -28,15 +30,17 @@ export type AtlasSimulatorResult = Readonly<{
   status: 'passed';
   transcript: readonly AtlasSimulatorTranscriptEntry[];
   captures: Record<string, any>;
-  final_state: ReturnType<AtlasLocalRuntime['snapshot']>;
+  final_state: ReturnType<typeof projectRuntimeSnapshot>;
 }>;
 
+type SimulationAuthority = AtlasLocalMissionCoordinator;
+
 export class AtlasMessagingSimulator {
-  private readonly runtime: AtlasLocalRuntime;
+  private readonly authority: SimulationAuthority;
   private readonly advance: (milliseconds: number) => void;
 
-  constructor(runtime: AtlasLocalRuntime, dependencies: Readonly<{ advance?: (milliseconds: number) => void }> = {}) {
-    this.runtime = runtime;
+  constructor(authority: SimulationAuthority, dependencies: Readonly<{ advance?: (milliseconds: number) => void }> = {}) {
+    this.authority = authority;
     this.advance = dependencies.advance ?? (() => undefined);
   }
 
@@ -49,34 +53,30 @@ export class AtlasMessagingSimulator {
       const event = scenario.events[index]!;
       let result: any;
       if (event.type === 'inbound') {
-        result = await this.runtime.receiveMessage(event.message);
+        result = await this.receive(event.message);
         if (event.capture_as) messages[event.capture_as] = event.message;
       } else if (event.type === 'replay_inbound') {
         const message = messages[event.message_from];
         if (!message) throw new Error(`Simulator capture ${event.message_from} does not contain an inbound message`);
-        result = await this.runtime.receiveMessage(message);
+        result = await this.receive(message);
       } else if (event.type === 'approve' || event.type === 'reject') {
         const source = requireCapture(captures, event.approval_from);
-        const approvalId = source.approval?.id;
+        const approvalId = source.approval?.id ?? source.runtime?.approval?.id;
         if (typeof approvalId !== 'string') throw new Error(`Simulator capture ${event.approval_from} has no approval id`);
-        result = await this.runtime.decideApproval(approvalId, {
-          decision: event.type === 'approve' ? 'approved' : 'rejected',
-          operator_id: event.operator_id,
-          ...(event.reason ? { reason: event.reason } : {}),
-        });
+        result = await this.approve(approvalId, event.type === 'approve', event.operator_id, event.reason);
       } else if (event.type === 'takeover') {
-        result = await this.runtime.takeHumanControl(event.conversation_id, { operator_id: event.operator_id, reason: event.reason });
+        result = await this.takeover(event.conversation_id, event.operator_id, event.reason);
       } else if (event.type === 'deliver') {
         const source = requireCapture(captures, event.outbox_from);
-        const outboxId = source.outbox?.id;
+        const outboxId = source.outbox?.id ?? source.runtime?.outbox?.id ?? source.runtime?.delivery?.id;
         if (typeof outboxId !== 'string') throw new Error(`Simulator capture ${event.outbox_from} has no outbox id`);
-        result = await this.runtime.attemptDelivery(outboxId, {
+        result = await this.deliver(outboxId, {
           outcome: event.outcome,
           ...(event.provider_code ? { provider_code: event.provider_code } : {}),
           ...(event.provider_message_id ? { provider_message_id: event.provider_message_id } : {}),
         });
       } else if (event.type === 'callback') {
-        result = await this.runtime.applyDeliveryCallback(event.callback);
+        result = await this.callback(event.callback);
       } else {
         if (!Number.isFinite(event.milliseconds) || event.milliseconds < 0) throw new Error('advance_time requires a non-negative millisecond value');
         this.advance(event.milliseconds);
@@ -85,8 +85,47 @@ export class AtlasMessagingSimulator {
       if (event.capture_as) captures[event.capture_as] = result;
       transcript.push({ index, type: event.type, capture_as: event.capture_as ?? null, status: 'passed', result });
     }
-    return { scenario_id: scenario.id, status: 'passed', transcript, captures, final_state: this.runtime.snapshot() };
+    return { scenario_id: scenario.id, status: 'passed', transcript, captures, final_state: await this.snapshot() };
   }
+
+  private async receive(message: AtlasLocalInboundMessage): Promise<Record<string, any>> {
+    return flattenCoordinatorResult(await this.authority.receive(message));
+  }
+
+  private async approve(approvalId: string, approved: boolean, operatorId: string, reason?: string): Promise<Record<string, any>> {
+    return flattenCoordinatorResult(approved
+      ? await this.authority.approve(approvalId, operatorId, reason)
+      : await this.authority.reject(approvalId, operatorId, reason));
+  }
+
+  private async takeover(conversationId: string, operatorId: string, reason: string): Promise<Record<string, any>> {
+    return flattenCoordinatorResult(await this.authority.takeover(conversationId, operatorId, reason));
+  }
+
+  private async deliver(outboxId: string, attempt: Parameters<AtlasLocalMissionCoordinator['deliver']>[1]): Promise<Record<string, any>> {
+    return flattenCoordinatorResult(await this.authority.deliver(outboxId, attempt));
+  }
+
+  private async callback(callback: Parameters<AtlasLocalMissionCoordinator['applyDeliveryCallback']>[0]): Promise<Record<string, any>> {
+    return flattenCoordinatorResult(await this.authority.applyDeliveryCallback(callback));
+  }
+
+  private async snapshot(): Promise<ReturnType<typeof projectRuntimeSnapshot>> {
+    return projectRuntimeSnapshot((await this.authority.snapshot()).runtime);
+  }
+}
+
+function flattenCoordinatorResult(result: MissionCoordinatorResult): Record<string, any> {
+  const projected = projectCoordinatorResult(result);
+  return {
+    ...projected.runtime,
+    mission: projected.mission,
+    ledger: projected.ledger,
+    receipts: projected.receipts,
+    mission_id: projected.missionId,
+    status: projected.status,
+    replayed: projected.replayed,
+  };
 }
 
 function requireCapture(captures: Record<string, any>, name: string): any {

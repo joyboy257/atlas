@@ -4,6 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { request } from 'node:http';
 import { postWebhookFixture, startAtlasDevServer, type AtlasDevServer } from '../src/dev-server.js';
+import { AtlasLocalMissionCoordinator } from '../src/mission-coordinator.js';
+import { AtlasLocalRuntime } from '../src/local-runtime.js';
 import { scaffoldAtlasProject, type AtlasScaffoldDependencies } from '../src/scaffold.js';
 
 describe('Atlas deterministic dev server', () => {
@@ -39,7 +41,26 @@ describe('Atlas deterministic dev server', () => {
     server = await startAtlasDevServer();
     await postWebhookFixture(`${server.url}/webhooks`, 'atlas.execution.completed', { run_id: 'run_fixture' });
     const result = await fetch(`${server.url}/events`).then((response) => response.json());
-    expect(result.events).toHaveLength(1); expect(result.events[0]).toMatchObject({ id: 'evt_atlas_dev_001', data: { run_id: 'run_fixture' } });
+    expect(result.events).toHaveLength(1);
+    expect(result.events[0]).toMatchObject({
+      id: 'evt_atlas_dev_001',
+      type: 'atlas.execution.completed',
+      created_at: '2026-07-13T00:00:00.000Z',
+      sequence: 1,
+      data_keys: ['run_id'],
+    });
+    expect(result.events[0]).not.toHaveProperty('data');
+    expect(JSON.stringify(result)).not.toContain('run_fixture');
+  });
+
+  it('durably routes project webhooks through the Mission coordinator', async () => {
+    server = await startAtlasDevServer({ projectRoot: await project() });
+    const event = { id: 'webhook-project-001', type: 'booking.updated', created_at: '2026-07-24T08:00:00.000Z', data: { booking_id: 'BK-100' } };
+    const first = await fetch(`${server.url}/webhooks`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(event) }).then((response) => response.json());
+    const replay = await fetch(`${server.url}/webhooks`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(event) }).then((response) => response.json());
+    expect(first).toMatchObject({ ok: true, durable: true, trigger: { trigger_id: 'webhook-project-001', status: 'APPLIED', replayed: false } });
+    expect(replay).toMatchObject({ ok: true, durable: true, trigger: { trigger_id: 'webhook-project-001', status: 'APPLIED', replayed: true } });
+    expect(JSON.stringify(first)).not.toContain('BK-100');
   });
 
   it('supports deterministic failure injection', async () => {
@@ -141,6 +162,63 @@ describe('Atlas deterministic dev server', () => {
     expect(state.data.outbox[0].state).toBe('delivered');
     expect(trace.data.events.map((event: { type: string }) => event.type)).toEqual(expect.arrayContaining(['knowledge.retrieved', 'action.committed', 'delivery.delivered']));
     expect(receipts.data.map((receipt: { kind: string }) => receipt.kind)).toEqual(expect.arrayContaining(['evidence', 'approval', 'action', 'delivery']));
+  });
+
+  it('redacts raw customer and operational payloads from HTTP projections', async () => {
+    server = await startAtlasDevServer({ projectRoot: await project() });
+    const inbound = await fetch(`${server.url}/api/messages/inbound`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        message_id: 'msg_redaction', conversation_id: 'conv_redaction', customer_id: 'cust_redaction', channel_id: 'local-web-chat',
+        sequence: 1, occurred_at: '2026-07-24T08:00:00.000Z', text: 'Can I move booking BK-100 to Friday?', consent: true, within_messaging_window: true,
+      }),
+    }).then((response) => response.json());
+
+    const state = await fetch(`${server.url}/api/state`).then((response) => response.json());
+    const trace = await fetch(`${server.url}/api/traces/${inbound.data.trace_id}`).then((response) => response.json());
+    const receipts = await fetch(`${server.url}/api/receipts`).then((response) => response.json());
+    const responseText = JSON.stringify({ inbound, state, trace, receipts });
+
+    expect(responseText).not.toContain('Can I move booking BK-100 to Friday?');
+    expect(JSON.stringify(state.data)).not.toContain('"goal"');
+    expect(JSON.stringify(state.data)).not.toContain('"body"');
+    expect(JSON.stringify(state.data)).not.toContain('"input"');
+    expect(state.data.messages[0]).not.toHaveProperty('text');
+    expect(state.data.traces[0].events[0]).not.toHaveProperty('data');
+    expect(receipts.data[0]).not.toHaveProperty('data');
+  });
+
+  it('runs simulator scenarios through Mission coordinator authority', async () => {
+    const projectRoot = await project();
+    server = await startAtlasDevServer({ projectRoot });
+    const inbound = await fetch(`${server.url}/api/messages/inbound`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        message_id: 'msg_cancelled', conversation_id: 'conv_cancelled', customer_id: 'cust_cancelled', channel_id: 'local-web-chat',
+        sequence: 1, occurred_at: '2026-07-24T08:00:00.000Z', text: 'Can I move booking BK-100 to Friday?', consent: true, within_messaging_window: true,
+      }),
+    }).then((response) => response.json());
+    const runtime = await AtlasLocalRuntime.open({ root: projectRoot });
+    const identity = runtime.snapshot().identity;
+    const coordinator = await AtlasLocalMissionCoordinator.open({ root: projectRoot, scope: {
+      tenantId: identity.tenant_id, organisationId: `local-org-${identity.project_hash.slice(0, 16)}`, projectId: identity.project_hash, environmentId: 'local',
+    } });
+    const missionId = inbound.data.missionId ?? inbound.data.mission_id;
+    const cancelled = await coordinator.cancel(missionId, 'operator_cancel', 'test cancellation');
+    expect(cancelled.mission.spec.state).toBe('CANCELLED');
+
+    const scenario = await fetch(`${server.url}/api/simulator/scenarios`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: 'http_cancelled', events: [
+        { type: 'inbound', capture_as: 'turn', message: {
+          message_id: 'msg_cancelled', conversation_id: 'conv_cancelled', customer_id: 'cust_cancelled', channel_id: 'local-web-chat', sequence: 1,
+          occurred_at: '2026-07-24T08:00:00.000Z', text: 'Can I move booking BK-100 to Friday?', consent: true, within_messaging_window: true,
+        } },
+        { type: 'approve', approval_from: 'turn', operator_id: 'operator_after_cancel', capture_as: 'commit' },
+      ] }),
+    }).then(async (response) => ({ status: response.status, body: await response.json() }));
+    expect(scenario.status).toBe(409);
+    expect(scenario.body).toMatchObject({ ok: false, error: { code: 'CONFLICT' } });
   });
 
   it('runs simulator scenarios through the same local authority', async () => {
