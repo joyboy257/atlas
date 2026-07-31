@@ -4,13 +4,7 @@
   "scope": "Fresh local zero-credential Atlas Front Desk Workbench journey",
   "status": "BLOCKED_EXTERNAL",
   "maturity": "LOCAL_PROVEN",
-  "environment": {
-    "server": "http://127.0.0.1:4174",
-    "fixture": "/tmp/atlas-bmr002-front-desk",
-    "project_hash": "sha256:cdef87f3d1ac81f8ceab8d7d7e1af12c39d6486c6120c63b82e81ffcf7350477",
-    "credentials": "none",
-    "provider": "local simulator"
-  },
+  "environment": "local zero-credential filesystem workspace",
   "journey": [
     "Opened the actual Atlas Front Desk Workbench in a browser.",
     "Clicked the Customer message textbox.",
@@ -33,7 +27,22 @@
   "limitations": [
     "This proves only the local browser/workbench and simulator path.",
     "No provider sandbox, staging, production, billing, hosted identity or commercial evidence is claimed.",
-    "A stale checked-in fixture initially produced the expected OUT_OF_ORDER_MESSAGE guard; verification was rerun from a fresh copied fixture."
+    "A stale checked-in fixture initially produced the expected OUT_OF_ORDER_MESSAGE guard; verification was rerun from a fresh copied fixture.",
+    "Original narrative record did not capture execution timestamps; canonical timestamps are recorded as not-recorded."
   ],
-  "verdict": "ATLAS-BMR2-P1-BROWSER-E2E = BLOCKED_EXTERNAL / LOCAL_PROVEN — the real local workbench path was completed with browser clicks and keyboard input; external environment evidence remains unavailable."
+  "verdict": "ATLAS-BMR2-P1-BROWSER-E2E = BLOCKED_EXTERNAL / LOCAL_PROVEN — the real local workbench path was completed with browser clicks and keyboard input; external environment evidence remains unavailable.",
+  "phase": "P1",
+  "work_item": "ATLAS-BMR2-P1-005",
+  "gate": "G1",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "Opened the actual Atlas Front Desk Workbench in a browser. ; Clicked the Customer message textbox. ; Used keyboard select-all and typed Can I move booking BK-100 to Friday?. ; Clicked Send customer message. ; Verified accepted inbound message, retrieved evidence, high-risk proposal, approval_required policy and pending approval. ; Clicked Approve for approval_af230efe53ee33b4. ; Verified exactly-once action commitment, queued outbox and recorded booking outcome. ; Clicked Simulate delivered. ; Verified delivered outbox with provider simulator identity, delivery trace event, 11 total trace events and 9 receipts.",
+  "started_at": "not-recorded",
+  "finished_at": "not-recorded",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:4326982c6e933b67a6427fd69ee17aebe877f70ee784eddac15479b534f0fcdb"
 }

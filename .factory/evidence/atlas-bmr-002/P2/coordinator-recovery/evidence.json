@@ -69,5 +69,22 @@
     "commercial readiness",
     "whole-product certification"
   ],
-  "verdict": "ATLAS-BMR2-P2-001 = IN_PROGRESS / LOCAL_PROVEN: the local lease and checkpoint slices pass, but the literal recovery acceptance remains unproven because crash points do not cover partial lifecycle commits, duplicate-worker step commits, long-step heartbeat behavior, or every remaining lifecycle boundary. CI, database-equivalent persistence, Cloud, provider, staging and production evidence remain absent."
+  "verdict": "ATLAS-BMR2-P2-001 = IN_PROGRESS / LOCAL_PROVEN: the local lease and checkpoint slices pass, but the literal recovery acceptance remains unproven because crash points do not cover partial lifecycle commits, duplicate-worker step commits, long-step heartbeat behavior, or every remaining lifecycle boundary. CI, database-equivalent persistence, Cloud, provider, staging and production evidence remain absent.",
+  "phase": "P2",
+  "gate": "G2",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run build && npx vitest run __tests__/mission-leases.test.ts __tests__/mission-coordinator.test.ts __tests__/mission-control.test.ts --testTimeout=30000",
+  "started_at": "2026-07-30T09:50:00+08:00",
+  "finished_at": "2026-07-30T09:50:00+08:00",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "INCONCLUSIVE",
+  "limitations": [
+    "Absent proof remains: CI, Atlas Cloud, provider sandbox, staging, production, capacity, usage/cost ledger, billing settlement, commercial readiness, whole-product certification."
+  ],
+  "checksum": "sha256:42b4716b09c6e8fb57024b2971ab859094290013a91e8f821bc3cfb1dafffaab"
 }

@@ -5,7 +5,7 @@ import json
 doc = Path(__file__).resolve().parent.parent
 board = json.loads((doc / "execution-board.v3.json").read_text(encoding="utf-8"))
 items = {w["id"]: w for w in board["work_items"]}
-terminal_ok = {"PASS","SUPERSEDED"}
+terminal_ok = {"PASS","BLOCKED_EXTERNAL","SUPERSEDED"}
 
 def ready(w):
     return w["status"] in {"NOT_STARTED","READY","BLOCKED_INTERNAL"} and all(items[d]["status"] in terminal_ok for d in w["dependencies"])

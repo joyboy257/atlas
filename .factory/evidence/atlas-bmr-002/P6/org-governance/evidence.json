@@ -49,5 +49,18 @@
     "No RBAC, machine identity, audit export, data lifecycle, billing, provider, production or commercial readiness is claimed.",
     "The server-derived context is represented as a local function input; deployment metadata and hosted request plumbing remain future integration surfaces."
   ],
-  "verdict": "ATLAS-BMR2-P6-001 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local organisation/project/environment hierarchy, server-derived scope fencing, production/test boundaries and guarded lifecycle transitions are proven; CI, staging and hosted identity evidence remain unavailable."
+  "verdict": "ATLAS-BMR2-P6-001 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local organisation/project/environment hierarchy, server-derived scope fencing, production/test boundaries and guarded lifecycle transitions are proven; CI, staging and hosted identity evidence remain unavailable.",
+  "phase": "P6",
+  "gate": "G6",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "Local evidence verification for ATLAS-BMR2-P6-001; see the record verification payload and verdict.",
+  "started_at": "2026-07-31T12:28:05+08:00",
+  "finished_at": "2026-07-31T12:28:05+08:00",
+  "actor": "principal orchestrator",
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:c9c0d7782ba9d56d9d91008431706566a6dacfaf747c0c2c07b81689b7a67651"
 }

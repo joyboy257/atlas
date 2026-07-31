@@ -72,7 +72,8 @@
     "The ordered local recovery protocol does not prove a database transaction spanning separate runtime and Mission stores, hosted worker transactionality or cross-process exactly-once effects.",
     "Trusted hosted operator identity and an operator-principal contract are not proven.",
     "Provider-worker fencing and production-side-effect fencing are not proven.",
-    "Mirai operator-surface integration and public handoff contract harness evidence are not proven."
+    "Mirai operator-surface integration and public handoff contract harness evidence are not proven.",
+    "Absent proof remains: CI, trusted operator identity, operator-contract harness, hosted Atlas Cloud, database or queue transactionality, provider-worker fencing, provider sandbox, staging, production, billing settlement, commercial readiness, whole-product certification."
   ],
   "absent_proof": [
     "CI",
@@ -129,5 +130,18 @@
       ]
     }
   ],
-  "verdict": "ATLAS-BMR2-P2-004 = IN_PROGRESS / LOCAL_PROVEN — bounded local human takeover, side-effect fencing, authoritative callback reconciliation, retryable governed return-to-Agent restoration, Mission-scoped receipts and public causation redaction are implemented and verified; CI, trusted hosted operator identity, operator-contract harness, hosted/provider-worker fencing, staging, production, billing, commercial and whole-product evidence remain unavailable."
+  "verdict": "ATLAS-BMR2-P2-004 = IN_PROGRESS / LOCAL_PROVEN — bounded local human takeover, side-effect fencing, authoritative callback reconciliation, retryable governed return-to-Agent restoration, Mission-scoped receipts and public causation redaction are implemented and verified; CI, trusted hosted operator identity, operator-contract harness, hosted/provider-worker fencing, staging, production, billing, commercial and whole-product evidence remain unavailable.",
+  "phase": "P2",
+  "gate": "G2",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/mission-control.test.ts --testTimeout=30000",
+  "started_at": "2026-07-31T15:58:00+08:00",
+  "finished_at": "2026-07-31T15:58:00+08:00",
+  "actor": "principal orchestrator",
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:9e27c73c927e9ae42ca33c52c68d72a0eb26e79001a89de54101d90c78d8f045"
 }

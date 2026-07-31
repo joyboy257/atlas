@@ -57,5 +57,18 @@
     "The current local retryable-failure path remains a bounded simulator behavior and does not establish provider acceptance or unknown-outcome reconciliation.",
     "No provider sandbox, staging, production, billing settlement, capacity, commercial readiness or whole-product certification is claimed."
   ],
-  "verdict": "ATLAS-BMR2-P6-002 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local versioned RBAC, exact scope, separated proposal/approval authority, environment-bound digest-only machine credentials, rotation/revocation, and bounded local outbox receipt integrity are proven; CI, staging identity-provider and hosted enforcement evidence remain unavailable."
+  "verdict": "ATLAS-BMR2-P6-002 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local versioned RBAC, exact scope, separated proposal/approval authority, environment-bound digest-only machine credentials, rotation/revocation, and bounded local outbox receipt integrity are proven; CI, staging identity-provider and hosted enforcement evidence remain unavailable.",
+  "phase": "P6",
+  "gate": "G6",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "Local evidence verification for ATLAS-BMR2-P6-002; see the record verification payload and verdict.",
+  "started_at": "2026-07-31T15:20:00+08:00",
+  "finished_at": "2026-07-31T15:20:00+08:00",
+  "actor": "principal orchestrator",
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:4295fa56dc174e8ca90093cffb353790b816f3aa9cec959e901615c3ff91ce62"
 }

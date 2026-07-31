@@ -26,7 +26,12 @@
   "verification": {
     "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
     "metadata": "PASS",
-    "tests": { "test_files": 29, "tests": 225, "passed": 225, "failed": 0 },
+    "tests": {
+      "test_files": 29,
+      "tests": 225,
+      "passed": 225,
+      "failed": 0
+    },
     "typescript_build": "PASS",
     "diff_check": "PASS"
   },
@@ -54,5 +59,18 @@
     "Durable database persistence, migrations, restart recovery, concurrency, CI, provider sandbox, staging, and production proof remain owned by later BMR-002 work items and are not claimed here.",
     "No credentials, provider, paid service, package publication, or production operation was used."
   ],
-  "verdict": "ATLAS-BMR2-P1-002 = PASS — versioned Mission and append-only lifecycle event contracts are locally proven; persistence and deployment maturity remain explicitly unclaimed."
+  "verdict": "ATLAS-BMR2-P1-002 = PASS — versioned Mission and append-only lifecycle event contracts are locally proven; persistence and deployment maturity remain explicitly unclaimed.",
+  "phase": "P1",
+  "gate": "G1",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
+  "started_at": "2026-07-29T12:43:00+08:00",
+  "finished_at": "2026-07-29T12:43:00+08:00",
+  "actor": "principal orchestrator",
+  "result": "PASS",
+  "checksum": "sha256:fb0bc4673f362a70d85310076a26ffa509bf629f6e9b814b37c7e9164be0a274"
 }

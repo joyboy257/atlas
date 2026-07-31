@@ -1350,3 +1350,30 @@ Independent review identified that earlier local PASS-style wording for P2-001 r
 - This does not prove provider acceptance, reconciliation-before-retry, or exactly-once external effects. P2-006 remains `IN_PROGRESS / LOCAL_PROVEN` with the ambiguity and hosted transaction/worker evidence gaps open.
 
 No CI, database/queue, provider sandbox, staging, production, billing, commercial, production-promotion or external provider operation was performed.
+
+
+## 2026-07-31 — ATLAS-BMR2 CANONICAL EVIDENCE AND BOARD REPAIR
+
+### Repair scope
+
+This append-only checkpoint repairs the package evidence layer after review found stale source bindings, an empty evidence index, schema-incompatible `IN_PROGRESS` results, missing checksums, and an active-work-item pointer that selected an externally blocked lane. It does not alter runtime behavior or claim any unavailable external environment.
+
+### Corrections
+
+- Normalized all 20 `.factory/evidence/atlas-bmr-002/**/evidence.json` records with the canonical programme, phase, work-item, gate, source-commit, environment, command/journey, timestamps, actor, result, limitations and checksum fields.
+- Mapped unfinished local verification to canonical `INCONCLUSIVE`; retained richer narrative status/verdict fields and did not convert local evidence into release-gate PASS.
+- Bound canonical source references to the committed local candidate `d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac`; no CI, hosted, provider, staging, production, billing, capacity, commercial or whole-product proof is implied.
+- Populated `evidence-index.v1.json` with one path-addressed entry per evidence record.
+- Reconciled the board active pointer to the genuinely `IN_PROGRESS` `ATLAS-BMR2-P2-001` lane. `BLOCKED_EXTERNAL` remains a release blocker, but does not falsely suppress independent local implementation lanes.
+- Updated `board_next.py` dependency readiness to treat `BLOCKED_EXTERNAL` as sequencing-terminal while preserving each work item’s blocked status and external limitations.
+- Scoped canonical markdown-link validation to the BMR-002 package and its evidence tree; unrelated repository dependency and beta-document links are not package failures.
+
+### Verification
+
+- Canonical evidence schema validation: 20/20 records contain all required fields, allowed results and matching checksums.
+- `board_next.py`: active lane is `ATLAS-BMR2-P2-001`; dependency-ready local lanes are listed without changing external gate statuses.
+- Full package validator and checksum verification are run after this append-only entry and manifest regeneration.
+
+### Boundary
+
+This is documentation/evidence reconciliation only. The previously reported local runtime review findings in trust-controls, public causation sanitization and usage-ledger validation remain unresolved follow-up findings; they are not silently represented as fixed by this record. No production promotion, deployment, provider call, credential use, push, merge or tag action was performed.

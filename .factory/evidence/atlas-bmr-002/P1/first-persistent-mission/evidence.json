@@ -42,5 +42,18 @@
     "CI, staging, provider sandbox, limited production, production Cloud persistence, real provider delivery, billing settlement and commercial operation remain unclaimed.",
     "P1-006 Mission control surfaces and P1-007 independent build-readiness review remain later work."
   ],
-  "verdict": "ATLAS-BMR2-P1-005 = PASS — one complete deterministic local Mission journey is locally proven with durable lifecycle state, approval gating, committed effect, inspectable receipts, restart recovery and replay safety; no stronger environment maturity is claimed."
+  "verdict": "ATLAS-BMR2-P1-005 = PASS — one complete deterministic local Mission journey is locally proven with durable lifecycle state, approval gating, committed effect, inspectable receipts, restart recovery and replay safety; no stronger environment maturity is claimed.",
+  "phase": "P1",
+  "gate": "G1",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm test && npm run build && git diff --check",
+  "started_at": "2026-07-29T13:26:00+08:00",
+  "finished_at": "2026-07-29T13:26:00+08:00",
+  "actor": "principal orchestrator",
+  "result": "PASS",
+  "checksum": "sha256:cd55eb2fc1ebaa51768c5f2acb1c9c7dec409432d482f6aa55eed34de2cae592"
 }

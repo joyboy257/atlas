@@ -206,7 +206,11 @@ def main() -> int:
     # Validate internal markdown links that point to local files.
     broken_links = []
     link_re = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
-    for p in ROOT.rglob("*.md"):
+    markdown_paths = list(DOC.rglob("*.md"))
+    evidence_root = ROOT / ".factory" / "evidence" / "atlas-bmr-002"
+    if evidence_root.exists():
+        markdown_paths.extend(evidence_root.rglob("*.md"))
+    for p in markdown_paths:
         text = p.read_text(encoding="utf-8")
         for target in link_re.findall(text):
             if "://" in target or target.startswith("#") or target.startswith("mailto:"):

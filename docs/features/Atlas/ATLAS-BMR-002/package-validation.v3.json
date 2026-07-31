@@ -13,7 +13,7 @@
     {
       "name": "json_parse",
       "passed": true,
-      "detail": "12 JSON files parsed"
+      "detail": "13 JSON files parsed"
     },
     {
       "name": "work_item_ids_unique",
@@ -73,7 +73,7 @@
     {
       "name": "initial_active_item",
       "passed": true,
-      "detail": "'ATLAS-BMR2-P0-001'"
+      "detail": "'ATLAS-BMR2-P2-001'"
     },
     {
       "name": "no_bmr001_historical_files",

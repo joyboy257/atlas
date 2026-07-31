@@ -78,7 +78,15 @@
         "Pause and cancel lifecycle transitions close active Mission waits and clear activeWait in one persistence transaction."
       ],
       "maturity": "LOCAL_PROVEN",
-      "absent_proof": ["CI", "Atlas Cloud", "provider sandbox", "staging", "production", "usage/cost ledger", "billing settlement"]
+      "absent_proof": [
+        "CI",
+        "Atlas Cloud",
+        "provider sandbox",
+        "staging",
+        "production",
+        "usage/cost ledger",
+        "billing settlement"
+      ]
     },
     {
       "timestamp": "2026-07-29T21:11:00+08:00",
@@ -104,7 +112,18 @@
         "Provider message identity reuse across outboxes, contradictory accepted replays and ambiguous legacy callback identities remain fenced by typed idempotency errors."
       ],
       "maturity": "LOCAL_PROVEN",
-      "absent_proof": ["CI", "Atlas Cloud", "provider sandbox", "staging", "limited production", "production", "usage/cost ledger", "billing settlement", "commercial readiness", "whole-product certification"]
+      "absent_proof": [
+        "CI",
+        "Atlas Cloud",
+        "provider sandbox",
+        "staging",
+        "limited production",
+        "production",
+        "usage/cost ledger",
+        "billing settlement",
+        "commercial readiness",
+        "whole-product certification"
+      ]
     },
     {
       "timestamp": "2026-07-29T21:18:00+08:00",
@@ -131,8 +150,32 @@
         "The fresh independent verifier confirmed root boundaries, explicit projections, redaction, coordinator authority, scope/lock fencing, provider identity preservation and callback chronology."
       ],
       "maturity": "LOCAL_PROVEN",
-      "absent_proof": ["CI", "Atlas Cloud", "provider sandbox", "staging", "limited production", "production", "usage/cost ledger", "billing settlement", "commercial readiness", "whole-product certification"]
+      "absent_proof": [
+        "CI",
+        "Atlas Cloud",
+        "provider sandbox",
+        "staging",
+        "limited production",
+        "production",
+        "usage/cost ledger",
+        "billing settlement",
+        "commercial readiness",
+        "whole-product certification"
+      ]
     }
   ],
-  "verdict": "ATLAS-BMR2-P1-006 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local Mission inspect, replay, pause, resume, cancel and approval control surfaces are durable, scoped, typed and locally proven; the required CI evidence and the acceptance-specified usage/cost projection are not available, so the work item is not PASS."
+  "verdict": "ATLAS-BMR2-P1-006 = BLOCKED_EXTERNAL / LOCAL_PROVEN — local Mission inspect, replay, pause, resume, cancel and approval control surfaces are durable, scoped, typed and locally proven; the required CI evidence and the acceptance-specified usage/cost projection are not available, so the work item is not PASS.",
+  "phase": "P1",
+  "gate": "G1",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run metadata:check && npm test && npm run build && git diff --check",
+  "started_at": "2026-07-31T10:48:54+08:00",
+  "finished_at": "2026-07-31T10:48:54+08:00",
+  "actor": "principal orchestrator",
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:5e53233b3a193400c72990041e64915194a8e7d59f7cbbc80865ce3c669339ea"
 }

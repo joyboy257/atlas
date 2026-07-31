@@ -27,7 +27,12 @@
   "verification": {
     "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
     "metadata": "PASS",
-    "tests": { "test_files": 31, "tests": 241, "passed": 241, "failed": 0 },
+    "tests": {
+      "test_files": 31,
+      "tests": 241,
+      "passed": 241,
+      "failed": 0
+    },
     "typescript_build": "PASS",
     "diff_check": "PASS"
   },
@@ -37,5 +42,18 @@
     "CI, staging, provider sandbox, limited production and production maturity remain unclaimed.",
     "Outbox workers, leases, provider execution, billing settlement and hosted Cloud persistence remain later work."
   ],
-  "verdict": "ATLAS-BMR2-P1-004 = PASS — durable Mission persistence is locally proven with restart, replay, isolation, concurrency and migration contract coverage; PostgreSQL/CI/staging/production proof remains unclaimed."
+  "verdict": "ATLAS-BMR2-P1-004 = PASS — durable Mission persistence is locally proven with restart, replay, isolation, concurrency and migration contract coverage; PostgreSQL/CI/staging/production proof remains unclaimed.",
+  "phase": "P1",
+  "gate": "G1",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
+  "started_at": "2026-07-29T13:09:00+08:00",
+  "finished_at": "2026-07-29T13:09:00+08:00",
+  "actor": "principal orchestrator",
+  "result": "PASS",
+  "checksum": "sha256:094349905ab55fe565d40157c4a7de5543fc2cf1bc34738178e29859771a5a36"
 }

@@ -66,5 +66,21 @@
     "commercial readiness",
     "whole-product certification"
   ],
-  "verdict": "ATLAS-BMR2-P4-001 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because CI, a disposable production-like stack and deployed authority ownership evidence are unavailable. No hosted or production readiness is claimed."
+  "verdict": "ATLAS-BMR2-P4-001 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because CI, a disposable production-like stack and deployed authority ownership evidence are unavailable. No hosted or production readiness is claimed.",
+  "phase": "P4",
+  "gate": "G4",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/deployment-config.test.ts --testTimeout=20000",
+  "started_at": "2026-07-31T10:19:30+08:00",
+  "finished_at": "2026-07-31T10:19:30+08:00",
+  "actor": "principal orchestrator",
+  "result": "BLOCKED_EXTERNAL",
+  "limitations": [
+    "Absent proof remains: CI, disposable production-like stack, Atlas Cloud authority census and one-writable-owner verification, staging, production, provider sandbox, capacity, usage/cost ledger, billing settlement, commercial readiness, whole-product certification."
+  ],
+  "checksum": "sha256:efbd687b519b2eaf615cdea6f58ce66b251b10149f38692c928945bb04cccd30"
 }

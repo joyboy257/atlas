@@ -62,5 +62,21 @@
     "commercial readiness",
     "whole-product certification"
   ],
-  "verdict": "ATLAS-BMR2-P4-002 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because no disposable load environment, observed workload trace or production capacity evidence is available. The model is a planning fixture, not a production capacity claim."
+  "verdict": "ATLAS-BMR2-P4-002 is LOCAL_PROVEN but remains BLOCKED_EXTERNAL because no disposable load environment, observed workload trace or production capacity evidence is available. The model is a planning fixture, not a production capacity claim.",
+  "phase": "P4",
+  "gate": "G4",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/deployment-config.test.ts --testTimeout=20000",
+  "started_at": "2026-07-31T10:19:30+08:00",
+  "finished_at": "2026-07-31T10:19:30+08:00",
+  "actor": "principal orchestrator",
+  "result": "BLOCKED_EXTERNAL",
+  "limitations": [
+    "Absent proof remains: disposable load environment, observed workload trace, production capacity envelope, provider sandbox, CI, staging, production, usage/cost ledger, billing settlement, commercial readiness, whole-product certification."
+  ],
+  "checksum": "sha256:37aeddccd8860922c00ac0c7dc2fddd9d4e24fc677e209dd692ba3d5b7c4aeea"
 }

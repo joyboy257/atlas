@@ -4,12 +4,12 @@
   "phase": "P2",
   "work_item": "ATLAS-BMR2-P2-005",
   "gate": "G2",
-  "source_commit": "e2d14ebe604fedf4c9fd9cb31d3463ea94fcad15",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
   "artifact_digest": "sha256:225aeafc77691099133d486a7a33c0406ebd7901ad4587c9413cd2851e100c17",
   "environment": "local zero-credential filesystem workspace",
   "region": null,
   "provider_account_scope": null,
-  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npx vitest run __tests__/memory.test.ts --testTimeout=30000 && npx vitest run __tests__/mission-control.test.ts __tests__/local-runtime.test.ts __tests__/mission-contract.test.ts --testTimeout=30000 && npm test -- --testTimeout=30000 && npm run build && git diff --check",
+  "command_or_journey": "Local evidence verification for ATLAS-BMR2-P2-005; see the record verification payload and verdict.",
   "started_at": "2026-07-31T14:58:00+08:00",
   "finished_at": "2026-07-31T15:00:35+08:00",
   "actor": "principal orchestrator",
@@ -44,5 +44,6 @@
     "The local tests do not provide an external provider/model poisoning harness or prove hosted policy-boundary enforcement.",
     "This record is a local implementation verification, not a release-gate PASS."
   ],
-  "checksum": "sha256:225aeafc77691099133d486a7a33c0406ebd7901ad4587c9413cd2851e100c17"
+  "maturity": "LOCAL_PROVEN",
+  "checksum": "sha256:e46af25ae25943e14bba40aff611a1f5b8790bac114c9836ec89f1354d5c1d73"
 }

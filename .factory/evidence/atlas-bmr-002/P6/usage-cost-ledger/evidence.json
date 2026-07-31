@@ -39,8 +39,30 @@
     "This is local filesystem proof only; no CI, staging or hosted ledger proof exists.",
     "No provider/model invoice fixture, payment processor settlement, pricing service or commercial billing integration was exercised.",
     "No database transaction, queue worker or cross-process exactly-once accounting proof exists.",
-    "The ledger is exported as a public package API but is not yet wired into the Mission inspect projection; that acceptance gap remains visible in P1-006 evidence."
+    "The ledger is exported as a public package API but is not yet wired into the Mission inspect projection; that acceptance gap remains visible in P1-006 evidence.",
+    "Absent proof remains: CI, staging, provider/model invoice reconciliation, billing settlement, production, commercial readiness, whole-product certification.",
+    "Original narrative record did not capture execution timestamps; canonical timestamps are recorded as not-recorded."
   ],
-  "absent_proof": ["CI", "staging", "provider/model invoice reconciliation", "billing settlement", "production", "commercial readiness", "whole-product certification"],
-  "verdict": "ATLAS-BMR2-P6-005 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded idempotent usage attribution and estimated-versus-settled reconciliation are implemented and tested locally; CI, staging, invoice/provider reconciliation and billing settlement remain unavailable."
+  "absent_proof": [
+    "CI",
+    "staging",
+    "provider/model invoice reconciliation",
+    "billing settlement",
+    "production",
+    "commercial readiness",
+    "whole-product certification"
+  ],
+  "verdict": "ATLAS-BMR2-P6-005 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded idempotent usage attribution and estimated-versus-settled reconciliation are implemented and tested locally; CI, staging, invoice/provider reconciliation and billing settlement remain unavailable.",
+  "gate": "G6",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/usage-ledger.test.ts --testTimeout=30000",
+  "started_at": "not-recorded",
+  "finished_at": "not-recorded",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:42d98b442ec0ea0909531527a26b9186986a09d420506696d02f72887ff63973"
 }

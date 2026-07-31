@@ -4,17 +4,17 @@
   "phase": "P2",
   "work_item": "ATLAS-BMR2-P2-006",
   "gate": "G2",
-  "source_commit": "e2d14ebe604fedf4c9fd9cb31d3463ea94fcad15",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
   "artifact_digest": "sha256:a157e68e5ea74f4186b0fc1522aeee1297de21dfa9ae4d7c85c9072ff7d81351",
   "environment": "local zero-credential filesystem workspace",
   "region": null,
   "provider_account_scope": null,
-  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm run metadata:check && npx vitest run __tests__/local-runtime.test.ts __tests__/mission-coordinator.test.ts __tests__/action-contract.test.ts --testTimeout=30000 && npm test -- --testTimeout=30000 && npm run build && git diff --check",
+  "command_or_journey": "Local evidence verification for ATLAS-BMR2-P2-006; see the record verification payload and verdict.",
   "started_at": "2026-07-31T15:05:00+08:00",
   "finished_at": "2026-07-31T17:00:06+08:00",
   "actor": "principal orchestrator",
   "reviewer": null,
-  "result": "IN_PROGRESS",
+  "result": "INCONCLUSIVE",
   "verification": {
     "focused_test_files": 4,
     "focused_tests": 83,
@@ -42,5 +42,7 @@
     "No CI, disposable database/queue, provider sandbox, staging, production, billing or commercial evidence exists.",
     "This record is a local implementation verification, not a release-gate PASS."
   ],
-  "verdict": "ATLAS-BMR2-P2-006 = IN_PROGRESS / LOCAL_PROVEN; local action rollback, deterministic effect identity, lease-token fencing and durable ambiguous-effect reconciliation fencing are verified, but hosted/provider-worker reconciliation, database/queue transactionality, CI and external exactly-once effect proof remain unavailable."
+  "verdict": "ATLAS-BMR2-P2-006 = IN_PROGRESS / LOCAL_PROVEN; local action rollback, deterministic effect identity, lease-token fencing and durable ambiguous-effect reconciliation fencing are verified, but hosted/provider-worker reconciliation, database/queue transactionality, CI and external exactly-once effect proof remain unavailable.",
+  "maturity": "LOCAL_PROVEN",
+  "checksum": "sha256:015f708c98aa61a85c2f97e49cc4a90d2d94fe4ecbd61abaac84974acf26fc0b"
 }

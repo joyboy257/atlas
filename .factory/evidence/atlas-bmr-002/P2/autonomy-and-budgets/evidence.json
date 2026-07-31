@@ -36,5 +36,19 @@
     "No disposable database or database-equivalent persistence evidence is available.",
     "No hosted Atlas Cloud, provider, staging, production, billing, capacity, commercial or whole-product certification is claimed."
   ],
-  "verdict": "ATLAS-BMR2-P2-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — action-specific autonomy limits, policy identity/explanations, fail-closed uncertainty and local atomic budget reservation semantics are proven; CI and disposable-database evidence remain unavailable."
+  "verdict": "ATLAS-BMR2-P2-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — action-specific autonomy limits, policy identity/explanations, fail-closed uncertainty and local atomic budget reservation semantics are proven; CI and disposable-database evidence remain unavailable.",
+  "phase": "P2",
+  "gate": "G2",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/autonomy-policy.test.ts",
+  "started_at": "2026-07-31T12:33:20+08:00",
+  "finished_at": "2026-07-31T12:33:20+08:00",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:86b7e603729cc9de30eb27e70c980fa0609368b8deff4578a61b6288fd3be050"
 }

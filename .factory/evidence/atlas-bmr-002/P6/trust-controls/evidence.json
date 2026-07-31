@@ -37,8 +37,30 @@
     "This is local filesystem audit and redaction proof only.",
     "No OIDC/SSO provider, KMS, production secret manager, RLS, hosted export service or key-rotation environment was available.",
     "No SOC2, ISO, GDPR, HIPAA or PCI compliance claim is made.",
-    "CI, staging, production, billing and commercial evidence remain unavailable."
+    "CI, staging, production, billing and commercial evidence remain unavailable.",
+    "Absent proof remains: CI, staging identity/KMS/secret systems, hosted RLS, production key rotation, compliance certification, billing, commercial readiness.",
+    "Original narrative record did not capture execution timestamps; canonical timestamps are recorded as not-recorded."
   ],
-  "absent_proof": ["CI", "staging identity/KMS/secret systems", "hosted RLS", "production key rotation", "compliance certification", "billing", "commercial readiness"],
-  "verdict": "ATLAS-BMR2-P6-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded tamper-evident, independently verifiable per-scope export and secret-redacting audit controls are implemented and tested locally; hosted identity, KMS/secret-manager and compliance evidence remain unavailable."
+  "absent_proof": [
+    "CI",
+    "staging identity/KMS/secret systems",
+    "hosted RLS",
+    "production key rotation",
+    "compliance certification",
+    "billing",
+    "commercial readiness"
+  ],
+  "verdict": "ATLAS-BMR2-P6-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded tamper-evident, independently verifiable per-scope export and secret-redacting audit controls are implemented and tested locally; hosted identity, KMS/secret-manager and compliance evidence remain unavailable.",
+  "gate": "G6",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/trust-controls.test.ts --testTimeout=30000",
+  "started_at": "not-recorded",
+  "finished_at": "not-recorded",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "BLOCKED_EXTERNAL",
+  "checksum": "sha256:66833d2ad2c5ed5ca6397b579f019d09a7c980b1fcf9e806410d847de17b773d"
 }

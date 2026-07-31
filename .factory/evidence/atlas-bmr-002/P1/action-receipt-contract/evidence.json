@@ -7,7 +7,14 @@
   "reviewer": "principal orchestrator",
   "status": "PASS",
   "maturity": "LOCAL_PROVEN",
-  "contract_kinds": ["Proposal", "Decision", "Action", "Receipt", "Outcome", "LearningProposal"],
+  "contract_kinds": [
+    "Proposal",
+    "Decision",
+    "Action",
+    "Receipt",
+    "Outcome",
+    "LearningProposal"
+  ],
   "changed_files": [
     "packages/atlas/src/action-contract.ts",
     "packages/atlas/__tests__/action-contract.test.ts",
@@ -35,7 +42,12 @@
   "verification": {
     "command": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
     "metadata": "PASS",
-    "tests": { "test_files": 30, "tests": 234, "passed": 234, "failed": 0 },
+    "tests": {
+      "test_files": 30,
+      "tests": 234,
+      "passed": 234,
+      "failed": 0
+    },
     "typescript_build": "PASS",
     "diff_check": "PASS"
   },
@@ -44,5 +56,18 @@
     "Action outbox persistence, transactional commit, worker leases, provider execution, settlement, CI, staging, and production proof remain later work.",
     "No credentials, provider, paid service, package publication, or production operation was used."
   ],
-  "verdict": "ATLAS-BMR2-P1-003 = PASS — governed action and evidence contract family is locally proven; durable execution and external provider maturity remain unclaimed."
+  "verdict": "ATLAS-BMR2-P1-003 = PASS — governed action and evidence contract family is locally proven; durable execution and external provider maturity remain unclaimed.",
+  "phase": "P1",
+  "gate": "G1",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npm run metadata:write && npm test && npm run build",
+  "started_at": "2026-07-29T12:52:00+08:00",
+  "finished_at": "2026-07-29T12:52:00+08:00",
+  "actor": "principal orchestrator",
+  "result": "PASS",
+  "checksum": "sha256:dd89c199275c028fcf930a43f6b165760eb3d520f896a936bbfbe5e20c7202bc"
 }

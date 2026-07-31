@@ -88,5 +88,24 @@
       "command": "git diff --check",
       "result": "PASS"
     }
-  ]
+  ],
+  "programme": "ATLAS-BMR-002",
+  "phase": "P5",
+  "gate": "G5",
+  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "artifact_digest": null,
+  "environment": "local zero-credential filesystem workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "cd packages/atlas && npx vitest run __tests__/provider-readiness.test.ts ; cd packages/atlas && npm test ; cd packages/atlas && npm run build ; cd packages/atlas && npm run metadata:check ; git diff --check",
+  "started_at": "not-recorded",
+  "finished_at": "not-recorded",
+  "actor": "principal orchestrator",
+  "reviewer": null,
+  "result": "INCONCLUSIVE",
+  "limitations": [
+    "Original narrative record did not capture execution timestamps; canonical timestamps are recorded as not-recorded."
+  ],
+  "evidence_id": "ATLAS-BMR2-P5-001-EVIDENCE-001",
+  "checksum": "sha256:a4bc057136aa8a2f8e30662abf1c95c451ebb83f02c035c3da4f5592471d8a42"
 }
