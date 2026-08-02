@@ -50,9 +50,9 @@
     "billing",
     "commercial readiness"
   ],
-  "verdict": "ATLAS-BMR2-P6-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded tamper-evident, independently verifiable per-scope export and secret-redacting audit controls are implemented and tested locally; hosted identity, KMS/secret-manager and compliance evidence remain unavailable.",
+  "verdict": "ATLAS-BMR2-P6-003 = BLOCKED_EXTERNAL / LOCAL_PROVEN \u2014 bounded tamper-evident, independently verifiable per-scope export and secret-redacting audit controls are implemented and tested locally; hosted identity, KMS/secret-manager and compliance evidence remain unavailable.",
   "gate": "G6",
-  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
   "artifact_digest": null,
   "region": null,
   "provider_account_scope": null,
@@ -62,5 +62,32 @@
   "actor": "principal orchestrator",
   "reviewer": null,
   "result": "BLOCKED_EXTERNAL",
-  "checksum": "sha256:66833d2ad2c5ed5ca6397b579f019d09a7c980b1fcf9e806410d847de17b773d"
+  "checksum": "sha256:5c8b8b3de7778550d97d7db75050f4ee0b0d82dea947e7e2031fdfe4f96bec59",
+  "verification_addenda": [
+    {
+      "timestamp": "2026-08-02T00:00:00Z",
+      "scope": "BMR-002 trust-control closure repair",
+      "verification": {
+        "focused_command": "cd packages/atlas && npx vitest run __tests__/trust-controls.test.ts --testTimeout=30000",
+        "focused_tests": 8,
+        "focused_passed": 8,
+        "package_test_gate": "INCONCLUSIVE \u2014 42 files, 418/427 passed; 9 pre-existing expired memory/RBAC fixtures",
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "metadata_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+        "diff_check": "PASS",
+        "canonical_package_validation": "PASS",
+        "canonical_package_checksums": "45/45 PASS"
+      },
+      "repairs": [
+        "Persisted audit state now recomputes each per-scope chain before ordinary reads/appends; tampered payloads, nested metadata digests, stored digests and previous links are fenced without rewriting the ledger.",
+        "Export preserves diagnostic chainValid=false behavior for corrupted state.",
+        "Optional audit beforeDigest and afterDigest values require non-empty strings."
+      ],
+      "limitations": [
+        "Local filesystem proof only; hosted identity, KMS, secret-manager, RLS, key rotation, CI, compliance, billing and commercial evidence remain unavailable."
+      ],
+      "maturity": "LOCAL_PROVEN"
+    }
+  ]
 }

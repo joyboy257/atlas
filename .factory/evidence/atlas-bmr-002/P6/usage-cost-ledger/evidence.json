@@ -52,9 +52,9 @@
     "commercial readiness",
     "whole-product certification"
   ],
-  "verdict": "ATLAS-BMR2-P6-005 = BLOCKED_EXTERNAL / LOCAL_PROVEN — bounded idempotent usage attribution and estimated-versus-settled reconciliation are implemented and tested locally; CI, staging, invoice/provider reconciliation and billing settlement remain unavailable.",
+  "verdict": "ATLAS-BMR2-P6-005 = BLOCKED_EXTERNAL / LOCAL_PROVEN \u2014 bounded idempotent usage attribution and estimated-versus-settled reconciliation are implemented and tested locally; CI, staging, invoice/provider reconciliation and billing settlement remain unavailable.",
   "gate": "G6",
-  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
   "artifact_digest": null,
   "region": null,
   "provider_account_scope": null,
@@ -64,5 +64,33 @@
   "actor": "principal orchestrator",
   "reviewer": null,
   "result": "BLOCKED_EXTERNAL",
-  "checksum": "sha256:42d98b442ec0ea0909531527a26b9186986a09d420506696d02f72887ff63973"
+  "checksum": "sha256:a840c770a567f0eb5a3e3f03d0273eb4874850c7f10aa6aa26821d3f31acdf60",
+  "verification_addenda": [
+    {
+      "timestamp": "2026-08-02T00:00:00Z",
+      "scope": "BMR-002 usage-ledger closure repair",
+      "verification": {
+        "focused_command": "cd packages/atlas && npx vitest run __tests__/usage-ledger.test.ts --testTimeout=30000",
+        "focused_tests": 11,
+        "focused_passed": 11,
+        "package_test_gate": "INCONCLUSIVE \u2014 42 files, 418/427 passed; 9 pre-existing expired memory/RBAC fixtures",
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "metadata_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+        "diff_check": "PASS",
+        "canonical_package_validation": "PASS",
+        "canonical_package_checksums": "45/45 PASS"
+      },
+      "repairs": [
+        "Optional attribution IDs and provider references require non-empty strings before JSON normalization.",
+        "Usage is a closed shape of safe non-negative integer counters with no unknown keys.",
+        "Settlement requires an event-side provider reference and exact provider, currency and amount reconciliation, including persisted-state validation.",
+        "Adversarial coercion and malformed persisted-state regressions are covered."
+      ],
+      "limitations": [
+        "Local filesystem proof only; no CI, hosted ledger, provider invoice, payment processor, database/queue transactionality or billing settlement proof is claimed."
+      ],
+      "maturity": "LOCAL_PROVEN"
+    }
+  ]
 }

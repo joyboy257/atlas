@@ -4,7 +4,7 @@
   "phase": "P2",
   "work_item": "ATLAS-BMR2-P2-006",
   "gate": "G2",
-  "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+  "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
   "artifact_digest": "sha256:a157e68e5ea74f4186b0fc1522aeee1297de21dfa9ae4d7c85c9072ff7d81351",
   "environment": "local zero-credential filesystem workspace",
   "region": null,
@@ -44,5 +44,36 @@
   ],
   "verdict": "ATLAS-BMR2-P2-006 = IN_PROGRESS / LOCAL_PROVEN; local action rollback, deterministic effect identity, lease-token fencing and durable ambiguous-effect reconciliation fencing are verified, but hosted/provider-worker reconciliation, database/queue transactionality, CI and external exactly-once effect proof remain unavailable.",
   "maturity": "LOCAL_PROVEN",
-  "checksum": "sha256:015f708c98aa61a85c2f97e49cc4a90d2d94fe4ecbd61abaac84974acf26fc0b"
+  "checksum": "sha256:d0dfc334ae4492ae18ceba80816922f687159518b8a4c1d02bed08d483417eb5",
+  "verification_addenda": [
+    {
+      "timestamp": "2026-08-02T00:00:00Z",
+      "scope": "BMR-002 closure repair verification",
+      "verification": {
+        "focused_command": "cd packages/atlas && npx vitest run __tests__/trust-controls.test.ts __tests__/usage-ledger.test.ts __tests__/mission-control.test.ts --testTimeout=30000",
+        "focused_test_files": 3,
+        "focused_tests": 34,
+        "focused_passed": 34,
+        "full_command": "cd packages/atlas && npm test -- --testTimeout=30000",
+        "full_test_files": 42,
+        "full_tests": 427,
+        "full_passed": 418,
+        "full_failed": 9,
+        "full_failure_class": "pre-existing wall-clock expiry fixtures in memory.test.ts and rbac.test.ts",
+        "typescript_build": "PASS",
+        "metadata": "PASS",
+        "diff_check": "PASS",
+        "canonical_package_validation": "PASS",
+        "canonical_package_checksums": "45/45 PASS"
+      },
+      "repairs": [
+        "Local trust-control, usage-ledger and public takeover-boundary regressions were verified in the same package-level focused run."
+      ],
+      "limitations": [
+        "The full package gate remains red: 9 existing date-sensitive memory/RBAC tests fail because July-dated fixtures are expired on the current wall clock; no unrelated tests were rewritten.",
+        "No CI, hosted, provider, staging, production, billing, commercial or whole-product proof is claimed."
+      ],
+      "maturity": "LOCAL_PROVEN"
+    }
+  ]
 }

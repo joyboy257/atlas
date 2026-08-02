@@ -1377,3 +1377,32 @@ This append-only checkpoint repairs the package evidence layer after review foun
 ### Boundary
 
 This is documentation/evidence reconciliation only. The previously reported local runtime review findings in trust-controls, public causation sanitization and usage-ledger validation remain unresolved follow-up findings; they are not silently represented as fixed by this record. No production promotion, deployment, provider call, credential use, push, merge or tag action was performed.
+
+## 2026-08-02T00:00Z — ATLAS-BMR2 CLOSURE REPAIR VERIFIED LOCALLY
+
+### What changed
+
+- Hardened persisted audit-chain verification and narrowed digest canonicalization to remove only the event's own stored digest; nested metadata digests remain signed.
+- Redacted coordinator takeover operator identity and free-form rationale from public Mission projections while preserving internal causation.
+- Hardened usage attribution, closed usage-counter validation, provider-reference binding and persisted settlement reconciliation.
+- Made package metadata provenance stable across a subsequent metadata-only commit by binding source SHA/tree to the latest commit touching included package source paths.
+
+### Verification
+
+- Focused Atlas repair suites: 3 files, `34/34` tests passed.
+- TypeScript build and package metadata check: PASS.
+- Canonical BMR-002 validator: PASS; package checksum verification: `45/45` PASS.
+- Full package suite: `418/427` passed across 42 files; 9 failures are existing July-dated expiry fixtures in `memory.test.ts` and `rbac.test.ts`, so the full gate is not claimed green.
+- `git diff --check`: PASS.
+
+### Evidence boundary
+
+This remains `LOCAL_PROVEN` with external gates `BLOCKED_EXTERNAL` or `INCONCLUSIVE` as recorded. No CI, hosted Atlas Cloud, database/queue, provider sandbox, staging, production, billing, capacity, commercial, compliance or whole-product evidence is claimed. No credentials, provider calls, deployment, promotion, push, merge, tag or publication was performed.
+
+### Verdict
+
+`ATLAS-BMR2 LOCAL REPAIR = COMMITTED / LOCAL PROOF UPDATED / EXTERNAL GATES BLOCKED; FULL PACKAGE GATE INCONCLUSIVE`
+
+### Commit
+
+- `87a9224872febc7785d782620fe64e0bfefa7e6c` — `fix(atlas): harden local trust and usage controls`

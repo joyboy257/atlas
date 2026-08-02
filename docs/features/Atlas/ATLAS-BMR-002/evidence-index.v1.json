@@ -103,9 +103,9 @@
       "gate": "G2",
       "result": "INCONCLUSIVE",
       "maturity": "LOCAL_PROVEN",
-      "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+      "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
       "artifact_digest": "sha256:a157e68e5ea74f4186b0fc1522aeee1297de21dfa9ae4d7c85c9072ff7d81351",
-      "checksum": "sha256:015f708c98aa61a85c2f97e49cc4a90d2d94fe4ecbd61abaac84974acf26fc0b"
+      "checksum": "sha256:d0dfc334ae4492ae18ceba80816922f687159518b8a4c1d02bed08d483417eb5"
     },
     {
       "path": ".factory/evidence/atlas-bmr-002/P2/autonomy-and-budgets/evidence.json",
@@ -247,9 +247,9 @@
       "gate": "G6",
       "result": "BLOCKED_EXTERNAL",
       "maturity": "LOCAL_PROVEN",
-      "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+      "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
       "artifact_digest": null,
-      "checksum": "sha256:66833d2ad2c5ed5ca6397b579f019d09a7c980b1fcf9e806410d847de17b773d"
+      "checksum": "sha256:5c8b8b3de7778550d97d7db75050f4ee0b0d82dea947e7e2031fdfe4f96bec59"
     },
     {
       "path": ".factory/evidence/atlas-bmr-002/P6/usage-cost-ledger/evidence.json",
@@ -259,9 +259,9 @@
       "gate": "G6",
       "result": "BLOCKED_EXTERNAL",
       "maturity": "LOCAL_PROVEN",
-      "source_commit": "d74900d5bd8f02b6b2ddfc71f68c8fbd035e94ac",
+      "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
       "artifact_digest": null,
-      "checksum": "sha256:42d98b442ec0ea0909531527a26b9186986a09d420506696d02f72887ff63973"
+      "checksum": "sha256:a840c770a567f0eb5a3e3f03d0273eb4874850c7f10aa6aa26821d3f31acdf60"
     }
   ],
   "note": "Canonical index of local evidence records. Rich narrative fields remain in each evidence file; INCONCLUSIVE records are unfinished local verification and are not release-gate PASS."
