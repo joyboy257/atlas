@@ -1883,8 +1883,8 @@
     }
   ],
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T09:31:17Z",
-    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "recorded_at": "2026-08-02T10:40:20Z",
+    "source_commit": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
     "proven_local_classifications": [
       "LOCAL_UNIT_PROVEN",
       "LOCAL_PACKAGE_PROVEN",
@@ -1901,7 +1901,8 @@
       "COMPLIANCE_PROOF_BLOCKED"
     ],
     "external_proof_evidence": ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+    "isolated_hosted_simulator_evidence": ".factory/evidence/atlas-bmr-002/P7/mirai-isolated-atlas-simulator-2026-08-02.json",
     "ci_candidate_evidence": ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02-candidate.json",
-    "note": "Requirement status remains NOT_SATISFIED where the requirement's full product-plane acceptance exceeds the locally proven simulator/package/CI boundary. E0-E6 external lanes were inspected and remain blocked by exact missing resources or authority."
+    "note": "Requirement status remains NOT_SATISFIED where the requirement's full product-plane acceptance exceeds the locally proven simulator/package/CI boundary. The exact candidate now has a bounded isolated hosted simulator proof, but full staging, provider, production, billing, commercial and compliance acceptance remains blocked by exact missing resources or authority."
   }
 }

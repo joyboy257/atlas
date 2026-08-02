@@ -1510,6 +1510,40 @@ The attached external-proof authority granted discovery and use of authorised no
 
 `ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` — exact-candidate CI is proven; every independently achievable external lane was inventoried and remains blocked by missing hosted infrastructure, provider credentials, staging, billing configuration or production authority. Atlas is not release-ready. BMR-003 remains out of scope.
 
+## 2026-08-02T10:40:20Z — ATLAS-BMR2 ISOLATED HOSTED SIMULATOR PROOF
+
+### Previous claim
+
+The exact Atlas candidate had no available or authorised hosted target; Mirai infrastructure reuse and exact-candidate hosting were recorded as `AVAILABLE_REPAIR_REQUIRED`, and the external-proof lane had no current Atlas deployment receipt.
+
+### Corrected claim
+
+The exact Atlas candidate `f825ffd45688aaba0e740a096f85a4182ca0ebe4` was built and deployed by the committed Mirai workflow `.github/workflows/atlas-bmr-002-isolated-staging.yml` at workflow commit `b86ce22474ce522703d0486ae9ec82f2862169e8`. GitHub Actions run `30744127175` passed against remote `main`. Its bounded receipt records image digest `sha256:5d5ff2147263da4f1c87778fe2c494d07c16ec0e3dbbc3def829957a5a3c345f`, target `atlas-stg-simulator`, loopback-only exposure `127.0.0.1:4401 only`, health PASS, Workbench route PASS, simulator Mission PASS, duplicate-trigger idempotency PASS and restart durability PASS.
+
+### Reason
+
+The owner approved an isolated Atlas simulator deployment using existing Mirai staging SSH/GHCR authority. The workflow was repaired only for demonstrated assertion defects: duplicate replay field path and the rendered Atlas Front Desk Workbench title. The successful proof is bounded to the simulator/local-fixture runtime and does not promote full staging, Atlas Cloud, provider, database, queue, worker, production, billing, commercial or compliance claims.
+
+### Commands and results
+
+- `gh workflow run atlas-bmr-002-isolated-staging.yml --repo joyboy257/mirai --ref main -f atlas_source_sha=f825ffd45688aaba0e740a096f85a4182ca0ebe4` — dispatched exact candidate.
+- `gh run view 30744127175 --repo joyboy257/mirai` — PASS; build, immutable image publication, isolated deployment, simulator journey and bounded receipt upload all passed.
+- `gh run download 30744127175 --repo joyboy257/mirai --name atlas-bmr002-isolated-staging` — receipt resolved and verified without secrets.
+- Receipt fields — `health=PASS`, `workbench_route=PASS`, `simulator_mission=PASS`, `duplicate_trigger_idempotency=PASS`, `restart_durability=PASS`, `database_queue=NOT_CONFIGURED`, `worker=NOT_CONFIGURED`, `provider=SIMULATOR_ONLY`, `credentials_recorded=false`.
+- Atlas local package and CI proof remain `42` files and `430/430` tests, CI run `30743431421` against the same exact Atlas SHA.
+
+### Digest reconciliation
+
+- Previous evidence artifact digest: `sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3` for the prior Atlas source candidate.
+- New image artifact digest: `sha256:5d5ff2147263da4f1c87778fe2c494d07c16ec0e3dbbc3def829957a5a3c345f`.
+- New committed evidence: `.factory/evidence/atlas-bmr-002/P7/mirai-isolated-atlas-simulator-2026-08-02.json`, file digest `sha256:3235321682402c4f8622f52788d84cb831c2870d54a33a95ce79011e8c037e1e`.
+- New evidence record checksum: `sha256:4be3240390ea818a54773b9f0e08705ead922b01b2bccfd88d40ae230e5c6ae0`.
+- Canonical authority files were updated together: final decision, execution board, release gates, gap register, requirements traceability, provider readiness, package metadata, evidence index and checksums.
+
+### Verdict
+
+`ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` remains correct. A bounded isolated hosted simulator is now proven and Mirai infrastructure reuse is authorised for that target. Full-product staging, hosted Atlas Cloud, provider sandbox, production, billing, commercial and compliance proof remain externally blocked; Atlas is not release-ready. BMR-003 remains out of scope.
+
 ## 2026-08-02T10:05:00Z — ATLAS-BMR2 MIRAI INFRASTRUCTURE REUSE DECISION
 
 ### Previous claim

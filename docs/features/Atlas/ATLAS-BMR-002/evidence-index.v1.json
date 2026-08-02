@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "programme": "ATLAS-BMR-002",
-  "generated_at": "2026-08-02T09:31:17Z",
+  "generated_at": "2026-08-02T10:40:20Z",
   "evidence_root": ".factory/evidence/atlas-bmr-002",
   "required_metadata": [
     "programme",
@@ -353,6 +353,19 @@
       "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
       "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
       "checksum": "sha256:c8d35dcf9232498be1b07514225c1c6661e6964a01eaa91096c77139eef58e82"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P7/mirai-isolated-atlas-simulator-2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P7-007-EVIDENCE-003",
+      "phase": "P7",
+      "work_item": "ATLAS-BMR2-P7-007",
+      "gate": "G9",
+      "result": "PASS",
+      "maturity": "CI_PROVEN",
+      "classification": "HOSTED_ISOLATED_SIMULATOR_PROVEN",
+      "source_commit": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
+      "artifact_digest": "sha256:5d5ff2147263da4f1c87778fe2c494d07c16ec0e3dbbc3def829957a5a3c345f",
+      "checksum": "sha256:3235321682402c4f8622f52788d84cb831c2870d54a33a95ce79011e8c037e1e"
     }
   ],
   "note": "Canonical index of local, CI and external-inventory evidence records. Rich narrative fields remain in each evidence file; external-inventory BLOCKED_EXTERNAL records preserve exact missing resources and do not promote local or CI proof into hosted proof."

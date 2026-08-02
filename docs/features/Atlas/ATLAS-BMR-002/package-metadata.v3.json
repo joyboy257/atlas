@@ -41,16 +41,17 @@
     "requires_p0_verification": true
   },
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T09:31:17Z",
-    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "recorded_at": "2026-08-02T10:40:20Z",
+    "source_commit": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
     "local_test_files": 42,
-    "local_test_count": 429,
+    "local_test_count": 430,
     "local_unit": "LOCAL_UNIT_PROVEN",
     "local_package": "LOCAL_PACKAGE_PROVEN",
     "local_integrated_simulator": "LOCAL_INTEGRATED_SIMULATOR_PROVEN",
     "ci": "CI_PROVEN",
-    "ci_run_id": "30741865646",
-    "ci_head": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "ci_run_id": "30743431421",
+    "ci_head": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
+    "isolated_hosted_simulator": "HOSTED_ISOLATED_SIMULATOR_PROVEN; run 30744127175; Mirai workflow commit b86ce22474",
     "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
     "release_ready": false
   },

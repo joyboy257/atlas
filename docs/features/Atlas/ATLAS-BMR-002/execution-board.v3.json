@@ -2791,13 +2791,13 @@
     "ATLAS_BMR_002_EXECUTION_FAILED",
     "ATLAS_BMR_002_ROLLED_BACK"
   ],
-  "active_work_item": "ATLAS-BMR2-P2-001",
+  "active_work_item": "ATLAS-BMR2-P7-007",
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T09:31:17Z",
-    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "recorded_at": "2026-08-02T10:40:20Z",
+    "source_commit": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
     "test_inventory": {
       "files": 42,
-      "tests": 429,
+      "tests": 430,
       "status": "PASS"
     },
     "classifications": {
@@ -2813,9 +2813,10 @@
       "COMMERCIAL_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
       "COMPLIANCE_PROOF_BLOCKED": "BLOCKED_EXTERNAL"
     },
-    "ci_run_id": "30741865646",
-    "ci_head": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
-    "sandbox": "LOCAL_INTEGRATED_SIMULATOR_PROVEN; full Docker API/worker/PostgreSQL/Redis path not claimable from current source",
+    "ci_run_id": "30743431421",
+    "ci_head": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
+    "sandbox": "LOCAL_INTEGRATED_SIMULATOR_PROVEN; isolated hosted simulator run 30744127175 PASS; full Docker API/worker/PostgreSQL/Redis path not claimable from current source",
+    "isolated_hosted_simulator": "HOSTED_ISOLATED_SIMULATOR_PROVEN; Mirai workflow commit b86ce22474 and receipt image sha256:5d5ff2147263da4f1c87778fe2c494d07c16ec0e3dbbc3def829957a5a3c345f",
     "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
     "release_ready": false
   }

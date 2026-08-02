@@ -216,7 +216,8 @@
       ],
       "verdict": "BLOCKED_EXTERNAL",
       "evidence_refs": [
-        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json"
+        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+        ".factory/evidence/atlas-bmr-002/P7/mirai-isolated-atlas-simulator-2026-08-02.json"
       ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
@@ -241,7 +242,8 @@
       ],
       "verdict": "BLOCKED_EXTERNAL",
       "evidence_refs": [
-        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json"
+        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+        ".factory/evidence/atlas-bmr-002/P7/mirai-isolated-atlas-simulator-2026-08-02.json"
       ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
@@ -266,17 +268,18 @@
       ],
       "verdict": "BLOCKED_EXTERNAL",
       "evidence_refs": [
-        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json"
+        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+        ".factory/evidence/atlas-bmr-002/P7/mirai-isolated-atlas-simulator-2026-08-02.json"
       ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
     }
   ],
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T08:10:00Z",
-    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "recorded_at": "2026-08-02T10:40:20Z",
+    "source_commit": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
     "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
     "release_ready": false,
-    "note": "G0 is package/CI proven; G1-G2 remain in local build-readiness progress; G3-G9 remain blocked by missing hosted, provider, staging, production, billing, commercial and compliance evidence."
+    "note": "G0 is package/CI proven; the exact candidate is additionally proven in a bounded isolated hosted simulator target, while G1-G2 remain in local build-readiness progress and G3-G9 remain blocked for full product, provider, staging, production, billing, commercial and compliance proof."
   }
 }

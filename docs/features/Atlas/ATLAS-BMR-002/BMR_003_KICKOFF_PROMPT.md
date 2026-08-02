@@ -6,7 +6,7 @@ Do not implement BMR-003 in this kickoff. Do not create source code, schemas, mi
 
 ## Starting point
 
-- Begin from the sealed BMR-002 source HEAD: `9c67cd8cbfd45d3c3042bc432639d84ca898ac0f`.
+- Begin from the sealed BMR-002 source HEAD: `f825ffd45688aaba0e740a096f85a4182ca0ebe4` and the final committed BMR-002 documentation state.
 - Work in the Atlas repository and read the repository `AGENTS.md` and `CLAUDE.md` rules first.
 - Create a separate BMR-003 planning/execution branch according to the current repository rules only after the initial discovery boundary is understood. Do not create that branch during this archival handoff.
 - Read the [BMR-001 constitution and preservation authority](./01_HANDOVER_BASELINE_AND_PRESERVATION.md), [BMR-002 README](./00_README.md), [BMR-002 final decision](./final-decision.v1.json), [BMR-002 execution log](./atlas_bmr002_execution_log.md), [BMR-002 handoff](./BMR_003_HANDOFF.md), and [BMR-002 locked decisions](./03_LOCKED_DECISIONS_AND_DEFAULTS.md).

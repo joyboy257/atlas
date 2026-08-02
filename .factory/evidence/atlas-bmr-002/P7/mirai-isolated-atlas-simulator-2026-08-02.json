@@ -1,0 +1,39 @@
+{
+  "programme": "ATLAS-BMR-002",
+  "phase": "P7",
+  "work_item": "ATLAS-BMR2-P7-007",
+  "gate": "G9",
+  "source_commit": "f825ffd45688aaba0e740a096f85a4182ca0ebe4",
+  "artifact_digest": "sha256:5d5ff2147263da4f1c87778fe2c494d07c16ec0e3dbbc3def829957a5a3c345f",
+  "environment": "Mirai VPS isolated atlas-stg-simulator target; loopback-only 127.0.0.1:4401; GitHub Actions run 30744127175",
+  "region": "Asia/Singapore",
+  "provider_account_scope": "none; simulator/local-fixture only",
+  "command_or_journey": "Dispatch .github/workflows/atlas-bmr-002-isolated-staging.yml from Mirai workflow commit b86ce22474ce522703d0486ae9ec82f2862169e8 against exact Atlas source f825ffd45688aaba0e740a096f85a4182ca0ebe4; build and push immutable GHCR image; deploy isolated container with named state volume; verify health, Atlas Front Desk Workbench route, simulator Mission approval/delivery, duplicate-trigger idempotency, state persistence across docker restart, exact image identity and bounded receipt.",
+  "started_at": "2026-08-02T10:38:08Z",
+  "finished_at": "2026-08-02T10:39:15Z",
+  "actor": "principal Codex session",
+  "reviewer": null,
+  "result": "PASS",
+  "classification": "HOSTED_ISOLATED_SIMULATOR_PROVEN",
+  "workflow_commit": "b86ce22474ce522703d0486ae9ec82f2862169e8",
+  "github_run_id": "30744127175",
+  "receipt": {
+    "target": "atlas-stg-simulator",
+    "health": "PASS",
+    "workbench_route": "PASS",
+    "simulator_mission": "PASS",
+    "duplicate_trigger_idempotency": "PASS",
+    "restart_durability": "PASS",
+    "network_exposure": "127.0.0.1:4401 only",
+    "database_queue": "NOT_CONFIGURED",
+    "worker": "NOT_CONFIGURED",
+    "provider": "SIMULATOR_ONLY",
+    "credentials_recorded": false
+  },
+  "limitations": [
+    "This proves an isolated hosted simulator target only; it is not whole-product staging certification, Atlas Cloud proof, provider sandbox proof, production proof, billing proof or commercial proof.",
+    "The target intentionally has no PostgreSQL, Redis, worker, provider credential, public route or production secret; the bounded receipt records database_queue and worker as NOT_CONFIGURED.",
+    "The Mirai main worktree contained unrelated concurrent changes; this proof used only the committed workflow on remote main and did not stage or deploy those changes."
+  ],
+  "checksum": "sha256:4be3240390ea818a54773b9f0e08705ead922b01b2bccfd88d40ae230e5c6ae0"
+}
