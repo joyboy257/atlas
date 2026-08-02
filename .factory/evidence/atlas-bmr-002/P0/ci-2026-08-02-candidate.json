@@ -1,0 +1,29 @@
+{
+  "evidence_id": "ATLAS-BMR2-P0-005-EVIDENCE-004",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P0",
+  "work_item": "ATLAS-BMR2-P0-005",
+  "gate": "G0",
+  "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+  "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+  "environment": "GitHub Actions ubuntu-latest, repository joyboy257/atlas",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "GitHub Actions run 30741865646: locked dependency installation; Atlas typecheck; build; complete 42-file/429-test suite; metadata check; package-boundary check; canonical BMR-002 validator/secret boundary; JSON authority parsing; evidence checksum verification",
+  "started_at": "2026-08-02T09:29:22Z",
+  "finished_at": "2026-08-02T09:29:57Z",
+  "actor": "GitHub Actions",
+  "reviewer": null,
+  "result": "PASS",
+  "maturity": "CI_PROVEN",
+  "classification": "CI_PROVEN",
+  "previous_claim": "CI proof existed only for an earlier parent source commit 9c67cd8; the final archival candidate had not yet been run.",
+  "corrected_claim": "The focused Atlas BMR-002 workflow passed all verification steps against exact candidate 65f088fa0a11e6b48e201e4fa4b56f7c4d616050 in run 30741865646.",
+  "ci_run_id": "30741865646",
+  "ci_url": "https://github.com/joyboy257/atlas/actions/runs/30741865646",
+  "limitations": [
+    "This is package CI proof only; it does not prove hosted Atlas Cloud, production-shaped PostgreSQL/Redis workers, provider sandbox, staging, production, billing, commercial or compliance environments.",
+    "GitHub reported a non-blocking Node.js 20 action deprecation annotation; all verification steps passed."
+  ],
+  "checksum": "sha256:8a8a127c61953cf7cc8e4f9e35a598a7a4d314bf6fc24933cf7c6113ffca7ae5"
+}

@@ -1471,3 +1471,41 @@ The prior state is preserved in the historical evidence and earlier log entries.
 - Classifications: `LOCAL_UNIT_PROVEN`, `LOCAL_PACKAGE_PROVEN`, `LOCAL_INTEGRATED_SIMULATOR_PROVEN` and `CI_PROVEN` are proven. `HOSTED_PROOF_BLOCKED`, `PROVIDER_SANDBOX_PROOF_BLOCKED`, `STAGING_PROOF_BLOCKED`, `PRODUCTION_PROOF_BLOCKED`, `BILLING_PROOF_BLOCKED`, `COMMERCIAL_PROOF_BLOCKED` and `COMPLIANCE_PROOF_BLOCKED` remain blocked externally.
 
 `ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` — local implementation, package, simulator and CI gates are proven; Atlas is not release-ready because hosted, provider, staging, production, billing, commercial and compliance proof is not configured or authorised.
+
+## 2026-08-02T09:31:17Z — ATLAS-BMR2 EXTERNAL-PROOF LANE EXHAUSTED
+
+### Entry gate and exact candidate
+
+- The archival candidate is `65f088fa0a11e6b48e201e4fa4b56f7c4d616050` on `codex/atlas-bmr-002-execution`.
+- Local package proof remains `42` files and `429/429` tests, with typecheck, build, metadata, package boundary, canonical validator, JSON parsing and checksums passing.
+- The simulator proof remains `LOCAL_INTEGRATED_SIMULATOR_PROVEN`.
+- The previous CI claim was run `30739270768` against parent source `9c67cd8`; this was insufficient for the exact archival candidate.
+- The candidate was pushed without changing unrelated pre-existing files. GitHub Actions run `30741865646` then passed all workflow steps against exact source `65f088fa0a11e6b48e201e4fa4b56f7c4d616050`.
+- Evidence index references resolve, canonical checksums pass, the worktree remains clean except `.claude/skills/gitnexus/`, `AGENTS.md` and `CLAUDE.md`, and BMR-001 history remains unchanged.
+
+### E0 inventory and E1-E6 disposition
+
+The attached external-proof authority granted discovery and use of authorised non-production resources but did not create any such resource. One focused inventory pass covered deployment runbooks, Docker/IaC, GitHub environments/secrets/variables, deployments/releases/packages, Infisical references, provider references, Stripe references, staging workflows and rollback documentation. No secret values were printed or retrieved.
+
+| Lane | Corrected claim | Classification | Exact blocker |
+| --- | --- | --- | --- |
+| E1 Hosted Atlas Cloud | No hosted Atlas Cloud target exists in repository or GitHub inventory. | `HOSTED_PROOF_BLOCKED` / `NOT_CONFIGURED` | No authorised hosted URL, deployment target, IaC, environment, secret set or registry target. |
+| E2 Production-shaped database and queue | No hosted database/queue or worker restart surface was available. | `HOSTED_PROOF_BLOCKED` / `NOT_CONFIGURED` | No production-shaped target; local Compose remains a development definition with absent API/worker/migration entrypoints. |
+| E3 Provider sandbox | No provider account, sender, credential or callback endpoint was available. | `PROVIDER_SANDBOX_PROOF_BLOCKED` / `CREDENTIAL_MISSING` | No authorised Resend, Twilio, Meta or other provider sandbox identity was configured. |
+| E4 Staging whole-product proof | No named staging environment exists and no deployment workflow is present. | `STAGING_PROOF_BLOCKED` / `NOT_CONFIGURED` | Repository beta documentation says staging is not yet live; no hosted candidate could be deployed. |
+| E5 Billing/commercial test mode | No Stripe test configuration or canonical settlement system is connected. | `BILLING_PROOF_BLOCKED` and `COMMERCIAL_PROOF_BLOCKED` / `NOT_CONFIGURED` | No test account, environment, webhook or billing credentials. |
+| E6 Recovery and rollback | No hosted deployment, database restore or external provider surface exists to exercise. | `HOSTED_PROOF_BLOCKED` / `NOT_CONFIGURED` | Recovery evidence requires the unavailable hosted/staging/provider dependencies. |
+
+### Reconciliation record
+
+- Previous claim: the final archival candidate had CI proof only through parent source `9c67cd8` and external discovery was recorded at the earlier closure checkpoint.
+- Corrected claim: exact candidate `65f088f` has real CI proof in run `30741865646`; E0-E6 were inspected and every external lane remains blocked by an exact missing resource, credential, environment or authority.
+- Reason: the exact candidate requirement was closed with a matching GitHub run, while no independently available hosted/provider/staging/billing/recovery target was found.
+- Commands: `git push -u origin codex/atlas-bmr-002-execution`; `gh run view 30741865646`; `gh api repos/joyboy257/atlas/environments`; `gh secret list`; `gh variable list`; repository deployment/IaC/provider/Stripe/Infisical inventory via `rg`; local package gate; canonical validator; checksum verification; evidence-path resolution; BMR-001 boundary checks.
+- Results: candidate CI PASS; local package and evidence validations PASS; hosted/provider/staging/billing/recovery lanes BLOCKED_EXTERNAL; no external deployment, provider send, billing action, production action, secret retrieval or uncontrolled recipient contact attempted.
+- Source SHA: `65f088fa0a11e6b48e201e4fa4b56f7c4d616050`.
+- Authority and evidence corrections are append-only; prior claims remain in earlier log entries and the new external inventory is `.factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json`.
+
+### Verdict
+
+`ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` — exact-candidate CI is proven; every independently achievable external lane was inventoried and remains blocked by missing hosted infrastructure, provider credentials, staging, billing configuration or production authority. Atlas is not release-ready. BMR-003 remains out of scope.

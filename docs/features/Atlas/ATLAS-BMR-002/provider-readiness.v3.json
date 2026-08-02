@@ -1,7 +1,7 @@
 {
   "schema_version": "3.0.0",
   "programme": "ATLAS-BMR-002",
-  "generated_at": "2026-07-29",
+  "generated_at": "2026-08-02T09:31:17Z",
   "readiness_vocabulary": [
     "DECLARED",
     "LOCAL_CONFORMANCE",
@@ -166,5 +166,14 @@
       "next_gate": "P5 provider scorecard or conformance review",
       "notes": "Contract/auth/replay conformance; customer operates endpoint"
     }
-  ]
+  ],
+  "external_proof_reconciliation": {
+    "recorded_at": "2026-08-02T09:31:17Z",
+    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "provider_sandbox_status": "CREDENTIAL_MISSING",
+    "selected_provider": null,
+    "provider_account_scope": "none discovered or authorised",
+    "evidence_ref": ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+    "note": "Provider entries remain declared or locally conformant hypotheses; no provider sandbox readiness state was promoted without an account, credential, authentic callback and redacted evidence."
+  }
 }

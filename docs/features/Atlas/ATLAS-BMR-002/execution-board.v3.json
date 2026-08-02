@@ -2589,9 +2589,13 @@
       "owner": "principal orchestrator",
       "release_gate": "G8",
       "falsifier": "Staging is tested from a locally rebuilt or post-review modified artifact",
-      "status": "NOT_STARTED",
+      "status": "BLOCKED_EXTERNAL",
       "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "blockers": [
+        "HOSTED_ATLAS_CLOUD_NOT_CONFIGURED",
+        "STAGING_DEPLOYMENT_WORKFLOW_NOT_FOUND",
+        "PRODUCTION_SHAPED_DATABASE_QUEUE_NOT_CONFIGURED"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-054"
@@ -2646,9 +2650,13 @@
       "owner": "independent verifier",
       "release_gate": "G8",
       "falsifier": "Disconnected component demos or pre-integration tests are substituted for one causally connected whole-product journey",
-      "status": "NOT_STARTED",
+      "status": "BLOCKED_EXTERNAL",
       "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "blockers": [
+        "STAGING_NOT_CONFIGURED",
+        "PROVIDER_SANDBOX_CREDENTIAL_MISSING",
+        "BILLING_TEST_MODE_NOT_CONFIGURED"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-055"
@@ -2699,10 +2707,12 @@
       "owner": "principal orchestrator",
       "release_gate": "G9",
       "falsifier": "Claude promotes production or onboards unbounded customers without explicit authority and an operable support/rollback envelope",
-      "status": "NOT_STARTED",
+      "status": "BLOCKED_EXTERNAL",
       "maturity": "DOCUMENTED_ONLY",
       "blockers": [
-        "EXPLICIT_PRODUCTION_AUTHORISATION"
+        "EXPLICIT_PRODUCTION_AUTHORISATION",
+        "PRODUCTION_NOT_CONFIGURED",
+        "NO_PROVIDER_OR_CUSTOMER_COHORT"
       ],
       "commit_sha": null,
       "gap_ids": [
@@ -2750,9 +2760,12 @@
       "owner": "independent verifier",
       "release_gate": "G9",
       "falsifier": "Programme declares completion from workstream readiness or a staging pass while required production evidence is absent",
-      "status": "NOT_STARTED",
+      "status": "BLOCKED_EXTERNAL",
       "maturity": "DOCUMENTED_ONLY",
-      "blockers": [],
+      "blockers": [
+        "P7_005_BLOCKED_EXTERNAL",
+        "INDEPENDENT_EXTERNAL_REVIEW_NOT_AVAILABLE"
+      ],
       "commit_sha": null,
       "gap_ids": [
         "ATLAS-BMR2-GAP-057"
@@ -2780,8 +2793,8 @@
   ],
   "active_work_item": "ATLAS-BMR2-P2-001",
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T08:10:00Z",
-    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "recorded_at": "2026-08-02T09:31:17Z",
+    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
     "test_inventory": {
       "files": 42,
       "tests": 429,
@@ -2800,8 +2813,8 @@
       "COMMERCIAL_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
       "COMPLIANCE_PROOF_BLOCKED": "BLOCKED_EXTERNAL"
     },
-    "ci_run_id": "30739027775",
-    "ci_head": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "ci_run_id": "30741865646",
+    "ci_head": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
     "sandbox": "LOCAL_INTEGRATED_SIMULATOR_PROVEN; full Docker API/worker/PostgreSQL/Redis path not claimable from current source",
     "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
     "release_ready": false

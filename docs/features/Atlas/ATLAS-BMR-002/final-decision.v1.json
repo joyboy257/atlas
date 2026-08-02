@@ -1,8 +1,8 @@
 {
   "schema_version": "atlas.bmr002-final-decision/v1",
   "programme": "ATLAS-BMR-002",
-  "recorded_at": "2026-08-02T08:10:00Z",
-  "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+  "recorded_at": "2026-08-02T09:31:17Z",
+  "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
   "branch": "codex/atlas-bmr-002-execution",
   "previous_claims": [
     "The full package suite was 418/427 with nine expired July fixtures.",
@@ -13,7 +13,7 @@
     "The deterministic memory and RBAC fixtures pass their focused 20/20 tests, including valid, expired, exact-boundary and timezone-independent cases.",
     "The complete Atlas package gate passes 42 files and 429 tests, with typecheck, build, metadata, package boundary, canonical validator, JSON authority parsing and checksums passing.",
     "The supported zero-credential local simulator and Workbench/dev-server path is proven; the stale full-stack Compose definition is not represented as a PostgreSQL/Redis/worker proof.",
-    "GitHub Actions run 30739027775 passes the focused BMR-002 workflow against source a55c1c6f46303bab35649149a289551386c6d11e."
+    "GitHub Actions run 30741865646 passes the focused BMR-002 workflow against exact candidate source 65f088fa0a11e6b48e201e4fa4b56f7c4d616050."
   ],
   "classifications": {
     "LOCAL_UNIT_PROVEN": "PROVEN",
@@ -31,19 +31,23 @@
   "external_discovery": {
     "github_ci": "AVAILABLE_AND_AUTHORISED",
     "hosted_atlas_cloud": "NOT_CONFIGURED",
-    "provider_sandbox": "CONFIGURED_CREDENTIAL_MISSING",
+    "production_shaped_database_queue": "NOT_CONFIGURED",
+    "provider_sandbox": "CREDENTIAL_MISSING",
     "staging": "NOT_CONFIGURED",
     "production": "NOT_CONFIGURED",
     "billing": "NOT_CONFIGURED",
     "commercial": "NOT_CONFIGURED",
     "compliance": "NOT_CONFIGURED",
-    "infisical": "NOT_FOUND"
+    "recovery_rollback": "NOT_CONFIGURED",
+    "infisical": "NOT_FOUND",
+    "deployment_workflow": "NOT_FOUND",
+    "container_registry_target": "NOT_FOUND"
   },
   "remaining_blockers": [
     "The documented Docker Compose full-stack path cannot be claimed: its Atlas API, worker, sandbox-entry and migration runtime are absent from the current source tree, and host ports 5433/6380 are occupied by unrelated local services. No product runtime was added in this closure sprint.",
-    "No hosted Atlas Cloud deployment or authorised staging URL is configured.",
-    "No provider sandbox account/credential is configured; simulator evidence remains local fixture proof only.",
-    "No production authority, customer cohort, billing settlement, commercial operation or formal compliance evidence is configured or authorised."
+    "No hosted Atlas Cloud deployment, production-shaped database/queue target or authorised staging URL is configured; no deployment workflow, IaC target or container registry target exists in the repository inventory.",
+    "No provider sandbox account or credential is configured; simulator evidence remains local fixture proof only.",
+    "No Stripe test configuration, hosted backup/restore surface, production authority, customer cohort, billing settlement, commercial operation or formal compliance evidence is configured or authorised."
   ],
   "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
   "release_ready": false,

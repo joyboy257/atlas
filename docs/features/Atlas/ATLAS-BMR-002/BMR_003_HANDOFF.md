@@ -7,6 +7,7 @@ This is an archival handoff only. It does not authorise or implement BMR-003.
 - Branch: `codex/atlas-bmr-002-execution`
 - Sealed BMR-002 source HEAD: `9c67cd8cbfd45d3c3042bc432639d84ca898ac0f`
 - Archival handoff commit: the documentation commit that adds this file and `BMR_003_KICKOFF_PROMPT.md`.
+- External-proof candidate SHA: `65f088fa0a11e6b48e201e4fa4b56f7c4d616050`
 - Terminal status: `ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL`
 - Release status: not release-ready.
 
@@ -30,7 +31,7 @@ Authoritative closeout records:
 | `LOCAL_UNIT_PROVEN` | Proven | Memory/RBAC focused suites: 20/20; deterministic expiry, boundary and timezone coverage. |
 | `LOCAL_PACKAGE_PROVEN` | Proven | 42 files, 429 tests; typecheck, build, metadata, package boundary, validator, JSON and checksums pass. |
 | `LOCAL_INTEGRATED_SIMULATOR_PROVEN` | Proven | 44/44 simulator/dev-server/runtime tests; local exactly-once test and replay pass. |
-| `CI_PROVEN` | Proven | GitHub Actions run `30739270768`, final verified source `9c67cd8`. |
+| `CI_PROVEN` | Proven | GitHub Actions run `30741865646`, exact external-proof candidate `65f088f`. |
 | `HOSTED_PROOF_BLOCKED` | Blocked external | No hosted Atlas Cloud deployment configured. |
 | `PROVIDER_SANDBOX_PROOF_BLOCKED` | Blocked external | No provider sandbox account or credentials configured. |
 | `STAGING_PROOF_BLOCKED` | Blocked external | No authorised staging URL or deployment environment configured. |
@@ -53,6 +54,8 @@ NOT_RELEASE_READY
 ```
 
 ## Remaining blockers and limitations
+
+The external-proof lane was subsequently inspected against candidate `65f088fa0a11e6b48e201e4fa4b56f7c4d616050`. Matching CI passed in run `30741865646`. E1 hosted Atlas Cloud, E2 production-shaped database/queue, E3 provider sandbox, E4 staging, E5 billing/commercial test mode and E6 recovery/rollback remain blocked because no authorised hosted target, deployment workflow/IaC, provider sandbox credentials, staging environment, Stripe test configuration or hosted recovery surface exists. The append-only evidence record is `.factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json`.
 
 - The documented Docker Compose full-stack path renders and builds, but its Atlas API, worker, sandbox-entry and PostgreSQL migration runtime are absent from the current source tree. Host ports `5433` and `6380` are also occupied by unrelated local services. The local simulator path is the supported proof; this is not PostgreSQL/Redis worker proof.
 - The local runtime is filesystem-backed and simulator-backed. It does not establish hosted database, queue, worker restart, provider acceptance, staging, production, billing or compliance behavior.

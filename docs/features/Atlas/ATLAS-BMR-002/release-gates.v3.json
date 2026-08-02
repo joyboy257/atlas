@@ -38,7 +38,8 @@
       "verdict": "PASS",
       "evidence_refs": [
         ".factory/evidence/atlas-bmr-002/P0/local-package-2026-08-02.json",
-        ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02.json"
+        ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02.json",
+        ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02-candidate.json"
       ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
@@ -214,7 +215,9 @@
         "Public/private/Mirai authority is duplicated"
       ],
       "verdict": "BLOCKED_EXTERNAL",
-      "evidence_refs": [],
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json"
+      ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
     },
@@ -237,7 +240,9 @@
         "A workstream gate is substituted for G8"
       ],
       "verdict": "BLOCKED_EXTERNAL",
-      "evidence_refs": [],
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json"
+      ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
     },
@@ -260,7 +265,9 @@
         "Execution complete is declared without the production cohort"
       ],
       "verdict": "BLOCKED_EXTERNAL",
-      "evidence_refs": [],
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json"
+      ],
       "reviewed_by": "principal Codex session",
       "reviewed_at": "2026-08-02T08:10:00Z"
     }

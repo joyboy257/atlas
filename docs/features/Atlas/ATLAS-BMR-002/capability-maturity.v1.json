@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "programme": "ATLAS-BMR-002",
-  "generated_at": "2026-07-29",
+  "generated_at": "2026-08-02T09:31:17Z",
   "maturity_vocabulary": [
     "DOCUMENTED_ONLY",
     "STUBBED",
@@ -234,5 +234,24 @@
       "evidence_required": "Source, tests, exact environment evidence, independent review, and rollback/disable path.",
       "notes": "P0 must reclassify from live repository truth; this package makes no production claim."
     }
-  ]
+  ],
+  "closure_reconciliation": {
+    "recorded_at": "2026-08-02T09:31:17Z",
+    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "local_and_ci_proven": [
+      "LOCAL_UNIT_PROVEN",
+      "LOCAL_PACKAGE_PROVEN",
+      "LOCAL_INTEGRATED_SIMULATOR_PROVEN",
+      "CI_PROVEN"
+    ],
+    "external_maturity_blocked": [
+      "HOSTED_ATLAS_CLOUD_PROVEN",
+      "PROVIDER_SANDBOX_PROVEN",
+      "STAGING_PROVEN",
+      "BILLING_TEST_MODE_PROVEN",
+      "PRODUCTION_PROVEN"
+    ],
+    "evidence_ref": ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+    "note": "Capability maturity is not promoted from local simulator or package CI into hosted, provider, staging, billing or production maturity."
+  }
 }

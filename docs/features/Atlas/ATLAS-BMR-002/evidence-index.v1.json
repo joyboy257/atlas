@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "programme": "ATLAS-BMR-002",
-  "generated_at": "2026-07-31",
+  "generated_at": "2026-08-02T09:31:17Z",
   "evidence_root": ".factory/evidence/atlas-bmr-002",
   "required_metadata": [
     "programme",
@@ -314,7 +314,33 @@
       "source_commit": "26b57e74f379b16636c2a901dea6de8b2e03cb1c",
       "artifact_digest": null,
       "checksum": "sha256:55f8c7c0f62671371c150bb2de5522c513aea99562e7eb11f6a98b0d65984ebb"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02-candidate.json",
+      "evidence_id": "ATLAS-BMR2-P0-005-EVIDENCE-004",
+      "phase": "P0",
+      "work_item": "ATLAS-BMR2-P0-005",
+      "gate": "G0",
+      "result": "PASS",
+      "maturity": "CI_PROVEN",
+      "classification": "CI_PROVEN",
+      "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+      "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+      "checksum": "sha256:8a8a127c61953cf7cc8e4f9e35a598a7a4d314bf6fc24933cf7c6113ffca7ae5"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P7-007-EVIDENCE-001",
+      "phase": "P7",
+      "work_item": "ATLAS-BMR2-P7-007",
+      "gate": "G9",
+      "result": "BLOCKED_EXTERNAL",
+      "maturity": "BLOCKED_EXTERNAL",
+      "classification": "EXTERNAL_PROOF_BLOCKED",
+      "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+      "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+      "checksum": "sha256:e08849875570616470c64aca43e1a732f32c7b358736574dd58c971a83971394"
     }
   ],
-  "note": "Canonical index of local evidence records. Rich narrative fields remain in each evidence file; INCONCLUSIVE records are unfinished local verification and are not release-gate PASS."
+  "note": "Canonical index of local, CI and external-inventory evidence records. Rich narrative fields remain in each evidence file; external-inventory BLOCKED_EXTERNAL records preserve exact missing resources and do not promote local or CI proof into hosted proof."
 }

@@ -41,14 +41,16 @@
     "requires_p0_verification": true
   },
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T08:10:00Z",
-    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "recorded_at": "2026-08-02T09:31:17Z",
+    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
     "local_test_files": 42,
     "local_test_count": 429,
     "local_unit": "LOCAL_UNIT_PROVEN",
     "local_package": "LOCAL_PACKAGE_PROVEN",
     "local_integrated_simulator": "LOCAL_INTEGRATED_SIMULATOR_PROVEN",
     "ci": "CI_PROVEN",
+    "ci_run_id": "30741865646",
+    "ci_head": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
     "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
     "release_ready": false
   },

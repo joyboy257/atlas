@@ -1883,8 +1883,8 @@
     }
   ],
   "closure_reconciliation": {
-    "recorded_at": "2026-08-02T08:10:00Z",
-    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "recorded_at": "2026-08-02T09:31:17Z",
+    "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
     "proven_local_classifications": [
       "LOCAL_UNIT_PROVEN",
       "LOCAL_PACKAGE_PROVEN",
@@ -1900,6 +1900,8 @@
       "COMMERCIAL_PROOF_BLOCKED",
       "COMPLIANCE_PROOF_BLOCKED"
     ],
-    "note": "Requirement status remains NOT_SATISFIED where the requirement's full product-plane acceptance exceeds the locally proven simulator/package/CI boundary."
+    "external_proof_evidence": ".factory/evidence/atlas-bmr-002/P7/external-proof-2026-08-02.json",
+    "ci_candidate_evidence": ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02-candidate.json",
+    "note": "Requirement status remains NOT_SATISFIED where the requirement's full product-plane acceptance exceeds the locally proven simulator/package/CI boundary. E0-E6 external lanes were inspected and remain blocked by exact missing resources or authority."
   }
 }

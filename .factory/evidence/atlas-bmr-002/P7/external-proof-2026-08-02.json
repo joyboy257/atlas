@@ -1,0 +1,37 @@
+{
+  "evidence_id": "ATLAS-BMR2-P7-007-EVIDENCE-001",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P7",
+  "work_item": "ATLAS-BMR2-P7-007",
+  "gate": "G9",
+  "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+  "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+  "environment": "Repository/GitHub external-resource inventory; no hosted Atlas environment available",
+  "region": null,
+  "provider_account_scope": "none discovered or authorised",
+  "command_or_journey": "E0 inventory through E6 recovery/rollback review: deployment/IaC/runbook inspection; GitHub environments, secret names and variables; deployment/release/package inventory; Infisical, provider and Stripe reference inspection; staging and rollback workflow inspection; exact-candidate CI verification",
+  "started_at": "2026-08-02T09:27:00Z",
+  "finished_at": "2026-08-02T09:31:17Z",
+  "actor": "principal Codex session",
+  "reviewer": null,
+  "result": "BLOCKED_EXTERNAL",
+  "maturity": "BLOCKED_EXTERNAL",
+  "classification": "EXTERNAL_PROOF_BLOCKED",
+  "external_lanes": {
+    "hosted_atlas_cloud": "NOT_CONFIGURED",
+    "production_shaped_database_queue": "NOT_CONFIGURED",
+    "provider_sandbox": "CREDENTIAL_MISSING",
+    "staging": "NOT_CONFIGURED",
+    "billing_test_mode": "NOT_CONFIGURED",
+    "recovery_rollback": "NOT_CONFIGURED",
+    "infisical": "NOT_FOUND",
+    "github_ci": "AVAILABLE_AND_AUTHORISED"
+  },
+  "limitations": [
+    "No GitHub environment, repository secret, repository variable, deployment workflow, container registry target, hosted URL, IaC target or authorised non-production deployment is configured.",
+    "The repository's beta sandbox documentation states that staging is not yet live; its Compose definition is a local simulator preview and the current source lacks the referenced API, worker, sandbox-entry and migration runtime.",
+    "No provider sandbox account or credential, Stripe test configuration, Infisical project/environment reference, production-shaped database/queue target or hosted backup/restore surface was found.",
+    "No external deployment, provider send, billing action, production action, secret retrieval or uncontrolled recipient contact was attempted."
+  ],
+  "checksum": "sha256:e08849875570616470c64aca43e1a732f32c7b358736574dd58c971a83971394"
+}
