@@ -34,6 +34,9 @@ COPY --from=builder /build/packages/atlas/package.json packages/atlas/
 COPY --from=builder /build/packages/atlas/dist packages/atlas/dist
 COPY --from=builder /build/packages/atlas/bin packages/atlas/bin
 COPY --from=builder /build/packages/atlas/schema packages/atlas/schema
+COPY --from=builder /build/packages/atlas/examples/front-desk /app/project
+RUN rm -rf /app/project/.atlas
+RUN chown -R atlas:atlas /app/project
 
 RUN npm ci --omit=dev && npm cache clean --force
 

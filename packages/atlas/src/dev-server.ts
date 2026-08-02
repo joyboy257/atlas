@@ -14,6 +14,7 @@ import { renderAtlasWorkbench } from './workbench.js';
 export type AtlasDevServerOptions = Readonly<{
   port?: number;
   host?: string;
+  deployment?: 'local' | 'sandbox';
   failFirst?: number;
   latencyMs?: number;
   webhookForwardUrl?: string;
@@ -46,7 +47,7 @@ export type AtlasDevServer = Readonly<{
 
 export async function startAtlasDevServer(options: AtlasDevServerOptions = {}): Promise<AtlasDevServer> {
   const host = options.host ?? '127.0.0.1';
-  if (!isLoopbackHostname(host)) {
+  if (!isLoopbackHostname(host) && options.deployment !== 'sandbox') {
     throw new Error(`Atlas dev server may bind only to a loopback host; received ${host}`);
   }
   const events: Record<string, unknown>[] = [];

@@ -84,6 +84,11 @@ describe('Atlas deterministic dev server', () => {
     await expect(startAtlasDevServer({ host: '0.0.0.0', projectRoot: await project() })).rejects.toThrow(/loopback/i);
   });
 
+  it('allows non-loopback binding only for the explicit sandbox deployment mode', async () => {
+    server = await startAtlasDevServer({ host: '0.0.0.0', deployment: 'sandbox' });
+    await expect(fetch(`${server.url.replace('0.0.0.0', '127.0.0.1')}/health`)).resolves.toMatchObject({ status: 200 });
+  });
+
   it('rejects hostile host and browser-origin requests before local mutation', async () => {
     server = await startAtlasDevServer({ projectRoot: await project() });
     const message = {
