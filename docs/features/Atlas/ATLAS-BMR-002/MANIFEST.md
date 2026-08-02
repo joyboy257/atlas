@@ -48,6 +48,8 @@
 - `docs/features/Atlas/ATLAS-BMR-002/24_INDEPENDENT_REVIEW_PROTOCOL.md`
 - `docs/features/Atlas/ATLAS-BMR-002/25_FINAL_RELEASE_AND_CLOSURE_DECISION_TEMPLATE.md`
 - `docs/features/Atlas/ATLAS-BMR-002/ATLAS_BMR_002_EXECUTION_AUTHORITY_COMBINED.md`
+- `docs/features/Atlas/ATLAS-BMR-002/BMR_003_HANDOFF.md`
+- `docs/features/Atlas/ATLAS-BMR-002/BMR_003_KICKOFF_PROMPT.md`
 - `docs/features/Atlas/ATLAS-BMR-002/MANIFEST.md`
 - `docs/features/Atlas/ATLAS-BMR-002/atlas_bmr002_execution_log.md`
 - `docs/features/Atlas/ATLAS-BMR-002/capability-maturity.v1.json`
