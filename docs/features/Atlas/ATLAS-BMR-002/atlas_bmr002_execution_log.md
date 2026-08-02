@@ -1509,3 +1509,39 @@ The attached external-proof authority granted discovery and use of authorised no
 ### Verdict
 
 `ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` — exact-candidate CI is proven; every independently achievable external lane was inventoried and remains blocked by missing hosted infrastructure, provider credentials, staging, billing configuration or production authority. Atlas is not release-ready. BMR-003 remains out of scope.
+
+## 2026-08-02T10:05:00Z — ATLAS-BMR2 MIRAI INFRASTRUCTURE REUSE DECISION
+
+### Previous claim
+
+The standalone Atlas repository appeared to have no configured hosted target, staging environment, provider sandbox, billing test environment or rollback surface.
+
+### Corrected claim and reuse decision
+
+Read-only inspection of the canonical Mirai repository and connected GitHub/Vercel surfaces found reusable infrastructure: Vercel `mirai-staging`, Mirai VPS Docker staging behind Caddy, Supabase Cloud staging project `feqsqctzcfaczjujdytw`, isolated Redis/Redis Streams, GHCR image publication, GitHub staging environments and secrets, OTEL/Langfuse hooks, and immutable digest rollback/lifecycle scripts.
+
+The single decision is:
+
+`EXTEND_EXISTING_MIRAI_INFRASTRUCTURE`
+
+Decision reason: Mirai infrastructure is suitable in principle and a new Atlas cloud platform is unnecessary, but the exact Atlas candidate is not a deployable Mirai service artifact. Candidate `65f088fa0a11e6b48e201e4fa4b56f7c4d616050` contains the Atlas CLI/local runtime/simulator and filesystem persistence, but no deployable API main, worker main, sandbox entrypoint or PostgreSQL/Redis runtime integration. Mirai's Atlas staging workflows deploy or rewire Mirai services and do not deploy this standalone candidate.
+
+### External attempt boundary
+
+- Confirmed current Mirai staging frontend URL inventory and existing deployment workflows.
+- Confirmed historical successful Mirai Atlas staging rewire/schema workflow runs, but the latest rewire receipt artifact is expired and is not reused as current Atlas proof.
+- Read current staging health endpoints: `staging.usemirai.app` redirects; `api.staging.usemirai.app`, `webhooks.staging.usemirai.app`, `realtime.staging.usemirai.app` and `ai.staging.usemirai.app` returned HTTP 502.
+- Compared exact Atlas candidate package/runtime paths with Mirai's separate `packages/atlas` and `apps/core-backend` Atlas surfaces; they differ materially.
+- Did not dispatch any workflow, SSH to any host, rewire shared staging, mutate Supabase/Redis, build/push an image, call a provider, perform a billing action, retrieve a secret or contact an uncontrolled recipient.
+
+### Concrete blocker
+
+A bounded Mirai integration change is required to package the exact Atlas candidate as isolated `atlas-api-staging`/`atlas-worker-staging` services with separate queue/schema/routes and an owner-approved staging target. Founder or infrastructure-owner approval is required before mutating shared Mirai staging. The exact candidate is therefore not externally certifiable from the connected environment without that decision and integration work.
+
+Evidence: `.factory/evidence/atlas-bmr-002/P7/mirai-infrastructure-reuse-2026-08-02.json`.
+
+Source SHA: `65f088fa0a11e6b48e201e4fa4b56f7c4d616050`.
+
+### Verdict
+
+`ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` — existing Mirai infrastructure can be reused only through a bounded Atlas-specific extension; no safe exact-candidate deployment was attempted because the required integration and staging ownership decision are unresolved. BMR-003 remains out of scope.

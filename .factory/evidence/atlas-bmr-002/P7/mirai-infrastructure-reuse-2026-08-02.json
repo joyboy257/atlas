@@ -1,0 +1,45 @@
+{
+  "evidence_id": "ATLAS-BMR2-P7-007-EVIDENCE-002",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P7",
+  "work_item": "ATLAS-BMR2-P7-007",
+  "gate": "G9",
+  "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+  "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+  "environment": "Mirai repository and authorised GitHub deployment surfaces; no Atlas deployment mutation performed",
+  "region": "Asia/Singapore / Supabase ap-southeast-1 staging reference",
+  "provider_account_scope": "Mirai staging infrastructure; no provider sandbox account selected",
+  "command_or_journey": "Read-only inspection of /Users/deon/Developer/mirai, GitHub environments/secrets/workflows/deployments, Vercel project inventory, Mirai staging health endpoints, recent Atlas staging workflow receipts, Mirai staging Compose/Caddy/rollback configuration, and exact Atlas candidate deployability",
+  "started_at": "2026-08-02T09:45:00Z",
+  "finished_at": "2026-08-02T10:05:00Z",
+  "actor": "principal Codex session",
+  "reviewer": null,
+  "result": "BLOCKED_EXTERNAL",
+  "maturity": "BLOCKED_EXTERNAL",
+  "classification": "EXTERNAL_PROOF_BLOCKED",
+  "reuse_decision": "EXTEND_EXISTING_MIRAI_INFRASTRUCTURE",
+  "inventory": {
+    "frontend": "Vercel project mirai-staging, staging.usemirai.app",
+    "backend": "Mirai VPS Docker staging services behind Caddy",
+    "database": "Supabase Cloud staging project ref feqsqctzcfaczjujdytw",
+    "queue": "Redis 7 with Redis Streams in isolated mirai-stg network",
+    "registry": "GitHub Container Registry ghcr.io/joyboy257/mirai/backend",
+    "deployment": "GitHub Actions staging-live/release-candidate/Atlas staging workflows with pinned staging SSH authority",
+    "observability": "OTEL collector, Langfuse evaluation hooks and Mirai health/doctor workflows",
+    "rollback": "Immutable GHCR digest release manifests, staging lifecycle stop, snapshot/rollback scripts"
+  },
+  "exact_candidate_boundary": {
+    "candidate": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+    "candidate_contains": "Atlas package CLI, local runtime, simulator, filesystem persistence, local dev server and contract/migration artifacts",
+    "candidate_missing": "Deployable API main, worker main, sandbox entrypoint and PostgreSQL/Redis runtime integration",
+    "mirai_workflow_boundary": "Mirai Atlas staging workflows rewire Mirai staging data/services and do not deploy the standalone Atlas candidate",
+    "current_health": "staging.usemirai.app redirects; api.staging.usemirai.app, webhooks.staging.usemirai.app, realtime.staging.usemirai.app and ai.staging.usemirai.app returned HTTP 502 during this inspection"
+  },
+  "blocker": "A bounded Mirai integration change is required to package the exact Atlas candidate as isolated atlas-api-staging/atlas-worker-staging services with separate queue/schema/routes and a documented owner-approved staging target. Founder or infrastructure-owner approval is required before mutating shared Mirai staging. No such exact-candidate integration or approval is present.",
+  "limitations": [
+    "The successful Mirai Atlas staging workflow receipts are historical Mirai infrastructure proof, not Atlas candidate proof; the latest receipt artifact was expired.",
+    "No workflow dispatch, SSH session, database mutation, provider operation, billing operation, deployment, rollback or secret retrieval was performed.",
+    "Mirai's shared worktree contains unrelated dirty changes and was left untouched."
+  ],
+  "checksum": "sha256:c8d35dcf9232498be1b07514225c1c6661e6964a01eaa91096c77139eef58e82"
+}

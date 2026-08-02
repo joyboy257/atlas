@@ -340,6 +340,19 @@
       "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
       "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
       "checksum": "sha256:e08849875570616470c64aca43e1a732f32c7b358736574dd58c971a83971394"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P7/mirai-infrastructure-reuse-2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P7-007-EVIDENCE-002",
+      "phase": "P7",
+      "work_item": "ATLAS-BMR2-P7-007",
+      "gate": "G9",
+      "result": "BLOCKED_EXTERNAL",
+      "maturity": "BLOCKED_EXTERNAL",
+      "classification": "EXTERNAL_PROOF_BLOCKED",
+      "source_commit": "65f088fa0a11e6b48e201e4fa4b56f7c4d616050",
+      "artifact_digest": "sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3",
+      "checksum": "sha256:c8d35dcf9232498be1b07514225c1c6661e6964a01eaa91096c77139eef58e82"
     }
   ],
   "note": "Canonical index of local, CI and external-inventory evidence records. Rich narrative fields remain in each evidence file; external-inventory BLOCKED_EXTERNAL records preserve exact missing resources and do not promote local or CI proof into hosted proof."
