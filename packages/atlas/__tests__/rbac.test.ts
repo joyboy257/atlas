@@ -14,8 +14,27 @@ const testScope: AtlasRbacScope = {
   environmentId: 'test-a',
 };
 const productionScope = { ...testScope, environmentId: 'production-a' };
-const issuedAt = '2026-07-31T00:00:00.000Z';
-const expiresAt = '2026-08-01T00:00:00.000Z';
+const TEST_NOW = '2030-08-01T12:00:00.000Z';
+const TEST_NOW_MS = Date.parse(TEST_NOW);
+const MINUTE_MS = 60 * 1000;
+const HOUR_MS = 60 * MINUTE_MS;
+
+function at(offsetMs = 0): string {
+  return new Date(TEST_NOW_MS + offsetMs).toISOString();
+}
+
+function atTimezone(offsetMs: number, timezoneOffsetMinutes: number): string {
+  const instant = new Date(TEST_NOW_MS + offsetMs);
+  const local = new Date(instant.getTime() + timezoneOffsetMinutes * MINUTE_MS).toISOString().replace(/Z$/, '');
+  const sign = timezoneOffsetMinutes >= 0 ? '+' : '-';
+  const absoluteMinutes = Math.abs(timezoneOffsetMinutes);
+  const hours = String(Math.floor(absoluteMinutes / 60)).padStart(2, '0');
+  const minutes = String(absoluteMinutes % 60).padStart(2, '0');
+  return `${local}${sign}${hours}:${minutes}`;
+}
+
+const issuedAt = at(-HOUR_MS);
+const expiresAt = at(24 * HOUR_MS);
 
 function policy() {
   return createRbacPolicy([
@@ -51,19 +70,27 @@ describe('Atlas local RBAC and machine identity contract', () => {
     const credential = rbac.issueMachineCredential({ credentialId: 'cred-test-v1', principalId: 'machine-test', environmentId: 'test-a', secret: 'local-secret', issuedAt, expiresAt });
     expect(credential.secretDigest).not.toContain('local-secret');
     expect(credential.environmentId).toBe('test-a');
-    expect(rbac.authenticateMachineCredential(credential.id, 'local-secret', testScope).id).toBe('machine-test');
-    expect(() => rbac.authenticateMachineCredential(credential.id, 'local-secret', productionScope)).toThrowError(/environment/);
-    expect(() => rbac.authenticateMachineCredential(credential.id, 'wrong-secret', testScope)).toThrowError(/does not match/);
+    expect(rbac.authenticateMachineCredential(credential.id, 'local-secret', testScope, TEST_NOW).id).toBe('machine-test');
+    expect(() => rbac.authenticateMachineCredential(credential.id, 'local-secret', productionScope, TEST_NOW)).toThrowError(/environment/);
+    expect(() => rbac.authenticateMachineCredential(credential.id, 'wrong-secret', testScope, TEST_NOW)).toThrowError(/does not match/);
   });
 
   it('rotates and revokes credentials fail closed', () => {
     const rbac = new AtlasRbacRegistry(policy());
     const current = rbac.issueMachineCredential({ credentialId: 'cred-rotate-v1', principalId: 'machine-test', environmentId: 'test-a', secret: 'secret-v1', issuedAt, expiresAt });
-    const replacement = rbac.rotateMachineCredential(current.id, { replacementId: 'cred-rotate-v2', secret: 'secret-v2', issuedAt: '2026-07-31T01:00:00.000Z', expiresAt });
+    const replacement = rbac.rotateMachineCredential(current.id, { replacementId: 'cred-rotate-v2', secret: 'secret-v2', issuedAt: at(HOUR_MS), expiresAt });
     expect(replacement.version).toBe(2);
-    expect(() => rbac.authenticateMachineCredential(current.id, 'secret-v1', testScope)).toThrowError(/revoked/);
-    expect(rbac.authenticateMachineCredential(replacement.id, 'secret-v2', testScope).id).toBe('machine-test');
-    rbac.revokeMachineCredential(replacement.id, '2026-07-31T02:00:00.000Z');
+    expect(() => rbac.authenticateMachineCredential(current.id, 'secret-v1', testScope, TEST_NOW)).toThrowError(/revoked/);
+    expect(rbac.authenticateMachineCredential(replacement.id, 'secret-v2', testScope, TEST_NOW).id).toBe('machine-test');
+    rbac.revokeMachineCredential(replacement.id, at(2 * HOUR_MS));
     expect(() => rbac.authorize({ principalId: 'machine-test', credentialId: replacement.id, operation: 'deploy', scope: testScope })).toThrowError(/REVOKED|revoked/);
+  });
+
+  it('enforces expiry at the exact instant across timezone representations', () => {
+    const rbac = new AtlasRbacRegistry(policy());
+    const credential = rbac.issueMachineCredential({ credentialId: 'cred-expiry-boundary', principalId: 'machine-test', environmentId: 'test-a', secret: 'boundary-secret', issuedAt: at(-HOUR_MS), expiresAt: at(HOUR_MS) });
+
+    expect(rbac.authenticateMachineCredential(credential.id, 'boundary-secret', testScope, atTimezone(0, 480)).id).toBe('machine-test');
+    expect(() => rbac.authenticateMachineCredential(credential.id, 'boundary-secret', testScope, at(HOUR_MS))).toThrowError(/expired/);
   });
 });

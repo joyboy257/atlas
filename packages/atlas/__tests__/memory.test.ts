@@ -18,6 +18,11 @@ const scope = {
 } as const;
 
 const otherScope = { ...scope, tenantId: 'tenant-other' } as const;
+const TEST_NOW = '2030-08-01T12:00:00.000Z';
+const TEST_NOW_MS = Date.parse(TEST_NOW);
+const MINUTE_MS = 60 * 1000;
+const HOUR_MS = 60 * MINUTE_MS;
+const DAY_MS = 24 * 60 * MINUTE_MS;
 const source = {
   kind: 'observation' as const,
   reference: 'message:msg-001',
@@ -26,6 +31,20 @@ const source = {
 };
 const extractor = { runtimeId: 'runtime-test', runtimeVersion: '1.0.0' } as const;
 
+function at(offsetMs = 0): string {
+  return new Date(TEST_NOW_MS + offsetMs).toISOString();
+}
+
+function atTimezone(offsetMs: number, timezoneOffsetMinutes: number): string {
+  const instant = new Date(TEST_NOW_MS + offsetMs);
+  const local = new Date(instant.getTime() + timezoneOffsetMinutes * MINUTE_MS).toISOString().replace(/Z$/, '');
+  const sign = timezoneOffsetMinutes >= 0 ? '+' : '-';
+  const absoluteMinutes = Math.abs(timezoneOffsetMinutes);
+  const hours = String(Math.floor(absoluteMinutes / 60)).padStart(2, '0');
+  const minutes = String(absoluteMinutes % 60).padStart(2, '0');
+  return `${local}${sign}${hours}:${minutes}`;
+}
+
 function candidate(overrides: Partial<AtlasMemoryCandidate> = {}): AtlasMemoryCandidate {
   return {
     memoryClass: 'CUSTOMER_SCOPED',
@@ -33,7 +52,7 @@ function candidate(overrides: Partial<AtlasMemoryCandidate> = {}): AtlasMemoryCa
     source,
     extractor,
     confidence: 0.9,
-    retention: { policyId: 'customer-preference', expiresAt: '2026-08-10T00:00:00.000Z' },
+    retention: { policyId: 'customer-preference', expiresAt: at(10 * DAY_MS) },
     encryptionClass: 'tenant-managed',
     ...overrides,
   };
@@ -47,16 +66,16 @@ function observation(overrides: Partial<Parameters<AtlasMemoryStore['recordObser
     source,
     extractor,
     confidence: 0.8,
-    retention: { policyId: 'step', expiresAt: '2026-08-01T00:00:00.000Z' },
+    retention: { policyId: 'step', expiresAt: at(DAY_MS) },
     encryptionClass: 'ephemeral',
-    createdAt: '2026-07-31T12:00:00.000Z',
+    createdAt: TEST_NOW,
     ...overrides,
   };
 }
 
 describe('Atlas provenance-governed memory', () => {
   it('records provenance-bearing ephemeral observations and keeps retrieval scope-bound', () => {
-    const store = new AtlasMemoryStore({ clock: () => '2026-07-31T12:00:00.000Z', reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     const entry = store.recordObservation(observation());
 
     expect(entry.schemaVersion).toBe(ATLAS_MEMORY_SCHEMA);
@@ -68,7 +87,7 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('rejects forged durable writes and requires an accepted reviewed proposal', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     const forged = {
       ...observation({ memoryId: 'forged-durable' }),
       memoryClass: 'CUSTOMER_SCOPED',
@@ -89,7 +108,7 @@ describe('Atlas provenance-governed memory', () => {
       privacyClass: 'customer',
       safetyClass: 'medium',
       proposer: { type: 'agent', identity: 'runtime-test' },
-      createdAt: '2026-07-31T12:01:00.000Z',
+      createdAt: at(MINUTE_MS),
     });
 
     expect(proposal.spec.status).toBe('PROPOSED');
@@ -97,11 +116,11 @@ describe('Atlas provenance-governed memory', () => {
     expect(() => store.reviewLearning(scope, 'learning-001', { type: 'operator', identity: 'runtime-test' }, 'same runtime')).toThrowError(/cannot review its own/);
     expect(() => store.promoteLearning(scope, 'learning-001', 'memory-durable-001')).toThrowError(/must be accepted/);
 
-    const reviewed = store.reviewLearning(scope, 'learning-001', { type: 'operator', identity: 'operator-001' }, 'Evidence reviewed against the contradictory observation.', '2026-07-31T12:02:00.000Z');
+    const reviewed = store.reviewLearning(scope, 'learning-001', { type: 'operator', identity: 'operator-001' }, 'Evidence reviewed against the contradictory observation.', at(2 * MINUTE_MS));
     expect(reviewed.spec.status).toBe('ACCEPTED');
     expect(reviewed.spec.reviewer?.identity).toBe('operator-001');
 
-    const promoted = store.promoteLearning(scope, 'learning-001', 'memory-durable-001', '2026-07-31T12:03:00.000Z');
+    const promoted = store.promoteLearning(scope, 'learning-001', 'memory-durable-001', at(3 * MINUTE_MS));
     expect(promoted.memoryClass).toBe('CUSTOMER_SCOPED');
     expect(promoted.reviewStatus).toBe('APPROVED');
     expect(promoted.source).toEqual(source);
@@ -111,7 +130,7 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('rejects cross-scope proposal access and prevents tenant, Mission and customer leakage', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     store.recordObservation(observation({ memoryId: 'memory-customer-001' }));
     store.proposeLearning({
       proposalId: 'learning-scope-001',
@@ -134,25 +153,25 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('invalidates dependent durable memory on explicit deletion and retention expiry', () => {
-    const store = new AtlasMemoryStore({ clock: () => '2026-07-31T12:00:00.000Z', reviewerIdentities: ['operator-001'] });
-    const first = store.recordObservation(observation({ memoryId: 'memory-root', retention: { policyId: 'step', expiresAt: '2026-08-10T00:00:00.000Z' } }));
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
+    const first = store.recordObservation(observation({ memoryId: 'memory-root', retention: { policyId: 'step', expiresAt: at(10 * DAY_MS) } }));
     const dependent = store.recordObservation(observation({
       memoryId: 'memory-dependent',
       dependsOnMemoryIds: ['memory-root'],
-      retention: { policyId: 'step', expiresAt: '2026-08-10T00:00:00.000Z' },
+      retention: { policyId: 'step', expiresAt: at(10 * DAY_MS) },
     }));
 
-    const invalidated = store.invalidate(scope, first.memoryId, 'source deletion requested', '2026-07-31T12:04:00.000Z');
+    const invalidated = store.invalidate(scope, first.memoryId, 'source deletion requested', at(4 * MINUTE_MS));
     expect(invalidated.map((entry) => entry.memoryId)).toEqual(['memory-root', 'memory-dependent']);
     expect(store.retrieve(scope)).toEqual([]);
     expect(() => store.get(scope, dependent.memoryId)).toThrowError(/invalidated/);
 
-    const expiring = store.recordObservation(observation({ memoryId: 'memory-expiring', retention: { policyId: 'short', expiresAt: '2026-08-01T00:00:00.000Z' } }));
-    expect(store.expire('2026-08-01T00:00:00.000Z').map((entry) => entry.memoryId)).toContain(expiring.memoryId);
+    const expiring = store.recordObservation(observation({ memoryId: 'memory-expiring', retention: { policyId: 'short', expiresAt: at(DAY_MS) } }));
+    expect(store.expire(at(DAY_MS)).map((entry) => entry.memoryId)).toContain(expiring.memoryId);
   });
 
   it('rejects unauthorized reviewers and scope-incomplete durable memory', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     expect(() => store.proposeLearning({
       proposalId: 'learning-unauthorized',
       scope,
@@ -192,18 +211,18 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('hides expired entries and cascades supporting evidence invalidation', () => {
-    let now = '2026-07-31T12:00:00.000Z';
+    let now = TEST_NOW;
     const store = new AtlasMemoryStore({ clock: () => now, reviewerIdentities: ['operator-001'] });
-    const expiring = store.recordObservation(observation({ memoryId: 'memory-expiring-now', retention: { policyId: 'short', expiresAt: '2026-07-31T12:01:00.000Z' } }));
+    const expiring = store.recordObservation(observation({ memoryId: 'memory-expiring-now', retention: { policyId: 'short', expiresAt: at(MINUTE_MS) } }));
     expect(store.retrieve(scope)).toContainEqual(expiring);
-    now = '2026-07-31T12:02:00.000Z';
+    now = at(2 * MINUTE_MS);
     expect(store.retrieve(scope)).not.toContainEqual(expiring);
 
-    now = '2026-07-31T12:02:00.000Z';
+    now = at(2 * MINUTE_MS);
     const supporting = store.recordObservation(observation({
       memoryId: 'memory-supporting-active',
       source: { ...source, reference: 'message:msg-supporting-active' },
-      retention: { policyId: 'step', expiresAt: '2026-08-01T00:00:00.000Z' },
+      retention: { policyId: 'step', expiresAt: at(DAY_MS) },
     }));
     const proposal = store.proposeLearning({
       proposalId: 'learning-supporting-cascade',
@@ -216,15 +235,30 @@ describe('Atlas provenance-governed memory', () => {
       safetyClass: 'medium',
       proposer: { type: 'agent', identity: 'runtime-test' },
     });
-    store.reviewLearning(scope, proposal.metadata.id, { type: 'operator', identity: 'operator-001' }, 'Reviewed supporting observation', '2026-07-31T12:03:00.000Z');
-    const promoted = store.promoteLearning(scope, proposal.metadata.id, 'memory-supported', '2026-07-31T12:04:00.000Z');
-    const invalidated = store.invalidate(scope, supporting.memoryId, 'source deletion requested', '2026-07-31T12:05:00.000Z');
+    store.reviewLearning(scope, proposal.metadata.id, { type: 'operator', identity: 'operator-001' }, 'Reviewed supporting observation', at(3 * MINUTE_MS));
+    const promoted = store.promoteLearning(scope, proposal.metadata.id, 'memory-supported', at(4 * MINUTE_MS));
+    const invalidated = store.invalidate(scope, supporting.memoryId, 'source deletion requested', at(5 * MINUTE_MS));
     expect(invalidated.map((entry) => entry.memoryId)).toContain('memory-supported');
     expect(() => store.get(scope, promoted.memoryId)).toThrowError(/invalidated/);
   });
 
+  it('keeps future-dated evidence valid across timezone representations until the exact boundary', () => {
+    let now = TEST_NOW;
+    const store = new AtlasMemoryStore({ clock: () => now, reviewerIdentities: ['operator-001'] });
+    const evidence = store.recordObservation(observation({
+      memoryId: 'memory-timezone-boundary',
+      retention: { policyId: 'short', expiresAt: at(HOUR_MS) },
+    }));
+
+    expect(store.retrieve(scope)).toContainEqual(evidence);
+    now = atTimezone(30 * MINUTE_MS, 480);
+    expect(store.retrieve(scope)).toContainEqual(evidence);
+    now = atTimezone(HOUR_MS, 480);
+    expect(store.retrieve(scope)).not.toContainEqual(evidence);
+  });
+
   it('rejects fabricated provenance digests and wildcard scope reads', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     store.recordObservation(observation());
     expect(() => store.proposeLearning({
       proposalId: 'learning-fabricated-digest',
@@ -246,25 +280,25 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('enforces retention expiry for exact-id reads', () => {
-    let now = '2026-07-31T12:00:00.000Z';
+    let now = TEST_NOW;
     const store = new AtlasMemoryStore({ clock: () => now, reviewerIdentities: ['operator-001'] });
     const entry = store.recordObservation(observation({
       memoryId: 'memory-get-expiry',
-      retention: { policyId: 'short', expiresAt: '2026-07-31T12:01:00.000Z' },
+      retention: { policyId: 'short', expiresAt: at(MINUTE_MS) },
     }));
     expect(store.get(scope, entry.memoryId)).toEqual(entry);
-    now = '2026-07-31T12:01:00.000Z';
+    now = at(MINUTE_MS);
     expect(() => store.get(scope, entry.memoryId)).toThrowError(/expired/);
   });
 
   it('rejects expired or invalidated supporting evidence at proposal and promotion time', () => {
-    let now = '2026-07-31T12:00:00.000Z';
+    let now = TEST_NOW;
     const store = new AtlasMemoryStore({ clock: () => now, reviewerIdentities: ['operator-001'] });
     const expiring = store.recordObservation(observation({
       memoryId: 'memory-expiring-support',
-      retention: { policyId: 'short', expiresAt: '2026-07-31T12:01:00.000Z' },
+      retention: { policyId: 'short', expiresAt: at(MINUTE_MS) },
     }));
-    now = '2026-07-31T12:01:00.000Z';
+    now = at(MINUTE_MS);
     expect(() => store.proposeLearning({
       proposalId: 'learning-expired-support',
       scope,
@@ -277,7 +311,7 @@ describe('Atlas provenance-governed memory', () => {
       proposer: { type: 'agent', identity: 'runtime-test' },
     })).toThrowError(/expired/);
 
-    now = '2026-07-31T12:00:00.000Z';
+    now = TEST_NOW;
     const invalidated = store.recordObservation(observation({
       memoryId: 'memory-invalidated-support',
       source: { ...source, reference: 'message:invalidated-support' },
@@ -299,7 +333,7 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('normalizes reviewer identities before enforcing separation of duties', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     store.recordObservation(observation());
 
     store.proposeLearning({
@@ -340,7 +374,7 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('rejects promotion when a candidate dependency was invalidated after proposal review', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     const dependency = store.recordObservation(observation({
       memoryId: 'memory-dependency-invalidated',
       source: { ...source, reference: 'message:dependency-invalidated' },
@@ -369,12 +403,12 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('rejects promotion when a candidate dependency has expired', () => {
-    let now = '2026-07-31T12:00:00.000Z';
+    let now = TEST_NOW;
     const store = new AtlasMemoryStore({ clock: () => now, reviewerIdentities: ['operator-001'] });
     const dependency = store.recordObservation(observation({
       memoryId: 'memory-dependency-expired',
       source: { ...source, reference: 'message:dependency-expired' },
-      retention: { policyId: 'short', expiresAt: '2026-07-31T12:01:00.000Z' },
+      retention: { policyId: 'short', expiresAt: at(MINUTE_MS) },
     }));
     const supporting = store.recordObservation(observation({
       memoryId: 'memory-supporting-expiry',
@@ -391,7 +425,7 @@ describe('Atlas provenance-governed memory', () => {
       safetyClass: 'medium',
       proposer: { type: 'agent', identity: 'runtime-test' },
     });
-    now = '2026-07-31T12:02:00.000Z';
+    now = at(2 * MINUTE_MS);
     store.reviewLearning(scope, proposal.metadata.id, { type: 'operator', identity: 'operator-001' }, 'Reviewed before dependency expiry');
 
     expect(() => store.promoteLearning(scope, proposal.metadata.id, 'memory-after-expired-dependency')).toThrowError(/dependency .*expired/);
@@ -399,7 +433,7 @@ describe('Atlas provenance-governed memory', () => {
   });
 
   it('rejects forged source references even when the digest matches supporting evidence', () => {
-    const store = new AtlasMemoryStore({ reviewerIdentities: ['operator-001'] });
+    const store = new AtlasMemoryStore({ clock: () => TEST_NOW, reviewerIdentities: ['operator-001'] });
     const real = store.recordObservation(observation({
       memoryId: 'memory-real-source',
       source: { ...source, reference: 'message:real' },
