@@ -262,6 +262,58 @@
       "source_commit": "87a9224872febc7785d782620fe64e0bfefa7e6c",
       "artifact_digest": null,
       "checksum": "sha256:a840c770a567f0eb5a3e3f03d0273eb4874850c7f10aa6aa26821d3f31acdf60"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P0/local-package-2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P0-005-EVIDENCE-002",
+      "phase": "P0",
+      "work_item": "ATLAS-BMR2-P0-005",
+      "gate": "G0",
+      "result": "PASS",
+      "maturity": "LOCAL_PROVEN",
+      "classification": "LOCAL_PACKAGE_PROVEN",
+      "source_commit": "8d6538f60c6c03497183af2023f0294ac4ba4a3b",
+      "artifact_digest": null,
+      "checksum": "sha256:1a8113874f6eacce27eb64d6400b3d10f812bcc24761412ea4fa5165384c69d9"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P0-005-EVIDENCE-003",
+      "phase": "P0",
+      "work_item": "ATLAS-BMR2-P0-005",
+      "gate": "G0",
+      "result": "PASS",
+      "maturity": "CI_PROVEN",
+      "classification": "CI_PROVEN",
+      "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+      "artifact_digest": null,
+      "checksum": "sha256:4fd8474b3658458a22c5d9950eb837171d542318c054c77e7e709421b30dee84"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P1/local-simulator/2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P1-005-EVIDENCE-002",
+      "phase": "P1",
+      "work_item": "ATLAS-BMR2-P1-005",
+      "gate": "G1",
+      "result": "PASS",
+      "maturity": "LOCAL_PROVEN",
+      "classification": "LOCAL_INTEGRATED_SIMULATOR_PROVEN",
+      "source_commit": "8d6538f60c6c03497183af2023f0294ac4ba4a3b",
+      "artifact_digest": null,
+      "checksum": "sha256:df21a95651e278aba681705c840276f902b4b195e590dc29d6bd5c74ec05f44d"
+    },
+    {
+      "path": ".factory/evidence/atlas-bmr-002/P2/memory-and-learning/expiry-fixtures-2026-08-02.json",
+      "evidence_id": "ATLAS-BMR2-P2-005-EVIDENCE-004",
+      "phase": "P2",
+      "work_item": "ATLAS-BMR2-P2-005",
+      "gate": "G2",
+      "result": "PASS",
+      "maturity": "LOCAL_PROVEN",
+      "classification": "LOCAL_UNIT_PROVEN",
+      "source_commit": "26b57e74f379b16636c2a901dea6de8b2e03cb1c",
+      "artifact_digest": null,
+      "checksum": "sha256:55f8c7c0f62671371c150bb2de5522c513aea99562e7eb11f6a98b0d65984ebb"
     }
   ],
   "note": "Canonical index of local evidence records. Rich narrative fields remain in each evidence file; INCONCLUSIVE records are unfinished local verification and are not release-gate PASS."

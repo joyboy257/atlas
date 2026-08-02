@@ -1,0 +1,27 @@
+{
+  "evidence_id": "ATLAS-BMR2-P0-005-EVIDENCE-002",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P0",
+  "work_item": "ATLAS-BMR2-P0-005",
+  "gate": "G0",
+  "source_commit": "8d6538f60c6c03497183af2023f0294ac4ba4a3b",
+  "artifact_digest": null,
+  "environment": "local Atlas repository workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "npm exec --workspace packages/atlas -- tsc -p tsconfig.json --noEmit; npm run build --workspace packages/atlas; npm test --workspace packages/atlas -- --testTimeout=30000; npm run metadata:check --workspace packages/atlas; python3 docs/features/Atlas/ATLAS-BMR-002/tools/validate_package.py; sha256sum -c docs/features/Atlas/ATLAS-BMR-002/SHA256SUMS.txt; package-boundary Vitest slice",
+  "started_at": "2026-08-02T07:20:00Z",
+  "finished_at": "2026-08-02T07:55:00Z",
+  "actor": "principal Codex session",
+  "reviewer": null,
+  "result": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "classification": "LOCAL_PACKAGE_PROVEN",
+  "previous_claim": "Full package gate was 418/427 with nine known expired fixture failures; CI had no workflow or run.",
+  "corrected_claim": "Typecheck, build, complete package suite (42 files, 429 tests), metadata, package boundary, canonical BMR-002 validator, JSON authority parsing and canonical checksums pass locally.",
+  "limitations": [
+    "GitHub CI is not represented by this local evidence; a real CI result must be recorded separately against the final committed source.",
+    "No hosted, provider sandbox, staging, production, billing, commercial or compliance proof is claimed."
+  ],
+  "checksum": "sha256:1a8113874f6eacce27eb64d6400b3d10f812bcc24761412ea4fa5165384c69d9"
+}

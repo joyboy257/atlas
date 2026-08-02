@@ -1459,5 +1459,21 @@
       "release_impact": "Blocks G9",
       "status": "OPEN"
     }
-  ]
+  ],
+  "closure_reconciliation": {
+    "recorded_at": "2026-08-02T08:10:00Z",
+    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "resolved_local_gaps": [
+      "Deterministic expiry fixture drift in the focused memory and RBAC test lanes",
+      "Missing Atlas BMR-002 package CI workflow and real GitHub run evidence"
+    ],
+    "remaining_open_gap_classes": [
+      "Docker full-stack API/worker/PostgreSQL/Redis runtime is not present in the current source tree",
+      "Hosted Atlas Cloud and staging deployment",
+      "Provider sandbox account and credentials",
+      "Production authority and customer cohort",
+      "Billing settlement, commercial operation and compliance evidence"
+    ],
+    "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL"
+  }
 }

@@ -1,0 +1,52 @@
+{
+  "schema_version": "atlas.bmr002-final-decision/v1",
+  "programme": "ATLAS-BMR-002",
+  "recorded_at": "2026-08-02T08:10:00Z",
+  "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+  "branch": "codex/atlas-bmr-002-execution",
+  "previous_claims": [
+    "The full package suite was 418/427 with nine expired July fixtures.",
+    "No Atlas CI workflow or GitHub Actions run existed.",
+    "The sandbox was documented as a full API/worker/PostgreSQL/Redis stack, although the current source tree has no matching API, worker or sandbox-entry runtime entrypoints."
+  ],
+  "corrected_claims": [
+    "The deterministic memory and RBAC fixtures pass their focused 20/20 tests, including valid, expired, exact-boundary and timezone-independent cases.",
+    "The complete Atlas package gate passes 42 files and 429 tests, with typecheck, build, metadata, package boundary, canonical validator, JSON authority parsing and checksums passing.",
+    "The supported zero-credential local simulator and Workbench/dev-server path is proven; the stale full-stack Compose definition is not represented as a PostgreSQL/Redis/worker proof.",
+    "GitHub Actions run 30739027775 passes the focused BMR-002 workflow against source a55c1c6f46303bab35649149a289551386c6d11e."
+  ],
+  "classifications": {
+    "LOCAL_UNIT_PROVEN": "PROVEN",
+    "LOCAL_PACKAGE_PROVEN": "PROVEN",
+    "LOCAL_INTEGRATED_SIMULATOR_PROVEN": "PROVEN",
+    "CI_PROVEN": "PROVEN",
+    "HOSTED_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+    "PROVIDER_SANDBOX_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+    "STAGING_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+    "PRODUCTION_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+    "BILLING_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+    "COMMERCIAL_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+    "COMPLIANCE_PROOF_BLOCKED": "BLOCKED_EXTERNAL"
+  },
+  "external_discovery": {
+    "github_ci": "AVAILABLE_AND_AUTHORISED",
+    "hosted_atlas_cloud": "NOT_CONFIGURED",
+    "provider_sandbox": "CONFIGURED_CREDENTIAL_MISSING",
+    "staging": "NOT_CONFIGURED",
+    "production": "NOT_CONFIGURED",
+    "billing": "NOT_CONFIGURED",
+    "commercial": "NOT_CONFIGURED",
+    "compliance": "NOT_CONFIGURED",
+    "infisical": "NOT_FOUND"
+  },
+  "remaining_blockers": [
+    "The documented Docker Compose full-stack path cannot be claimed: its Atlas API, worker, sandbox-entry and migration runtime are absent from the current source tree, and host ports 5433/6380 are occupied by unrelated local services. No product runtime was added in this closure sprint.",
+    "No hosted Atlas Cloud deployment or authorised staging URL is configured.",
+    "No provider sandbox account/credential is configured; simulator evidence remains local fixture proof only.",
+    "No production authority, customer cohort, billing settlement, commercial operation or formal compliance evidence is configured or authorised."
+  ],
+  "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
+  "release_ready": false,
+  "bmr001_history": "UNCHANGED; no BMR-001 tag or historical file was modified in this worktree.",
+  "secret_handling": "No real secret values were printed, committed or used."
+}

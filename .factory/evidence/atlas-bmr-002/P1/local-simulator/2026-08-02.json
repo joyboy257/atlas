@@ -1,0 +1,28 @@
+{
+  "evidence_id": "ATLAS-BMR2-P1-005-EVIDENCE-002",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P1",
+  "work_item": "ATLAS-BMR2-P1-005",
+  "gate": "G1",
+  "source_commit": "8d6538f60c6c03497183af2023f0294ac4ba4a3b",
+  "artifact_digest": null,
+  "environment": "local zero-credential Atlas simulator and project Workbench path",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "npx vitest run --testTimeout=30000 __tests__/dev-server.test.ts __tests__/messaging-simulator.test.ts __tests__/local-runtime.test.ts; atlas init; atlas doctor --json; atlas test --json; atlas replay --json",
+  "started_at": "2026-08-02T07:35:00Z",
+  "finished_at": "2026-08-02T07:50:00Z",
+  "actor": "principal Codex session",
+  "reviewer": null,
+  "result": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "classification": "LOCAL_INTEGRATED_SIMULATOR_PROVEN",
+  "previous_claim": "The sandbox was described as a full API/worker/PostgreSQL/Redis stack, but no current Atlas API, worker or sandbox-entry source entrypoints exist.",
+  "corrected_claim": "The repository-supported zero-credential simulator journey passes: 44 focused dev-server/simulator/runtime tests, disposable project init and doctor, exactly-once Mission test, replay, simulator delivery, durable local receipt/trace projections, and Workbench/dev-server contract coverage.",
+  "limitations": [
+    "The stale Docker Compose full-stack definition renders and builds but cannot start: host ports 5433/6380 are occupied by unrelated services, and its referenced API/worker/sandbox-entry entrypoints and migration runtime are absent from this source tree.",
+    "No PostgreSQL/Redis migration, cross-process worker restart, hosted, provider sandbox, staging, production, billing, commercial or compliance proof is claimed.",
+    "Provider simulation is local fixture behavior only and is not provider sandbox proof."
+  ],
+  "checksum": "sha256:df21a95651e278aba681705c840276f902b4b195e590dc29d6bd5c74ec05f44d"
+}

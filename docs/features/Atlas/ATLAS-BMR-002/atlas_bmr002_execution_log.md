@@ -1406,3 +1406,68 @@ This remains `LOCAL_PROVEN` with external gates `BLOCKED_EXTERNAL` or `INCONCLUS
 ### Commit
 
 - `87a9224872febc7785d782620fe64e0bfefa7e6c` — `fix(atlas): harden local trust and usage controls`
+
+## 2026-08-02T08:10:00Z — ATLAS-BMR2 CRITICAL-PATH CLOSURE RECONCILIATION
+
+This append-only checkpoint closes the locally achievable deterministic-test, package, simulator and CI gates. It records the Compose boundary and all remaining external proof blockers without adding product runtime functionality or rewriting historical evidence.
+
+### Previous claims
+
+- The complete package suite was `418/427`, with nine July-dated expiry fixtures failing in `memory.test.ts` and `rbac.test.ts`.
+- No Atlas GitHub Actions workflow or real run existed.
+- The sandbox documentation described an API/worker/PostgreSQL/Redis stack as runnable.
+
+### Corrected claims and reasons
+
+- The nine failures were deterministic fixture drift, not production expiry behavior. A fixed UTC test clock, relative fixture builders, timezone-equivalent timestamps and exact-boundary assertions now produce `20/20` focused tests and `429/429` tests across `42` package files.
+- The minimum Atlas workflow is committed and real GitHub run `30739027775` passed against source `a55c1c6f46303bab35649149a289551386c6d11e`. The first run failed only because shallow checkout hid the metadata source-history binding; `fetch-depth: 0` repaired that demonstrated CI defect and the rerun passed.
+- The supported zero-credential local simulator and Workbench/dev-server path is `LOCAL_INTEGRATED_SIMULATOR_PROVEN`. The full Docker Compose path is not claimed because the current source tree has no matching API, worker, sandbox-entry or PostgreSQL migration runtime, and host ports `5433` and `6380` are occupied by unrelated services. No product runtime was added because this sprint forbids product development.
+
+### Verification commands and results
+
+- `npm test -- --testTimeout=30000 __tests__/memory.test.ts __tests__/rbac.test.ts` — `2` files, `20/20` passed.
+- `npm test -- --testTimeout=30000` — `42` files, `429/429` passed.
+- `npm exec --workspace packages/atlas -- tsc -p tsconfig.json --noEmit` — PASS.
+- `npm run build --workspace packages/atlas` — PASS.
+- `npm run metadata:check --workspace packages/atlas` — PASS; source content digest `sha256:9ce82f0eeacbb6ea5c9a665fe0fa2097563efea094ab74dfd48b1f946850feb3`.
+- `npm exec --workspace packages/atlas -- vitest run --testTimeout=30000 __tests__/package.test.ts __tests__/package-docs.test.ts __tests__/mission-persistence.test.ts` — `3` files, `21/21` passed.
+- `python3 docs/features/Atlas/ATLAS-BMR-002/tools/validate_package.py` — PASS.
+- JSON authority parsing and `(cd docs/features/Atlas/ATLAS-BMR-002 && sha256sum -c SHA256SUMS.txt)` — PASS before this checkpoint; final manifest is regenerated after all canonical edits.
+- `docker compose -f deploy/docker-compose.sandbox.yml config --quiet` — PASS; image build PASS; startup blocked before Atlas services by occupied host ports and stale absent Atlas entrypoints.
+- `npx vitest run --testTimeout=30000 __tests__/dev-server.test.ts __tests__/messaging-simulator.test.ts __tests__/local-runtime.test.ts` — `3` files, `44/44` passed.
+- Disposable `atlas init`, `atlas doctor --json`, `atlas test --json` and `atlas replay --json` — PASS; exactly-once simulator delivery, replay, receipts and trace state verified.
+- `gh run view 30739027775 -R joyboy257/atlas` — PASS for typecheck, build, `429/429` suite, metadata, package boundary, canonical validator/secret scan, JSON authorities and checksums.
+
+### Evidence and digest reconciliation
+
+The prior state is preserved in the historical evidence and earlier log entries. New evidence records were added for deterministic unit proof, local simulator proof, local package proof and CI proof; `evidence-index.v1.json`, board state, release gates, gap/requirement traceability, package metadata, final decision and `SHA256SUMS.txt` are updated together.
+
+| Authority | Previous digest at correction start | Corrected digest |
+| --- | --- | --- |
+| `execution-board.v3.json` | `ad1650433924c0d79e88eb6e8aa159ff1ced64629414bff40663effac1cabf02` | regenerated in final checksum manifest |
+| `evidence-index.v1.json` | `289ea1f5190f7b07c8af00ba9a81c2932b3ce2aaea097aa8027caf474a7bb959` | regenerated in final checksum manifest |
+| `release-gates.v3.json` | `efb2d740659a29b3b94b02ec2f2b7a3567002e983a50234dba7248df60353143` | regenerated in final checksum manifest |
+| `gap-register.v3.json` | `2d9cf3d1cf57284df3e919dee61d502ef8f3c9895053d97af358d1329d7a3143` | regenerated in final checksum manifest |
+| `requirements-traceability.v3.json` | `3b7d9ca31a0e9ed200ef681341e84cfabaf2ff1a9b145731c23fa9e03b3713a2` | regenerated in final checksum manifest |
+| `package-metadata.v3.json` | `de22f1809494d5b84f8da05804f117b9def7fa3b7bd6aec70d44d0f8aa2f7794` | regenerated in final checksum manifest |
+| `atlas_bmr002_execution_log.md` | `547f8f02546238c26f04ceca741e6b1a5c89106c33aa8f170d189712adea2816` | final self-digest is recorded by `SHA256SUMS.txt` after append |
+
+### External discovery
+
+- Hosted Atlas Cloud: `NOT_CONFIGURED`.
+- Provider sandbox: `CONFIGURED_CREDENTIAL_MISSING`; only simulator/local-fixture modes are configured.
+- Staging: `NOT_CONFIGURED`.
+- Production: `NOT_CONFIGURED`.
+- Billing/commercial: `NOT_CONFIGURED`.
+- Compliance systems: `NOT_CONFIGURED`.
+- Infisical: `NOT_FOUND`.
+- GitHub CI: `AVAILABLE_AND_AUTHORISED` through SSH push; no provider or production credentials were used.
+
+### Preservation and verdict
+
+- Reported commits `87a9224` and `4456e19` resolve with their recorded ancestry.
+- `atlas-bmr-001-closed` is absent from this Atlas worktree and remote tag listing; no BMR-001 tag or historical file was created, changed or deleted.
+- No real secret value was printed, committed or used.
+- Classifications: `LOCAL_UNIT_PROVEN`, `LOCAL_PACKAGE_PROVEN`, `LOCAL_INTEGRATED_SIMULATOR_PROVEN` and `CI_PROVEN` are proven. `HOSTED_PROOF_BLOCKED`, `PROVIDER_SANDBOX_PROOF_BLOCKED`, `STAGING_PROOF_BLOCKED`, `PRODUCTION_PROOF_BLOCKED`, `BILLING_PROOF_BLOCKED`, `COMMERCIAL_PROOF_BLOCKED` and `COMPLIANCE_PROOF_BLOCKED` remain blocked externally.
+
+`ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL` — local implementation, package, simulator and CI gates are proven; Atlas is not release-ready because hosted, provider, staging, production, billing, commercial and compliance proof is not configured or authorised.

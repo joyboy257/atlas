@@ -1881,5 +1881,25 @@
       ],
       "status": "NOT_SATISFIED"
     }
-  ]
+  ],
+  "closure_reconciliation": {
+    "recorded_at": "2026-08-02T08:10:00Z",
+    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "proven_local_classifications": [
+      "LOCAL_UNIT_PROVEN",
+      "LOCAL_PACKAGE_PROVEN",
+      "LOCAL_INTEGRATED_SIMULATOR_PROVEN",
+      "CI_PROVEN"
+    ],
+    "blocked_external_classifications": [
+      "HOSTED_PROOF_BLOCKED",
+      "PROVIDER_SANDBOX_PROOF_BLOCKED",
+      "STAGING_PROOF_BLOCKED",
+      "PRODUCTION_PROOF_BLOCKED",
+      "BILLING_PROOF_BLOCKED",
+      "COMMERCIAL_PROOF_BLOCKED",
+      "COMPLIANCE_PROOF_BLOCKED"
+    ],
+    "note": "Requirement status remains NOT_SATISFIED where the requirement's full product-plane acceptance exceeds the locally proven simulator/package/CI boundary."
+  }
 }

@@ -2778,5 +2778,32 @@
     "ATLAS_BMR_002_EXECUTION_FAILED",
     "ATLAS_BMR_002_ROLLED_BACK"
   ],
-  "active_work_item": "ATLAS-BMR2-P2-001"
+  "active_work_item": "ATLAS-BMR2-P2-001",
+  "closure_reconciliation": {
+    "recorded_at": "2026-08-02T08:10:00Z",
+    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "test_inventory": {
+      "files": 42,
+      "tests": 429,
+      "status": "PASS"
+    },
+    "classifications": {
+      "LOCAL_UNIT_PROVEN": "PROVEN",
+      "LOCAL_PACKAGE_PROVEN": "PROVEN",
+      "LOCAL_INTEGRATED_SIMULATOR_PROVEN": "PROVEN",
+      "CI_PROVEN": "PROVEN",
+      "HOSTED_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+      "PROVIDER_SANDBOX_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+      "STAGING_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+      "PRODUCTION_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+      "BILLING_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+      "COMMERCIAL_PROOF_BLOCKED": "BLOCKED_EXTERNAL",
+      "COMPLIANCE_PROOF_BLOCKED": "BLOCKED_EXTERNAL"
+    },
+    "ci_run_id": "30739027775",
+    "ci_head": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "sandbox": "LOCAL_INTEGRATED_SIMULATOR_PROVEN; full Docker API/worker/PostgreSQL/Redis path not claimable from current source",
+    "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
+    "release_ready": false
+  }
 }

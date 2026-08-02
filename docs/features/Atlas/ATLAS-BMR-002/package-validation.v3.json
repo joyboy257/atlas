@@ -13,7 +13,7 @@
     {
       "name": "json_parse",
       "passed": true,
-      "detail": "13 JSON files parsed"
+      "detail": "14 JSON files parsed"
     },
     {
       "name": "work_item_ids_unique",

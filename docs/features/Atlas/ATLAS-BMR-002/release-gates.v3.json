@@ -35,10 +35,13 @@
         "Historical evidence was silently edited",
         "A first-class product plane is removed without an evidence-backed decision"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "PASS",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P0/local-package-2026-08-02.json",
+        ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G1",
@@ -57,10 +60,12 @@
         "Restart loses Mission state",
         "G1 is presented as complete-product certification"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "IN_PROGRESS",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P1/local-simulator/2026-08-02.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G2",
@@ -81,10 +86,14 @@
         "Paused/cancelled Missions continue acting",
         "G2 is presented as complete-product certification"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "IN_PROGRESS",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P2/memory-and-learning/expiry-fixtures-2026-08-02.json",
+        ".factory/evidence/atlas-bmr-002/P2/coordinator-recovery/evidence.json",
+        ".factory/evidence/atlas-bmr-002/P2/action-outbox/evidence.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G3",
@@ -103,10 +112,12 @@
         "Local journey requires Cloud/provider/model credentials",
         "G3 is presented as complete-product certification"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "BLOCKED_EXTERNAL",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P0/ci-2026-08-02.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G4",
@@ -127,10 +138,12 @@
         "No named incident owner",
         "G4 is presented as complete-product certification"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "BLOCKED_EXTERNAL",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P4/production-authority/evidence.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G5",
@@ -150,10 +163,12 @@
         "Unsupported account/region is called production-supported",
         "G5 is presented as complete-product certification"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "BLOCKED_EXTERNAL",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P5/provider-harness/evidence.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G6",
@@ -173,10 +188,13 @@
         "Deletion/retention behavior is untested",
         "G6 is presented as complete-product certification"
       ],
-      "verdict": "NOT_EVALUATED",
-      "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "verdict": "BLOCKED_EXTERNAL",
+      "evidence_refs": [
+        ".factory/evidence/atlas-bmr-002/P6/rbac-machine-identity/evidence.json",
+        ".factory/evidence/atlas-bmr-002/P6/usage-cost-ledger/evidence.json"
+      ],
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G7",
@@ -195,10 +213,10 @@
         "A first-class plane is omitted without an explicit scope decision",
         "Public/private/Mirai authority is duplicated"
       ],
-      "verdict": "NOT_EVALUATED",
+      "verdict": "BLOCKED_EXTERNAL",
       "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G8",
@@ -218,10 +236,10 @@
         "Critical evidence is stale",
         "A workstream gate is substituted for G8"
       ],
-      "verdict": "NOT_EVALUATED",
+      "verdict": "BLOCKED_EXTERNAL",
       "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     },
     {
       "id": "G9",
@@ -241,10 +259,17 @@
         "Open critical risks lack owner and disposition",
         "Execution complete is declared without the production cohort"
       ],
-      "verdict": "NOT_EVALUATED",
+      "verdict": "BLOCKED_EXTERNAL",
       "evidence_refs": [],
-      "reviewed_by": null,
-      "reviewed_at": null
+      "reviewed_by": "principal Codex session",
+      "reviewed_at": "2026-08-02T08:10:00Z"
     }
-  ]
+  ],
+  "closure_reconciliation": {
+    "recorded_at": "2026-08-02T08:10:00Z",
+    "source_commit": "a55c1c6f46303bab35649149a289551386c6d11e",
+    "terminal_verdict": "ATLAS_BMR_002_EXECUTION_BLOCKED_EXTERNAL",
+    "release_ready": false,
+    "note": "G0 is package/CI proven; G1-G2 remain in local build-readiness progress; G3-G9 remain blocked by missing hosted, provider, staging, production, billing, commercial and compliance evidence."
+  }
 }

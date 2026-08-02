@@ -53,6 +53,7 @@
 - `docs/features/Atlas/ATLAS-BMR-002/capability-maturity.v1.json`
 - `docs/features/Atlas/ATLAS-BMR-002/evidence-index.v1.json`
 - `docs/features/Atlas/ATLAS-BMR-002/execution-board.v3.json`
+- `docs/features/Atlas/ATLAS-BMR-002/final-decision.v1.json`
 - `docs/features/Atlas/ATLAS-BMR-002/founder-decisions.v3.json`
 - `docs/features/Atlas/ATLAS-BMR-002/gap-register.v3.json`
 - `docs/features/Atlas/ATLAS-BMR-002/package-metadata.v3.json`

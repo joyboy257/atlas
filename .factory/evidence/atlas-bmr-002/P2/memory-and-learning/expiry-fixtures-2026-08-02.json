@@ -1,0 +1,26 @@
+{
+  "evidence_id": "ATLAS-BMR2-P2-005-EVIDENCE-004",
+  "programme": "ATLAS-BMR-002",
+  "phase": "P2",
+  "work_item": "ATLAS-BMR2-P2-005",
+  "gate": "G2",
+  "source_commit": "26b57e74f379b16636c2a901dea6de8b2e03cb1c",
+  "artifact_digest": null,
+  "environment": "local zero-credential Atlas package workspace",
+  "region": null,
+  "provider_account_scope": null,
+  "command_or_journey": "npm test -- --testTimeout=30000 __tests__/memory.test.ts __tests__/rbac.test.ts; npm test -- --testTimeout=30000",
+  "started_at": "2026-08-02T07:30:00Z",
+  "finished_at": "2026-08-02T07:55:00Z",
+  "actor": "principal Codex session",
+  "reviewer": null,
+  "result": "PASS",
+  "maturity": "LOCAL_PROVEN",
+  "classification": "LOCAL_UNIT_PROVEN",
+  "previous_claim": "418/427 package tests passed; nine July-dated expiry fixtures failed.",
+  "corrected_claim": "The two focused suites pass 20/20, and the complete Atlas package suite passes 429/429 across 42 files. Expiry fixtures use a fixed UTC clock, relative timestamps, timezone-equivalent instants, and exact-boundary assertions.",
+  "limitations": [
+    "This evidence proves deterministic local unit behavior only; it does not prove database, queue, worker, hosted, provider, staging, production, billing, commercial or compliance environments."
+  ],
+  "checksum": "sha256:55f8c7c0f62671371c150bb2de5522c513aea99562e7eb11f6a98b0d65984ebb"
+}
