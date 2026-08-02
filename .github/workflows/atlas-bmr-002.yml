@@ -1,0 +1,72 @@
+name: Atlas BMR-002
+
+on:
+  push:
+    branches:
+      - main
+      - codex/atlas-bmr-002-execution
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify Atlas BMR-002 package
+    runs-on: ubuntu-latest
+    env:
+      ATLAS_CHANNEL_MODE: simulator
+      ATLAS_MODEL_MODE: local-fixture
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Typecheck Atlas package
+        run: npm exec --workspace packages/atlas -- tsc -p tsconfig.json --noEmit
+
+      - name: Build Atlas package
+        run: npm run build --workspace packages/atlas
+
+      - name: Run complete Atlas package suite
+        run: npm test --workspace packages/atlas -- --testTimeout=30000
+
+      - name: Check Atlas package metadata
+        run: npm run metadata:check --workspace packages/atlas
+
+      - name: Check public/private package boundary
+        run: >-
+          npm exec --workspace packages/atlas -- vitest run
+          --testTimeout=30000
+          __tests__/package.test.ts
+          __tests__/package-docs.test.ts
+          __tests__/mission-persistence.test.ts
+
+      - name: Validate BMR-002 authorities and secret boundary
+        run: python3 docs/features/Atlas/ATLAS-BMR-002/tools/validate_package.py
+
+      - name: Parse BMR-002 JSON authorities
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("docs/features/Atlas/ATLAS-BMR-002")
+          paths = sorted(root.glob("*.json")) + sorted((root / "schemas").glob("*.json"))
+          for path in paths:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"Parsed {len(paths)} BMR-002 JSON authorities")
+          PY
+
+      - name: Verify BMR-002 evidence checksums
+        working-directory: docs/features/Atlas/ATLAS-BMR-002
+        run: sha256sum -c SHA256SUMS.txt
