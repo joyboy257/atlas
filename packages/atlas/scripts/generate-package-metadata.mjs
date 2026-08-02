@@ -30,12 +30,13 @@ const sourceContentDigest = digest(Buffer.from(contentEntries.map((entry) => `${
 const packageRelative = path.relative(repositoryRoot, packageRoot);
 const sourcePathspecs = [...includedRoots, ...includedFiles].map((relativePath) => path.join(packageRelative, relativePath));
 const status = execFileSync('git', ['status', '--porcelain', '--', ...sourcePathspecs], { cwd: repositoryRoot, encoding: 'utf8' }).trim();
+const sourceHeadSha = git(['rev-list', '-1', 'HEAD', '--', ...includedRoots, ...includedFiles]);
 const metadata = {
   schema_version: 'atlas.package-source/v1',
   package_name: packageJson.name,
   package_version: packageJson.version,
-  source_head_sha: git(['rev-parse', 'HEAD']),
-  base_tree_sha: git(['rev-parse', 'HEAD^{tree}']),
+  source_head_sha: sourceHeadSha,
+  base_tree_sha: git(['rev-parse', `${sourceHeadSha}^{tree}`]),
   source_content_sha256: `sha256:${sourceContentDigest}`,
   source_dirty: status.length > 0,
   source_file_count: contentEntries.length,

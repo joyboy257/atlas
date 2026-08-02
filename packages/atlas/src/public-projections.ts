@@ -653,7 +653,9 @@ function projectTrace(trace: AtlasLocalTrace): AtlasPublicTraceSummary {
 
 function publicCausationId(value: string): string {
   const controlMatch = value.match(/^(local\.control\.[a-z-]+)/);
-  return controlMatch?.[1] ?? value;
+  if (controlMatch) return controlMatch[1];
+  if (value.startsWith('local.coordinator.takeover:')) return 'local.control.takeover';
+  return value;
 }
 
 export function projectReceipt(receipt: AtlasLocalReceipt): AtlasPublicReceiptSummary {

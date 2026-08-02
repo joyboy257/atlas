@@ -119,6 +119,12 @@ describe('Atlas local Mission control surfaces', () => {
     const handedOff = await restarted.inspect(inbound.missionId);
     expect(handedOff.mission?.spec.state).toBe('HANDED_OFF');
     expect(handedOff.ledger?.events.at(-1)?.spec.resultingState).toBe('HANDED_OFF');
+    expect(handedOff.ledger?.events.at(-1)?.spec.causationId)
+      .toBe('local.coordinator.takeover:operator-human:customer requested a person');
+    const projectedTakeover = projectMissionEvent(handedOff.ledger?.events.at(-1)! as any);
+    expect(projectedTakeover.spec.causationId).toBe('local.control.takeover');
+    expect(JSON.stringify(projectedTakeover)).not.toContain('operator-human');
+    expect(JSON.stringify(projectedTakeover)).not.toContain('customer requested a person');
 
     await expect(restarted.approve(inbound.runtime.approval.id, 'operator-human')).rejects.toMatchObject({ code: 'CONFLICT' });
     await expect(restarted.deliver(committed.runtime.outbox.id, {

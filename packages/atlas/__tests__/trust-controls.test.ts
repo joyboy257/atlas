@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -29,11 +29,53 @@ describe('LocalAuditLedger', () => {
     }
   });
   it('redacts nested secret material before persistence', () => { expect(redactSecrets({ password: 'x', nested: { authorization: 'y', keep: 'z' } })).toEqual({ password: '[REDACTED]', nested: { authorization: '[REDACTED]', keep: 'z' } }); });
-  it('rejects non-string digest inputs and corrupted persisted audit state', async () => {
+  it('rejects malformed digest inputs and corrupted persisted audit state', async () => {
     const { ledger } = await fixture();
-    await expect(ledger.append(event({ beforeDigest: 42 }) as never)).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+    for (const key of ['beforeDigest', 'afterDigest']) {
+      await expect(ledger.append(event({ [key]: 42 }) as never)).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+      await expect(ledger.append(event({ [key]: ' ' }) as never)).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+      await expect(ledger.append(event({ [key]: { digest: 'not-a-string' } }) as never)).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+    }
     const valid = await ledger.append(event({ eventId: 'audit-valid' }));
     await writeFile(ledger.filePath, JSON.stringify({ schemaVersion: ATLAS_AUDIT_SCHEMA, events: [{ ...valid.event, afterDigest: { digest: 'not-a-string' } }] }));
     await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+  });
+
+  it('rejects tampered payloads when loading or appending without rewriting the ledger', async () => {
+    const { ledger } = await fixture();
+    const valid = await ledger.append(event({ eventId: 'audit-tamper' }));
+    await writeFile(ledger.filePath, JSON.stringify({ schemaVersion: ATLAS_AUDIT_SCHEMA, events: [{ ...valid.event, action: 'mission.cancel' }] }));
+    await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_STATE' });
+    const before = await readFile(ledger.filePath, 'utf8');
+    await expect(ledger.append(event({ eventId: 'audit-next' }))).rejects.toMatchObject({ code: 'INVALID_STATE' });
+    expect(await readFile(ledger.filePath, 'utf8')).toBe(before);
+  });
+
+  it('covers nested digest metadata in the event hash', async () => {
+    const { ledger } = await fixture();
+    const valid = await ledger.append(event({ eventId: 'audit-nested', metadata: { digest: 'metadata-v1' } }) as never);
+    await writeFile(ledger.filePath, JSON.stringify({ schemaVersion: ATLAS_AUDIT_SCHEMA, events: [{ ...valid.event, metadata: { digest: 'metadata-v2' } }] }));
+    await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_STATE' });
+  });
+
+  it('rejects tampered digests and previous links on load and append', async () => {
+    const { ledger } = await fixture();
+    const first = await ledger.append(event({ eventId: 'audit-chain-1' }));
+    const second = await ledger.append(event({ eventId: 'audit-chain-2' }));
+    const tamperedStates = [
+      [
+        { ...first.event, digest: 'sha256:tampered' },
+        second.event,
+      ],
+      [
+        first.event,
+        { ...second.event, previousDigest: 'sha256:tampered' },
+      ],
+    ];
+    for (const [index, events] of tamperedStates.entries()) {
+      await writeFile(ledger.filePath, JSON.stringify({ schemaVersion: ATLAS_AUDIT_SCHEMA, events }));
+      await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_STATE' });
+      await expect(ledger.append(event({ eventId: `audit-after-${index}` }))).rejects.toMatchObject({ code: 'INVALID_STATE' });
+    }
   });
 });

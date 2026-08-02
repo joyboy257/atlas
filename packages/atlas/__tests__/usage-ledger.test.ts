@@ -35,4 +35,47 @@ describe('LocalUsageLedger', () => {
     await writeFile(path.join(root, '.atlas', 'usage-ledger.json'), JSON.stringify({ schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA, events: [validEvent], settlements: [{ ...settlement, eventId: 'missing' }] }));
     await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_STATE' });
   });
+  it('validates optional attribution IDs and provider references as non-empty strings', async () => {
+    const { ledger } = await fixture();
+    for (const [key, value] of [['agentVersionId', 42], ['missionId', false], ['actionId', {}]] as const) {
+      await expect(ledger.record(event({ eventId: `invalid-${key}`, attribution: { ...attribution, [key]: value } }))).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+    }
+    await expect(ledger.record(event({ eventId: 'invalid-provider-reference', providerReference: '   ' }))).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+  });
+  it('accepts only closed finite non-negative numeric usage fields', async () => {
+    const { ledger } = await fixture();
+    const invalidUsage = [
+      ['usage-unknown-key', { inputTokens: 1, totalTokens: 2 }],
+      ['usage-string', { inputTokens: '1' }],
+      ['usage-infinity', { inputTokens: Infinity }],
+      ['usage-negative', { inputTokens: -1 }],
+    ] as const;
+    for (const [eventId, usage] of invalidUsage) {
+      await expect(ledger.record(event({ eventId, usage }))).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+    }
+    await expect(ledger.record(event({ eventId: 'usage-fractional', usage: { inputTokens: 1.5 } }))).resolves.toMatchObject({ replayed: false });
+  });
+  it('rejects coercive values before JSON normalization', async () => {
+    const { ledger } = await fixture();
+    const boxedProviderReference = new String('provider-1');
+    const coerciveUsage = { toJSON: () => 1 };
+    await expect(ledger.record(event({ eventId: 'boxed-provider', providerReference: boxedProviderReference }) as never)).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+    await expect(ledger.record(event({ eventId: 'coercive-usage', usage: { inputTokens: coerciveUsage } }) as never)).rejects.toMatchObject({ code: 'INVALID_EVENT' });
+  });
+  it('requires an event provider reference before settlement reconciliation', async () => {
+    const { root, ledger } = await fixture();
+    await ledger.record(event({ eventId: 'usage-without-provider', providerReference: undefined }));
+    await expect(ledger.settle({ eventId: 'usage-without-provider', providerReference: 'provider-1', amountMinor: 12, currency: 'USD', invoiceReference: 'invoice-1', settledAt: '2026-08-01T12:00:00.000Z' })).rejects.toMatchObject({ code: 'INVALID_SETTLEMENT' });
+    const validEvent = { ...event({ eventId: 'persisted-without-provider', providerReference: undefined }), schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA };
+    const settlement = { settlementId: 'settlement-persisted', eventId: 'persisted-without-provider', providerReference: 'provider-1', amountMinor: 12, currency: 'USD', invoiceReference: 'invoice-1', settledAt: '2026-08-01T12:00:00.000Z' };
+    await writeFile(path.join(root, '.atlas', 'usage-ledger.json'), JSON.stringify({ schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA, events: [validEvent], settlements: [settlement] }));
+    await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_STATE' });
+  });
+  it('rejects persisted settlements without an event provider reference', async () => {
+    const { root, ledger } = await fixture();
+    const { providerReference: _providerReference, ...eventWithoutProvider } = event({ eventId: 'persisted-without-provider' });
+    const settlement = { settlementId: 'settlement-persisted', eventId: 'persisted-without-provider', providerReference: 'provider-1', amountMinor: 12, currency: 'USD', invoiceReference: 'invoice-1', settledAt: '2026-08-01T12:00:00.000Z' };
+    await writeFile(path.join(root, '.atlas', 'usage-ledger.json'), JSON.stringify({ schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA, events: [{ ...eventWithoutProvider, schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA }], settlements: [settlement] }));
+    await expect(ledger.readState()).rejects.toMatchObject({ code: 'INVALID_STATE' });
+  });
 });

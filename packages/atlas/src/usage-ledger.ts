@@ -78,6 +78,11 @@ export class AtlasUsageLedgerError extends Error {
 }
 
 const EMPTY_STATE: AtlasUsageLedgerState = Object.freeze({ schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA, events: Object.freeze([]), settlements: Object.freeze([]) });
+const USAGE_KINDS = new Set<AtlasUsageKind>(['model', 'runtime', 'tool', 'provider', 'media', 'storage', 'observability']);
+const REQUIRED_ATTRIBUTION_FIELDS = ['tenantId', 'organisationId', 'projectId', 'environmentId'] as const;
+const OPTIONAL_ATTRIBUTION_FIELDS = ['agentVersionId', 'missionId', 'actionId'] as const;
+const ATTRIBUTION_FIELDS = new Set<string>([...REQUIRED_ATTRIBUTION_FIELDS, ...OPTIONAL_ATTRIBUTION_FIELDS]);
+const USAGE_FIELDS = new Set(['inputTokens', 'outputTokens', 'bytes', 'calls']);
 
 export class LocalUsageLedger {
   readonly root: string;
@@ -100,8 +105,9 @@ export class LocalUsageLedger {
   async readState(): Promise<AtlasUsageLedgerState> { return this.load(); }
 
   async record(event: Omit<AtlasUsageEvent, 'schemaVersion'>): Promise<Readonly<{ event: AtlasUsageEvent; replayed: boolean }>> {
-    const normalized = freezeClone({ ...event, schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA });
-    validateEvent(normalized);
+    const candidate = { ...event, schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA } as AtlasUsageEvent;
+    validateEvent(candidate);
+    const normalized = freezeClone(candidate);
     return this.transaction(async (state) => {
       const existing = state.events.find((candidate) => candidate.eventId === normalized.eventId);
       if (existing) {
@@ -113,12 +119,13 @@ export class LocalUsageLedger {
   }
 
   async settle(input: Omit<AtlasUsageSettlement, 'settlementId'> & { settlementId?: string }): Promise<Readonly<{ settlement: AtlasUsageSettlement; replayed: boolean }>> {
-    const settlement = freezeClone({ ...input, settlementId: input.settlementId ?? `settlement_${sha256(stableJson(input)).slice(7, 23)}` });
-    validateSettlement(settlement);
+    const candidate = { ...input, settlementId: input.settlementId ?? `settlement_${sha256(stableJson(input)).slice(7, 23)}` } as AtlasUsageSettlement;
+    validateSettlement(candidate);
+    const settlement = freezeClone(candidate);
     return this.transaction(async (state) => {
       const event = state.events.find((candidate) => candidate.eventId === settlement.eventId);
       if (!event) throw new AtlasUsageLedgerError('NOT_FOUND', `Usage event ${settlement.eventId} was not found`);
-      if (event.providerReference && event.providerReference !== settlement.providerReference) throw new AtlasUsageLedgerError('INVALID_SETTLEMENT', 'Settlement provider reference does not match the usage event');
+      if (event.providerReference !== settlement.providerReference) throw new AtlasUsageLedgerError('INVALID_SETTLEMENT', 'Settlement provider reference does not match the usage event');
       if (event.cost.estimate || event.cost.currency !== settlement.currency || event.cost.amountMinor !== settlement.amountMinor) throw new AtlasUsageLedgerError('INVALID_SETTLEMENT', 'Settlement must exactly reconcile the non-estimated usage event cost');
       const existingForEvent = state.settlements.find((candidate) => candidate.eventId === settlement.eventId);
       if (existingForEvent && existingForEvent.settlementId !== settlement.settlementId) throw new AtlasUsageLedgerError('INVALID_SETTLEMENT', `Usage event ${settlement.eventId} already has a settlement`);
@@ -196,7 +203,29 @@ export class LocalUsageLedger {
 }
 
 function validateEvent(event: AtlasUsageEvent): void {
-  if (event.schemaVersion !== ATLAS_USAGE_LEDGER_SCHEMA || !nonEmpty(event.eventId) || !['model', 'runtime', 'tool', 'provider', 'media', 'storage', 'observability'].includes(event.kind) || !nonEmpty(event.unit) || !Number.isFinite(event.quantity) || event.quantity < 0 || !isScope(event.attribution) || !isRecord(event.cost) || !Number.isSafeInteger(event.cost.amountMinor) || event.cost.amountMinor < 0 || !nonEmpty(event.cost.currency) || typeof event.cost.estimate !== 'boolean' || !nonEmpty(event.cost.source) || !validTimestamp(event.occurredAt) || !validTimestamp(event.recordedAt)) throw new AtlasUsageLedgerError('INVALID_EVENT', 'Usage event is incomplete or invalid');
+  const valid = event.schemaVersion === ATLAS_USAGE_LEDGER_SCHEMA
+    && nonEmpty(event.eventId)
+    && USAGE_KINDS.has(event.kind)
+    && nonEmpty(event.unit)
+    && Number.isFinite(event.quantity)
+    && event.quantity >= 0
+    && isScope(event.attribution)
+    && isRecord(event.cost)
+    && Number.isSafeInteger(event.cost.amountMinor)
+    && event.cost.amountMinor >= 0
+    && nonEmpty(event.cost.currency)
+    && typeof event.cost.estimate === 'boolean'
+    && nonEmpty(event.cost.source)
+    && validTimestamp(event.occurredAt)
+    && validTimestamp(event.recordedAt)
+    && optionalNonEmpty(event.providerReference)
+    && validateUsage(event.usage);
+  if (!valid) throw new AtlasUsageLedgerError('INVALID_EVENT', 'Usage event is incomplete or invalid');
+}
+function validateUsage(value: unknown): boolean {
+  if (value === undefined) return true;
+  if (!isRecord(value)) return false;
+  return Object.entries(value).every(([key, item]) => USAGE_FIELDS.has(key) && typeof item === 'number' && Number.isFinite(item) && item >= 0);
 }
 function validateSettlement(settlement: AtlasUsageSettlement): void {
   if (!nonEmpty(settlement.settlementId) || !nonEmpty(settlement.eventId) || !nonEmpty(settlement.providerReference) || !Number.isSafeInteger(settlement.amountMinor) || settlement.amountMinor < 0 || !nonEmpty(settlement.currency) || !nonEmpty(settlement.invoiceReference) || !validTimestamp(settlement.settledAt)) throw new AtlasUsageLedgerError('INVALID_SETTLEMENT', 'Usage settlement is incomplete or invalid');
@@ -213,15 +242,21 @@ function validateState(value: unknown): AtlasUsageLedgerState {
   const settledEvents = new Set<string>();
   for (const settlement of settlements) {
     const event = eventById.get(settlement.eventId);
-    if (!event || event.cost.estimate || (event.providerReference && event.providerReference !== settlement.providerReference) || event.cost.currency !== settlement.currency || event.cost.amountMinor !== settlement.amountMinor || settledEvents.has(settlement.eventId)) {
+    if (!event || event.cost.estimate || !event.providerReference || event.providerReference !== settlement.providerReference || event.cost.currency !== settlement.currency || event.cost.amountMinor !== settlement.amountMinor || settledEvents.has(settlement.eventId)) {
       throw new AtlasUsageLedgerError('INVALID_STATE', `Usage settlement ${settlement.settlementId} does not reconcile to a unique usage event`);
     }
     settledEvents.add(settlement.eventId);
   }
   return freezeState({ schemaVersion: ATLAS_USAGE_LEDGER_SCHEMA, events, settlements });
 }
-function isScope(value: unknown): value is AtlasUsageAttribution { return isRecord(value) && ['tenantId', 'organisationId', 'projectId', 'environmentId'].every((key) => nonEmpty(value[key])) && Object.keys(value).every((key) => ['tenantId', 'organisationId', 'projectId', 'environmentId', 'agentVersionId', 'missionId', 'actionId'].includes(key)); }
+function isScope(value: unknown): value is AtlasUsageAttribution {
+  if (!isRecord(value)) return false;
+  return REQUIRED_ATTRIBUTION_FIELDS.every((key) => nonEmpty(value[key]))
+    && OPTIONAL_ATTRIBUTION_FIELDS.every((key) => optionalNonEmpty(value[key]))
+    && Object.keys(value).every((key) => ATTRIBUTION_FIELDS.has(key));
+}
 function matchesAttribution(value: AtlasUsageAttribution, filter: Partial<AtlasUsageAttribution>): boolean { return Object.entries(filter).every(([key, expected]) => expected === undefined || value[key as keyof AtlasUsageAttribution] === expected); }
+function optionalNonEmpty(value: unknown): boolean { return value === undefined || nonEmpty(value); }
 function nonEmpty(value: unknown): value is string { return typeof value === 'string' && value.trim().length > 0; }
 function validTimestamp(value: unknown): value is string { return typeof value === 'string' && Number.isFinite(Date.parse(value)); }
 function isRecord(value: unknown): value is Record<string, any> { return Boolean(value) && typeof value === 'object' && !Array.isArray(value); }
